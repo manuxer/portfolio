@@ -26,12 +26,14 @@
     <!-- Resolve the theme before first paint so dark mode never flashes. -->
     <script>
       (function () {
+        var root = document.documentElement;
+        if (root.dataset.theme) return; // a host page already chose
         try {
           var stored = localStorage.getItem("theme");
           var dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-          document.documentElement.dataset.theme = dark ? "dark" : "light";
+          root.dataset.theme = dark ? "dark" : "light";
         } catch (e) {
-          document.documentElement.dataset.theme = "light";
+          root.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         }
       })();
     </script>

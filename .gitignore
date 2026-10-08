@@ -19,3 +19,4 @@ dist-ssr
 *.suo
 *.sw?
 .env
+dist-embed

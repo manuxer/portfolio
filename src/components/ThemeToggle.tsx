@@ -20,9 +20,20 @@ function apply(theme: Theme) {
   listeners.forEach((l) => l());
 }
 
+let observer: MutationObserver | null = null;
+
 const subscribe = (listener: () => void) => {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  // Also follow theme changes made outside the toggle (e.g. by a host page).
+  observer ??= new MutationObserver(() => listeners.forEach((l) => l()));
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  return () => {
+    listeners.delete(listener);
+    if (listeners.size === 0) {
+      observer?.disconnect();
+      observer = null;
+    }
+  };
 };
 
 function storedTheme(): Theme | null {
