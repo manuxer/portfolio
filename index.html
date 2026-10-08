@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>manuxer | UX Designer Portfolio</title>
+    <meta name="description" content="manuxer | Product Designer Portfolio" />
+    <meta name="author" content="manuxer" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="manuxer | Product Designer Portfolio" />
+    <meta property="og:description" content="manuxer | Product Designer Portfolio" />
+    <meta property="og:image" content="%BASE_URL%favicon.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@manuxer" />
+    <meta name="twitter:title" content="manuxer | Product Designer Portfolio" />
+    <meta name="twitter:description" content="manuxer | Product Designer Portfolio" />
+    <meta name="twitter:image" content="%BASE_URL%favicon.png" />
+
+    <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
+    <link rel="alternate icon" href="%BASE_URL%favicon.ico" />
+
+    <!-- Resolve the theme before first paint so dark mode never flashes. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
