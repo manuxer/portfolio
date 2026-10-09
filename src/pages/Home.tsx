@@ -1,34 +1,46 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import manuLogoQr from "@/assets/manu-logo-qr.png?responsive";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor, ButtonLink } from "@/components/Button";
 import { ContactCTA } from "@/components/ContactCTA";
-import { Img } from "@/components/Img";
+import { ManuWordmark, QrCode } from "@/components/ManuWordmark";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
 import { WordsReveal } from "@/components/WordsReveal";
 import { featured } from "@/data/projects";
 import { useTilt } from "@/hooks/useTilt";
 import { useTitle } from "@/hooks/useTitle";
-import { MAILTO } from "@/lib/site";
+import { focusTarget } from "@/lib/focus";
+import { LINKEDIN, MAILTO } from "@/lib/site";
 
 function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const still = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   // As the page scrolls, the headline recedes: it drifts, shrinks and dims.
-  const y = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  // Scroll-linked values aren't covered by MotionConfig, so honour reduced motion here.
+  const y = useTransform(scrollYProgress, [0, 1], still ? [0, 0] : [0, 140]);
+  const scale = useTransform(scrollYProgress, [0, 1], still ? [1, 1] : [1, 0.9]);
+  const opacity = useTransform(scrollYProgress, [0, 0.65], still ? [1, 1] : [1, 0]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+
+  const toFeatured = () => {
+    const section = document.getElementById("featured");
+    section?.scrollIntoView({ behavior: still ? "auto" : "smooth" });
+    focusTarget(section?.querySelector<HTMLElement>("h2"));
+  };
 
   return (
     <section ref={ref} className="relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-32">
       <Aurora />
       <div className="aurora-fade" aria-hidden="true" />
 
-      <motion.div style={{ y, scale, opacity }} className="container-x relative z-10 text-center">
+      {/* A focused button never sits faded out: focus overrides the scroll fade. */}
+      <motion.div
+        style={{ y, scale, opacity }}
+        className="container-x hero-copy relative z-10 text-center has-[:focus-visible]:!opacity-100"
+      >
         <WordsReveal
           as="h1"
           className="t-display"
@@ -53,13 +65,13 @@ function Hero() {
 
       <motion.button
         type="button"
-        onClick={() => document.getElementById("featured")?.scrollIntoView({ behavior: "smooth" })}
+        onClick={toFeatured}
         style={{ opacity: cueOpacity }}
         initial={{ y: -6 }}
-        animate={{ y: 4 }}
-        transition={{ duration: 1.6, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-5 grid h-10 w-10 place-items-center rounded-full text-fg-2"
-        aria-label="Scroll to featured projects"
+        animate={still ? { y: 0 } : { y: 4 }}
+        transition={{ duration: 1.6, repeat: still ? 0 : Infinity, repeatType: "reverse", ease: "easeInOut" }}
+        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-6 grid h-12 w-12 place-items-center rounded-full text-fg-2 focus-visible:!opacity-100"
+        aria-label="Skip to featured projects"
       >
         <ChevronDown size={18} />
       </motion.button>
@@ -67,15 +79,29 @@ function Hero() {
   );
 }
 
+/**
+ * The "MANU" wordmark + QR card. In light mode it reads as the original white
+ * card; in dark mode it becomes a dark surface with light strokes, and only the
+ * QR keeps a small grey quiet-zone tile so it still scans.
+ */
 function QrCard() {
   const tilt = useTilt(5);
   return (
     <motion.div
       {...tilt.handlers}
       style={tilt.style}
-      className="group relative overflow-hidden rounded-[32px] bg-white p-6 shadow-[var(--shadow-card-hover)] md:p-10"
+      className="group relative flex aspect-[1920/1086] flex-col items-center justify-center gap-[6%] overflow-hidden rounded-[32px] bg-white p-6 text-[#1d1d1f] shadow-[var(--shadow-card-hover)] md:p-10 dark:bg-surface dark:text-fg dark:shadow-[var(--shadow-card)]"
     >
-      <Img src={manuLogoQr} alt="Manu logo and QR code" sizes="(min-width: 768px) 520px, 90vw" className="h-auto w-full" />
+      <ManuWordmark className="h-auto w-[66%]" />
+      <a
+        href={LINKEDIN}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative z-10 block w-[26%] rounded-[10px] outline-offset-4"
+      >
+        <QrCode className="block h-auto w-full" />
+        <span className="sr-only">QR code: Manu's LinkedIn profile (opens in a new tab)</span>
+      </a>
       <motion.span className="card-glare" style={{ background: tilt.glare }} aria-hidden="true" />
     </motion.div>
   );
@@ -95,7 +121,7 @@ export default function Home() {
           </Reveal>
           <div className="project-grid">
             {featured.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
+              <ProjectCard key={project.id} project={project} index={i} headingLevel={3} />
             ))}
           </div>
           <Reveal className="mt-16 flex justify-center md:mt-20">

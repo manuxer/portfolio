@@ -40,7 +40,6 @@ export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0
   return (
     <Comp
       className={className}
-      aria-label={label}
       variants={{
         hidden: {},
         show: { transition: { delayChildren: staggerFrom(stagger, { startDelay: delay }) } },
@@ -49,6 +48,8 @@ export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0
       whileInView="show"
       viewport={{ once: true }}
     >
+      {/* Real text for assistive tech; the animated words below are visual only. */}
+      <span className="sr-only">{label}</span>
       {parts.map((part, p) =>
         part.text.split(" ").map((w, i) => {
           index += 1;

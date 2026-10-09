@@ -1,9 +1,7 @@
 import amazonLogo from "@/assets/amazon-phone-logo.png?responsive";
-import { publicUrl } from "@/lib/site";
 import type { LegacyProject } from "../types";
 
 const LEGACY = "https://manupeethambar.github.io/manuxer";
-const ndaThumb = publicUrl("lovable-uploads/dc5f6271-b4ae-4ce0-b1fe-3878571be0f1.png");
 
 const range = (count: number, url: (n: number) => string) => Array.from({ length: count }, (_, i) => url(i + 1));
 
@@ -30,7 +28,6 @@ const list: LegacyProject[] = [
     subProjects: [1, 2, 3, 4].map((n) => ({
       title: `Project Ingress ${n}`,
       description: "Password protected project",
-      image: ndaThumb,
       isPasswordProtected: true,
     })),
   },
@@ -193,6 +190,7 @@ const list: LegacyProject[] = [
     hero: amazonLogo,
     figmaEmbed:
       "https://embed.figma.com/deck/LhXIPj37x2N7kwbKGY8NTP/Accommodations-intake-redesign--Copy-?node-id=1-536&viewport=-95%2C-20%2C0.46&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share",
+    figmaUrl: "https://www.figma.com/deck/LhXIPj37x2N7kwbKGY8NTP/Accommodations-intake-redesign--Copy-",
     processImages: [],
   },
 ];

@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -209,6 +210,13 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
 
   useEffect(() => lockScroll(), []);
 
+  // Real modality: while open, the page behind can't be reached by Tab or a screen reader.
+  useEffect(() => {
+    const root = document.getElementById("root");
+    root?.setAttribute("inert", "");
+    return () => root?.removeAttribute("inert");
+  }, []);
+
   // Keep the track aligned when the window resizes.
   useEffect(() => {
     trackX.jump(-indexRef.current * pageW);
@@ -271,9 +279,10 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       } else if (e.key === "ArrowLeft") {
         goTo(indexRef.current - 1);
       } else if (e.key === "Tab" && dialogRef.current) {
+        // Only controls that are actually rendered (prev/next hide at the ends).
         const focusables = Array.from(
           dialogRef.current.querySelectorAll<HTMLElement>("button:not([disabled]), a[href]"),
-        );
+        ).filter((el) => el.getClientRects().length > 0);
         if (focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
@@ -342,6 +351,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
   };
 
   const current = items[index];
+  const statusId = useId();
 
   return (
     <div
@@ -349,8 +359,12 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       role="dialog"
       aria-modal="true"
       aria-label="Image viewer"
+      aria-describedby={statusId}
       className="fixed inset-0 z-[100] select-none"
     >
+      <p id={statusId} className="sr-only" aria-live="polite" aria-atomic="true">
+        Image {index + 1} of {items.length}: {current.alt}
+      </p>
       <motion.div
         className="absolute inset-0 bg-black/75 backdrop-blur-2xl backdrop-saturate-150"
         style={{ opacity: backdropOpacity }}
@@ -377,6 +391,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
                 thumb={getThumb(item.key)}
                 box={fit(aspectOf(item, getThumb(item.key)), vp)}
                 offset={i * pageW}
+                active={i === index}
                 radius={i === index ? radius : undefined}
                 // Neighbours stay hidden while the active image morphs, or
                 // they would slide into view as the stage scales down.
@@ -391,8 +406,8 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       <motion.div className="pointer-events-none absolute inset-0" style={{ opacity: chrome }}>
         <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 sm:p-5">
           <span
+            aria-hidden="true"
             className="glass glass-soft pointer-events-auto rounded-full px-3.5 py-1.5 text-sm font-medium tabular-nums text-white [--glass-bg:rgb(40_40_42/0.5)] [--glass-stroke:rgb(255_255_255/0.14)]"
-            aria-live="polite"
           >
             {index + 1} / {items.length}
           </span>
@@ -418,7 +433,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
-              className={cn(chromeButton, "absolute left-5 top-1/2 hidden -translate-y-1/2 sm:grid")}
+              className={cn(chromeButton, "absolute bottom-4 left-4 sm:bottom-auto sm:left-5 sm:top-1/2 sm:-translate-y-1/2")}
               aria-label="Previous image"
             >
               <ChevronLeft size={22} />
@@ -427,7 +442,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index + 1)}
               disabled={index === items.length - 1}
-              className={cn(chromeButton, "absolute right-5 top-1/2 hidden -translate-y-1/2 sm:grid")}
+              className={cn(chromeButton, "absolute bottom-4 right-4 sm:bottom-auto sm:right-5 sm:top-1/2 sm:-translate-y-1/2")}
               aria-label="Next image"
             >
               <ChevronRight size={22} />
@@ -448,6 +463,7 @@ function Slide({
   thumb,
   box,
   offset,
+  active,
   radius,
   opacity,
 }: {
@@ -455,6 +471,8 @@ function Slide({
   thumb: HTMLElement | null;
   box: Box;
   offset: number;
+  /** Off-screen neighbours are hidden from assistive tech. */
+  active: boolean;
   radius?: MotionValue<number>;
   opacity?: MotionValue<number>;
 }) {
@@ -466,6 +484,7 @@ function Slide({
   return (
     <motion.div
       data-slide
+      aria-hidden={active ? undefined : true}
       className="absolute overflow-hidden bg-white/5 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]"
       style={{
         left: box.left + offset,

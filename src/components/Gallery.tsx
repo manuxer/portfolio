@@ -13,13 +13,15 @@ interface GalleryProps {
   layout?: "stack" | "grid";
   /** Override the responsive `sizes` hint when the gallery sits in a narrower column. */
   sizes?: string;
+  /** Artwork keeps its true colour (skips the dark-mode glare dim). */
+  trueColor?: boolean;
   className?: string;
 }
 
 const STACK_SIZES = "(min-width: 1200px) 1120px, 94vw";
 const GRID_SIZES = "(min-width: 1024px) 360px, (min-width: 640px) 46vw, 92vw";
 
-export function Gallery({ id, images, layout = "stack", sizes, className }: GalleryProps) {
+export function Gallery({ id, images, layout = "stack", sizes, trueColor = false, className }: GalleryProps) {
   const { open, register, hiddenKey } = useLightbox();
   const items: LightboxItem[] = useMemo(
     () => images.map((img, i) => ({ key: `${id}-${i}`, src: img.src, alt: img.alt })),
@@ -44,15 +46,19 @@ export function Gallery({ id, images, layout = "stack", sizes, className }: Gall
             onClick={() => open(items, i)}
             className="gallery-item group media-frame"
             style={{ visibility: hiddenKey === item.key ? "hidden" : undefined }}
-            aria-label={`Expand image ${i + 1} of ${items.length}: ${item.alt}`}
+            aria-haspopup="dialog"
+            aria-label={`Enlarge image ${i + 1} of ${items.length}: ${item.alt}`}
           >
             <Img
               src={item.src}
               alt={item.alt}
               sizes={sizes ?? (layout === "stack" ? STACK_SIZES : GRID_SIZES)}
-              className="block h-auto w-full"
+              className={cn("block h-auto w-full", trueColor && "true-color")}
             />
-            <span className="hover-chip glass glass-soft absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-fg">
+            <span
+              aria-hidden="true"
+              className="hover-chip glass glass-soft absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-fg [--glass-bg:var(--glass-bg-strong)]"
+            >
               <Maximize2 size={16} strokeWidth={2} />
             </span>
           </button>

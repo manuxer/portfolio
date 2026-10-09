@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from "react";
 import { Link } from "react-router";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { BackPill } from "@/components/BackPill";
 import { CountUp } from "@/components/CountUp";
@@ -21,14 +21,15 @@ import { ease } from "@/lib/motion";
 export function CaseHero({
   id,
   image,
-  alt,
+  alt = "",
   overlay,
   caption,
   className,
 }: {
   id: number;
   image: ImageSource;
-  alt: string;
+  /** Hero art is decorative by default: the page's h1 already names the project. */
+  alt?: string;
   /** Painted inside the media (e.g. a scrim) — morphs with the image. */
   overlay?: ReactNode;
   /** Text laid over the media but outside the morphing element. */
@@ -37,8 +38,10 @@ export function CaseHero({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+  // Scroll-linked values bypass MotionConfig, so reduced motion is handled here.
+  const still = useReducedMotion();
+  const scale = useTransform(scrollYProgress, [0, 1], still ? [1, 1] : [1, 1.12]);
+  const y = useTransform(scrollYProgress, [0, 1], still ? ["0%", "0%"] : ["0%", "10%"]);
 
   return (
     <div className="container-x pt-[92px] md:pt-28">
@@ -81,18 +84,19 @@ export function ImpactCard({ text }: { text: string }) {
     <div onPointerMove={onPointerMove} className="glass glass-rim specular group overflow-hidden rounded-[28px] p-7 md:p-9">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-24 -top-28 -z-10 h-72 w-72 rounded-full opacity-40"
+        className="pointer-events-none absolute -left-24 -top-28 -z-10 h-72 w-72 rounded-full opacity-40 dark:opacity-[0.18]"
         style={{ background: "radial-gradient(closest-side, var(--brand-yellow), transparent)" }}
       />
       <div className="flex items-start gap-5">
         <span
+          aria-hidden="true"
           className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-white shadow-[0_8px_20px_-8px_var(--brand-red)]"
           style={{ background: "linear-gradient(135deg, var(--brand-yellow), var(--brand-red))" }}
         >
           <ArrowUpRight size={22} strokeWidth={2.2} className="nudge-up" />
         </span>
         <div>
-          <p className="t-label !text-[var(--brand-red)]">Impact</p>
+          <p className="t-label !text-brand-red-ink">Impact</p>
           <p className="mt-2 text-[1.2rem] font-semibold leading-snug tracking-[-0.022em] text-fg md:text-[1.45rem]">
             {text}
           </p>
@@ -156,7 +160,7 @@ function Findings({ findings }: { findings: Finding[] }) {
           key={f.finding}
           className="hairline-t grid gap-4 py-7 md:grid-cols-[64px_minmax(0,1.1fr)_minmax(0,1fr)] md:gap-8 md:py-9"
         >
-          <span className="font-[family-name:var(--font-display)] text-[0.95rem] font-semibold tabular-nums text-fg-3">
+          <span aria-hidden="true" className="font-[family-name:var(--font-display)] text-[0.95rem] font-semibold tabular-nums text-fg-2">
             {String(i + 1).padStart(2, "0")}
           </span>
           <div>
@@ -164,7 +168,7 @@ function Findings({ findings }: { findings: Finding[] }) {
             <p className="t-body mt-2">{f.details}</p>
           </div>
           <div className="self-start rounded-[20px] bg-[color-mix(in_srgb,var(--brand-red)_8%,transparent)] p-5">
-            <p className="t-label !text-[var(--brand-red)]">Design Impact</p>
+            <p className="t-label !text-brand-red-ink">Design Impact</p>
             <p className="mt-1.5 text-[0.97rem] leading-relaxed text-fg">{f.impact}</p>
           </div>
         </StaggerItem>
@@ -199,16 +203,17 @@ function Acceptance({ levels }: { levels: AcceptanceLevel[] }) {
       <Stagger className="mt-8 grid gap-5 md:grid-cols-3">
         {levels.map((l) => (
           <StaggerItem key={l.label} className="h-full">
-            <div className="glass glass-soft glass-rim h-full rounded-[26px] p-7">
+            <div className="glass glass-soft glass-rim flex h-full flex-col rounded-[26px] p-7">
+              {/* Heading first for screen readers; flex order keeps the number on top visually. */}
+              <h4 className="order-3 mt-4 text-[1.1rem] font-semibold tracking-[-0.02em] text-fg">{l.label}</h4>
               <CountUp
                 value={l.percentage}
                 suffix="%"
-                className="font-[family-name:var(--font-display)] text-[3.2rem] font-semibold leading-none tracking-[-0.045em] tabular-nums"
+                className="order-1 font-[family-name:var(--font-display)] text-[3.2rem] font-semibold leading-none tracking-[-0.045em] tabular-nums"
               />
-              <span className="mt-4 block h-1 w-10 rounded-full" style={{ background: toneColor[l.tone] }} />
-              <h4 className="mt-4 text-[1.1rem] font-semibold tracking-[-0.02em] text-fg">{l.label}</h4>
-              <p className="mt-2 text-[0.97rem] leading-relaxed text-fg-2">{l.characteristics}</p>
-              <p className="mt-4 text-[0.92rem] italic leading-relaxed text-fg-3">“{l.feedback}”</p>
+              <span aria-hidden="true" className="order-2 mt-4 block h-1 w-10 rounded-full" style={{ background: toneColor[l.tone] }} />
+              <p className="order-4 mt-2 text-[0.97rem] leading-relaxed text-fg-2">{l.characteristics}</p>
+              <p className="order-5 mt-4 text-[0.92rem] italic leading-relaxed text-fg-2">“{l.feedback}”</p>
             </div>
           </StaggerItem>
         ))}
@@ -219,11 +224,14 @@ function Acceptance({ levels }: { levels: AcceptanceLevel[] }) {
 
 function Insights({ insights }: { insights: string[] }) {
   return (
-    <Stagger className="grid gap-4 md:grid-cols-2" stagger={0.05}>
+    <Stagger as="ol" className="grid gap-4 md:grid-cols-2" stagger={0.05}>
       {insights.map((insight, i) => (
-        <StaggerItem key={insight} className="h-full">
+        <StaggerItem as="li" key={insight} className="h-full">
           <div className="glass glass-soft glass-rim flex h-full gap-4 rounded-[22px] p-6">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-fg text-[0.85rem] font-semibold tabular-nums text-bg">
+            <span
+              aria-hidden="true"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-badge text-[0.85rem] font-semibold tabular-nums text-on-badge shadow-[inset_0_0_0_1px_var(--hairline-strong)]"
+            >
               {i + 1}
             </span>
             <p className="pt-1 leading-relaxed text-fg">{insight}</p>
@@ -302,9 +310,9 @@ export function KeyFeatures({ features }: { features: string[] }) {
 
 export function TechChips({ items }: { items: string[] }) {
   return (
-    <Stagger className="flex flex-wrap gap-3" stagger={0.04}>
+    <Stagger as="ul" className="flex flex-wrap gap-3" stagger={0.04}>
       {items.map((t) => (
-        <StaggerItem key={t}>
+        <StaggerItem as="li" key={t}>
           <span className="chip glass glass-soft transition-transform duration-500 ease-[var(--ease-spring)] hover:-translate-y-0.5">
             {t}
           </span>
@@ -338,14 +346,14 @@ export function NextProject({ next }: { next: ProjectSummary }) {
               <Img src={next.image} alt="" sizes={HERO_SIZES} className="h-full w-full object-cover" />
             </div>
             {/* Frosted caption: the artwork stays visible but never fights the type. */}
-            <div className="glass glass-rim absolute inset-x-3 bottom-3 flex flex-col gap-5 rounded-[22px] p-5 text-white [--glass-bg:rgb(12_12_14/0.42)] [--glass-blur:28px] [--glass-highlight:rgb(255_255_255/0.22)] [--glass-stroke:rgb(255_255_255/0.16)] sm:flex-row sm:items-center sm:justify-between md:inset-x-5 md:bottom-5 md:p-7">
+            <div className="glass glass-rim absolute inset-x-3 bottom-3 flex flex-col gap-5 rounded-[22px] p-5 text-white [--glass-bg:rgb(12_12_14/0.66)] [--glass-blur:28px] [--glass-highlight:rgb(255_255_255/0.22)] [--glass-stroke:rgb(255_255_255/0.16)] sm:flex-row sm:items-center sm:justify-between md:inset-x-5 md:bottom-5 md:p-7">
               <div className="min-w-0">
-                <p className="t-label !text-white/65">Next project</p>
+                <p className="t-label !text-white/85">Next project</p>
                 <h2 className="mt-1.5 text-[clamp(1.35rem,1rem+1.6vw,2.25rem)] font-semibold leading-tight tracking-[-0.03em] text-white">
                   {next.title}
                 </h2>
               </div>
-              <span className="btn btn-sm shrink-0 self-start bg-white text-[#1d1d1f] sm:self-auto">
+              <span className="btn btn-sm shrink-0 self-start bg-white text-[#1d1d1f] sm:self-auto dark:bg-[var(--btn-bg)] dark:text-[var(--btn-fg)]">
                 View Project <ArrowRight size={16} className="nudge-x" />
               </span>
             </div>

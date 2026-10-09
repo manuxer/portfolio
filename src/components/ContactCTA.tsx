@@ -27,36 +27,43 @@ function CopyEmail() {
   };
 
   return (
-    <motion.button
-      layout
-      transition={spring.smooth}
-      type="button"
-      onClick={copy}
-      onPointerMove={onPointerMove}
-      className="btn btn-lg btn-glass glass glass-soft specular overflow-hidden"
-      aria-live="polite"
-    >
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={copied ? "copied" : "copy"}
-          initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
-          transition={spring.smooth}
-          className="inline-flex items-center gap-2"
-        >
-          {copied ? (
-            <>
-              <Check size={18} strokeWidth={2.2} className="text-[var(--positive)]" /> Copied to clipboard
-            </>
-          ) : (
-            <>
-              <Copy size={17} strokeWidth={1.9} className="text-fg-2" /> {EMAIL}
-            </>
-          )}
-        </motion.span>
-      </AnimatePresence>
-    </motion.button>
+    <>
+      <motion.button
+        layout
+        transition={spring.smooth}
+        type="button"
+        onClick={copy}
+        onPointerMove={onPointerMove}
+        className="btn btn-lg btn-glass glass glass-soft specular max-w-full overflow-hidden"
+        aria-label={copied ? undefined : `Copy email address ${EMAIL}`}
+      >
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={copied ? "copied" : "copy"}
+            initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+            transition={spring.smooth}
+            // Wraps only when the address can't fit (320px, 400% zoom).
+            className="inline-flex min-w-0 items-center gap-2 whitespace-normal [overflow-wrap:anywhere]"
+          >
+            {copied ? (
+              <>
+                <Check size={18} strokeWidth={2.2} className="shrink-0 text-[var(--positive)]" /> Copied to clipboard
+              </>
+            ) : (
+              <>
+                <Copy size={17} strokeWidth={1.9} className="shrink-0 text-fg-2" /> {EMAIL}
+              </>
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
+      {/* Announced once per copy; the button's own name stays stable. */}
+      <span role="status" className="sr-only">
+        {copied ? "Email address copied to clipboard" : ""}
+      </span>
+    </>
   );
 }
 

@@ -50,6 +50,7 @@ export function ButtonAnchor({
       {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
       {children}
+      {newTab && <span className="sr-only"> (opens in a new tab)</span>}
     </a>
   );
 }

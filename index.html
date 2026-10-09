@@ -20,6 +20,7 @@
     <meta name="twitter:description" content="manuxer | Product Designer Portfolio" />
     <meta name="twitter:image" content="%BASE_URL%favicon.png" />
 
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
     <link rel="alternate icon" href="%BASE_URL%favicon.ico" />
 
@@ -27,14 +28,22 @@
     <script>
       (function () {
         var root = document.documentElement;
-        if (root.dataset.theme) return; // a host page already chose
-        try {
-          var stored = localStorage.getItem("theme");
-          var dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-          root.dataset.theme = dark ? "dark" : "light";
-        } catch (e) {
-          root.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (!root.dataset.theme) {
+          // A host page may already have chosen; otherwise stored choice, then OS.
+          try {
+            var stored = localStorage.getItem("theme");
+            var dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+            root.dataset.theme = dark ? "dark" : "light";
+          } catch (e) {
+            root.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
         }
+        // Match browser chrome to the chosen theme (CSS sets color-scheme per theme).
+        var theme = root.dataset.theme === "dark" ? "dark" : "light";
+        var scheme = document.querySelector('meta[name="color-scheme"]');
+        if (scheme) scheme.setAttribute("content", theme);
+        var metas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < metas.length; i++) metas[i].setAttribute("content", theme === "dark" ? "#000000" : "#fbfbfd");
       })();
     </script>
   </head>

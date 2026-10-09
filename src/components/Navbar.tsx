@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { AnimatePresence, motion, stagger } from "motion/react";
 import { Logo } from "@/components/Logo";
@@ -19,14 +19,31 @@ export function Navbar() {
   const open = menu.open && menu.path === pathname;
   const setOpen = (value: boolean) => setMenu({ open: value, path: pathname });
 
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
   const active = navLinks.find((l) => pathname.startsWith(l.to))?.to ?? null;
+  // "page" only on the exact page; inside a section (a case study under Projects) it's "true".
+  const currentFor = (to: string) => (pathname === to ? "page" : active === to ? "true" : undefined);
+
+  const closeMenu = (returnFocus: boolean) => {
+    setMenu((m) => ({ ...m, open: false }));
+    if (returnFocus) toggleRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenu((m) => ({ ...m, open: false }));
+    // While the menu covers the page, the page behind it can't take focus.
+    const behind = Array.from(document.querySelectorAll<HTMLElement>("#main, footer, a.skip-link"));
+    behind.forEach((el) => (el.inert = true));
     const unlock = lockScroll();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMenu((m) => ({ ...m, open: false }));
+      toggleRef.current?.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => {
+      behind.forEach((el) => (el.inert = false));
       unlock();
       window.removeEventListener("keydown", onKey);
     };
@@ -50,7 +67,7 @@ export function Navbar() {
                   to={link.to}
                   viewTransition
                   className="nav-link"
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={currentFor(link.to)}
                   onPointerEnter={() => setHovered(link.to)}
                   onFocus={() => setHovered(link.to)}
                   onBlur={() => setHovered(null)}
@@ -89,11 +106,12 @@ export function Navbar() {
             Contact
           </a>
           <button
+            ref={toggleRef}
             type="button"
             className="btn btn-icon md:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label="Menu"
             onClick={() => setOpen(!open)}
           >
             <span className="relative block h-3 w-[18px]" aria-hidden="true">
@@ -115,18 +133,17 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <>
-            <motion.button
-              type="button"
-              aria-label="Close menu"
-              tabIndex={-1}
-              className="fixed inset-0 -z-10 bg-black/10 backdrop-blur-[2px] md:hidden dark:bg-black/40"
+            <motion.div
+              aria-hidden="true"
+              className="fixed inset-0 -z-10 bg-black/10 backdrop-blur-[2px] md:hidden dark:bg-black/50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
+              onClick={() => closeMenu(true)}
             />
-            <motion.div
+            <motion.nav
               id="mobile-menu"
+              aria-label="Site menu"
               className="glass glass-strong glass-rim absolute inset-x-3 top-[76px] origin-top rounded-[28px] p-3 md:hidden"
               initial={{ opacity: 0, y: -12, scale: 0.96, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
@@ -146,12 +163,12 @@ export function Navbar() {
                     <Link
                       to={link.to}
                       viewTransition
-                      onClick={() => setOpen(false)}
-                      aria-current={active === link.to ? "page" : undefined}
-                      className="flex h-14 items-center justify-between rounded-2xl px-4 text-[1.6rem] font-semibold tracking-[-0.03em] text-fg-2 transition-colors active:bg-fg/5 aria-[current=page]:text-fg"
+                      onClick={() => closeMenu(false)}
+                      aria-current={currentFor(link.to)}
+                      className="flex min-h-14 items-center justify-between rounded-2xl px-4 text-[1.6rem] font-semibold tracking-[-0.03em] text-fg-2 transition-colors active:bg-fg/5 aria-[current]:text-fg"
                     >
                       {link.label}
-                      {active === link.to && <span className="h-1.5 w-1.5 rounded-full bg-fg" />}
+                      {active === link.to && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-fg" />}
                     </Link>
                   </motion.li>
                 ))}
@@ -164,7 +181,7 @@ export function Navbar() {
                   </a>
                 </motion.li>
               </motion.ul>
-            </motion.div>
+            </motion.nav>
           </>
         )}
       </AnimatePresence>

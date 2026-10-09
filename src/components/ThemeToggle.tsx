@@ -13,7 +13,9 @@ const media = () => window.matchMedia("(prefers-color-scheme: dark)");
 const read = (): Theme => (document.documentElement.dataset.theme === "dark" ? "dark" : "light");
 
 function apply(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
+  const root = document.documentElement;
+  root.dataset.theme = theme;
+  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
   document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
     meta.setAttribute("content", theme === "dark" ? "#000000" : "#fbfbfd");
   });

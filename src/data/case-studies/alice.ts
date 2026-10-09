@@ -6,6 +6,7 @@ import alice3 from "@/assets/alice/alice3.png?responsive";
 import alice4 from "@/assets/alice/alice4.png?responsive";
 import alice5 from "@/assets/alice/alice5.png?responsive";
 import alice6 from "@/assets/alice/alice6.png?responsive";
+import { altFor } from "../alt-text";
 import type { CaseStudy } from "../types";
 
 const alice: CaseStudy = {
@@ -29,7 +30,7 @@ const alice: CaseStudy = {
   hero: aliceIntro,
   impact:
     "Streamlined accommodation intake process by improved employee experience during stressful life events, scaled adoption of AI",
-  introImages: [{ src: aliceResponsive, alt: "ALICE on both mobile and desktop" }],
+  introImages: [{ src: aliceResponsive, alt: altFor("alice-responsive.png", "ALICE on both mobile and desktop") }],
   research: {
     methodology:
       "Mixed-methods research combining interviews, usability testing, and surveys with employees and operations associates",
@@ -139,9 +140,9 @@ const alice: CaseStudy = {
       id: "journey",
       title: "User Journey Walkthrough",
       nav: "Walkthrough",
-      images: [alice1, alice2, alice3, alice4, alice5, alice6].map((src) => ({
+      images: [alice1, alice2, alice3, alice4, alice5, alice6].map((src, i) => ({
         src,
-        alt: "ALICE journey walkthrough",
+        alt: altFor(`alice/alice${i + 1}.png`, `ALICE journey walkthrough, step ${i + 1} of 6.`),
       })),
     },
   ],

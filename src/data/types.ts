@@ -81,7 +81,8 @@ export interface CaseStudy {
 export interface SubProject {
   title: string;
   description: string;
-  image: ImageSource;
+  /** Omitted for placeholders; the card then shows the theme-aware logo mark. */
+  image?: ImageSource;
   isPasswordProtected?: boolean;
 }
 
@@ -104,6 +105,8 @@ export interface LegacyProject {
   methodology?: string[];
   tools?: string[];
   figmaEmbed?: string;
+  /** Direct link to the embedded deck, as a text alternative to the iframe. */
+  figmaUrl?: string;
   subProjects?: SubProject[];
   processImages: string[];
 }

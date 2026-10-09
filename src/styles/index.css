@@ -13,8 +13,9 @@
   --bg-2: #f5f5f7;
   --surface: #ffffff;
   --fg: #1d1d1f;
-  --fg-2: #6e6e73;
-  --fg-3: #86868b;
+  /* Secondary text holds AAA (7:1+) on every solid surface, tertiary 4.5:1+. */
+  --fg-2: #515154;
+  --fg-3: #6a6a6e;
   --hairline: rgb(0 0 0 / 0.08);
   --hairline-strong: rgb(0 0 0 / 0.14);
   --link: #0066cc;
@@ -23,6 +24,17 @@
   --btn-bg: #1d1d1f;
   --btn-fg: #ffffff;
   --btn-bg-hover: #3a3a3c;
+
+  /* Small solid badges (insight numbers, dialog icon tile). */
+  --badge-bg: #1d1d1f;
+  --badge-fg: #ffffff;
+
+  /* Brand red is a fill colour; this is its text-safe partner. */
+  --brand-red-ink: #a3301f;
+
+  /* QR codes need a light quiet zone to scan everywhere. */
+  --qr-bg: #ffffff;
+  --qr-ink: #000000;
 
   /* Glass material */
   --glass-bg: rgb(255 255 255 / 0.6);
@@ -46,7 +58,7 @@
   --brand-blue: #5b81c1;
   --aurora-opacity: 0.5;
 
-  --positive: #1f8a3b;
+  --positive: #187a32;
   --neutral: #b27100;
   --negative: #c4352b;
 
@@ -66,23 +78,33 @@
   --bg-2: #0a0a0b;
   --surface: #161617;
   --fg: #f5f5f7;
-  --fg-2: #a1a1a6;
-  --fg-3: #6e6e73;
+  --fg-2: #b0b0b5;
+  --fg-3: #8f8f94;
   --hairline: rgb(255 255 255 / 0.1);
   --hairline-strong: rgb(255 255 255 / 0.18);
   --link: #2997ff;
   --focus: #2997ff;
 
-  --btn-bg: #f5f5f7;
-  --btn-fg: #1d1d1f;
-  --btn-bg-hover: #ffffff;
+  /* No white surfaces in dark: primary actions are Apple blue (white label 4.7:1). */
+  --btn-bg: #0071e3;
+  --btn-fg: #ffffff;
+  --btn-bg-hover: #0068d1;
 
-  --glass-bg: rgb(30 30 32 / 0.55);
-  --glass-bg-strong: rgb(30 30 32 / 0.8);
+  --badge-bg: #3a3a3c;
+  --badge-fg: #f5f5f7;
+
+  --brand-red-ink: #ff9585;
+
+  /* A soft grey tile (not white) still gives scanners ~60% module contrast. */
+  --qr-bg: #d1d1d6;
+
+  /* Denser tint keeps text legible when glass floats over bright imagery. */
+  --glass-bg: rgb(24 24 26 / 0.66);
+  --glass-bg-strong: rgb(22 22 24 / 0.9);
   --glass-stroke: rgb(255 255 255 / 0.12);
   --glass-edge: rgb(0 0 0 / 0.5);
   --glass-highlight: rgb(255 255 255 / 0.2);
-  --glass-sheen: rgb(255 255 255 / 0.12);
+  --glass-sheen: rgb(255 255 255 / 0.07);
   --glass-shadow:
     0 1px 1px rgb(0 0 0 / 0.4), 0 10px 30px -12px rgb(0 0 0 / 0.7),
     0 30px 60px -30px rgb(0 0 0 / 0.7);
@@ -113,6 +135,9 @@
   --color-fg-3: var(--fg-3);
   --color-hairline: var(--hairline);
   --color-link: var(--link);
+  --color-badge: var(--badge-bg);
+  --color-on-badge: var(--badge-fg);
+  --color-brand-red-ink: var(--brand-red-ink);
   --color-brand-yellow: var(--brand-yellow);
   --color-brand-red: var(--brand-red);
   --color-brand-green: var(--brand-green);
@@ -137,6 +162,8 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-padding-top: calc(var(--nav-h) + 40px);
+    /* Keep focused/scrolled-to content clear of the floating section dock. */
+    scroll-padding-bottom: 96px;
     background: var(--bg);
   }
 
@@ -160,6 +187,11 @@
   :focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
+  }
+
+  /* Programmatic focus targets (skip link, route changes, section jumps). */
+  :where(main, h1, h2, section)[tabindex="-1"]:focus {
+    outline: none;
   }
 
   img {
@@ -292,11 +324,11 @@
     background-clip: text;
     color: transparent;
     animation: gradient-pan 9s linear infinite;
-    /* Darker stops in light mode keep the gradient legible on white. */
-    --g1: #c8432f;
-    --g2: #c27c00;
-    --g3: #3a8f43;
-    --g4: #3f69b2;
+    /* Darker stops in light mode keep the gradient legible on white (each >= 5:1). */
+    --g1: #c13f2b;
+    --g2: #9a5f00;
+    --g3: #2c7a36;
+    --g4: #3a64ad;
   }
 
   [data-theme="dark"] .text-gradient-brand {
@@ -430,7 +462,8 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 48px;
+    min-height: 48px;
+    padding-block: 0.4rem;
     padding-inline: 1.4rem;
     border-radius: 999px;
     font-size: 1.0625rem;
@@ -469,19 +502,20 @@
   }
 
   .btn-sm {
-    height: 36px;
+    min-height: 36px;
     padding-inline: 1rem;
     font-size: 0.9375rem;
   }
 
   .btn-lg {
-    height: 56px;
+    min-height: 56px;
     padding-inline: 1.75rem;
     font-size: 1.125rem;
   }
 
   .btn-icon {
     width: 40px;
+    min-height: 40px;
     height: 40px;
     padding: 0;
   }
@@ -567,7 +601,7 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: 36px;
+    min-height: 36px;
     padding-inline: 0.95rem;
     border-radius: 999px;
     font-size: 0.9375rem;
@@ -577,7 +611,7 @@
   }
 
   .nav-link:hover,
-  .nav-link[aria-current="page"] {
+  .nav-link[aria-current] {
     color: var(--fg);
   }
 
@@ -729,7 +763,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    height: 38px;
+    min-height: 38px;
+    padding-block: 0.3rem;
     padding-inline: 1rem;
     border-radius: 999px;
     font-size: 0.9375rem;
@@ -917,6 +952,133 @@
   }
   to {
     clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Accessibility: legibility guarantees and user preferences
+   ───────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* Copy that sits directly on the aurora gets a soft pool of page colour
+     behind it, so contrast never depends on where the light drifts. */
+  .hero-copy {
+    isolation: isolate;
+  }
+  .hero-copy::before {
+    content: "";
+    position: absolute;
+    inset: -14% -6%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--bg) 72%, transparent) 62%,
+      transparent 100%
+    );
+  }
+
+  /* Dark mode: bright screenshots and slides are dimmed slightly to cut glare
+     (text inside them stays far above 7:1). Full brightness returns on hover,
+     on keyboard focus and in the lightbox. Artwork keeps its true colour. */
+  [data-theme="dark"] :is(.card-media, .media-frame) img:not(.true-color) {
+    filter: brightness(0.88);
+    transition:
+      filter 0.5s var(--ease-out),
+      transform 1.1s var(--ease-out),
+      opacity 0.7s var(--ease-out);
+  }
+  @media (hover: hover) {
+    [data-theme="dark"] :is(.group:hover .card-media, .gallery-item:hover) img {
+      filter: none;
+    }
+  }
+  [data-theme="dark"] :is(.group:focus-visible .card-media, .gallery-item:focus-visible) img {
+    filter: none;
+  }
+}
+
+/* Reduced transparency: glass becomes a solid, high-legibility surface. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong,
+  .glass-soft {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    --glass-bg: var(--surface);
+    --glass-bg-strong: var(--surface);
+  }
+  .aurora,
+  .halo {
+    opacity: 0.35;
+  }
+}
+
+/* Increased contrast: opaque materials, stronger edges, darker secondary text. */
+@media (prefers-contrast: more) {
+  :root {
+    --fg-2: #3a3a3c;
+    --fg-3: #48484a;
+    --hairline: rgb(0 0 0 / 0.3);
+    --hairline-strong: rgb(0 0 0 / 0.45);
+    --glass-bg: var(--surface);
+    --glass-bg-strong: var(--surface);
+    --glass-stroke: rgb(0 0 0 / 0.45);
+  }
+  [data-theme="dark"] {
+    --fg-2: #d1d1d6;
+    --fg-3: #c7c7cc;
+    --hairline: rgb(255 255 255 / 0.35);
+    --hairline-strong: rgb(255 255 255 / 0.5);
+    --glass-stroke: rgb(255 255 255 / 0.5);
+  }
+  .glass,
+  .glass-strong,
+  .glass-soft {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  [data-theme="dark"] :is(.card-media, .media-frame) img {
+    filter: none;
+  }
+  .aurora,
+  .halo,
+  .card-glare,
+  .specular::after {
+    display: none;
+  }
+}
+
+/* Windows High Contrast / forced colours: give every surface a real edge,
+   show the active state without colour, drop decorative light. */
+@media (forced-colors: active) {
+  .btn,
+  .glass,
+  .chip,
+  .surface-card,
+  .card-media,
+  .media-frame,
+  .nav-pill {
+    border: 1px solid CanvasText;
+  }
+  .nav-indicator-active {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+  .text-gradient-brand {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
+  .aurora,
+  .halo,
+  .card-glare,
+  .specular::after,
+  .glass-rim::before {
+    display: none;
+  }
+  :focus-visible {
+    outline-color: Highlight;
   }
 }
 
