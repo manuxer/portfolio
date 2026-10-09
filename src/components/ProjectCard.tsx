@@ -15,6 +15,10 @@ interface ProjectCardProps {
   headingLevel?: 2 | 3;
 }
 
+/**
+ * Whole-card link done as a "stretched link": the title is the only link (so
+ * its name is exactly the visible title) and its ::after covers the card.
+ */
 export function ProjectCard({ project, index = 0, headingLevel = 3 }: ProjectCardProps) {
   const tilt = useTilt(3.5);
   const uid = useId();
@@ -24,15 +28,9 @@ export function ProjectCard({ project, index = 0, headingLevel = 3 }: ProjectCar
 
   return (
     <Reveal delay={(index % 2) * 0.08} blur={false} y={40}>
-      <Link
-        to={`/projects/${project.id}`}
-        viewTransition
-        // A short link name ("<title> View case study"); category and summary are its description.
-        aria-labelledby={`${uid}-title ${uid}-cta`}
-        aria-describedby={`${uid}-category ${uid}-summary`}
-        className="group block rounded-[30px] outline-offset-[6px]"
+      <div
+        className="group relative rounded-[30px] outline-offset-[6px] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--focus)]"
         onPointerEnter={warm}
-        onFocus={warm}
         onTouchStart={warm}
         {...tilt.handlers}
       >
@@ -51,20 +49,27 @@ export function ProjectCard({ project, index = 0, headingLevel = 3 }: ProjectCar
         </motion.div>
 
         <div className="px-1 pt-6">
-          <p id={`${uid}-category`} className="t-eyebrow">
-            {project.category}
-          </p>
-          <Heading id={`${uid}-title`} className="t-subtitle mt-2">
-            {project.title}
+          <p className="t-eyebrow">{project.category}</p>
+          <Heading className="t-subtitle mt-2">
+            <Link
+              to={`/projects/${project.id}`}
+              viewTransition
+              aria-describedby={`${uid}-summary`}
+              className="after:absolute after:inset-0 after:z-10 after:rounded-[30px] after:content-[''] focus-visible:outline-none"
+              onFocus={warm}
+            >
+              {project.title}
+            </Link>
           </Heading>
           <p id={`${uid}-summary`} className="t-body mt-2 line-clamp-2">
             {project.description}
           </p>
-          <span id={`${uid}-cta`} className="link-chevron mt-4">
+          {/* Visual affordance only: the title link above is what's announced and activated. */}
+          <span aria-hidden="true" className="link-chevron mt-4">
             View case study <ChevronRight size={17} strokeWidth={2.2} className="nudge-x" />
           </span>
         </div>
-      </Link>
+      </div>
     </Reveal>
   );
 }

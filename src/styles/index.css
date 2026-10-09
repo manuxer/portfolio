@@ -713,7 +713,8 @@
 
   @media (hover: hover) {
     .group:hover .hover-chip,
-    .group:focus-visible .hover-chip {
+    .group:focus-visible .hover-chip,
+    .group:has(:focus-visible) .hover-chip {
       opacity: 1;
       transform: none;
     }
@@ -993,7 +994,7 @@
       filter: none;
     }
   }
-  [data-theme="dark"] :is(.group:focus-visible .card-media, .gallery-item:focus-visible) img {
+  [data-theme="dark"] :is(.group:focus-visible .card-media, .group:has(:focus-visible) .card-media, .gallery-item:focus-visible) img {
     filter: none;
   }
 }

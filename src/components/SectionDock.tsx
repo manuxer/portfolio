@@ -99,34 +99,34 @@ export function SectionDock({ items }: { items: DockItem[] }) {
       style={{ pointerEvents: visible ? "auto" : "none" }}
       transition={spring.smooth}
     >
-          <div className="glass glass-strong glass-rim relative max-w-full overflow-hidden rounded-full p-1.5">
-            <div ref={listRef} className="no-scrollbar relative flex overflow-x-auto">
-              {items.map((item) => (
-                <button
-                  key={item.id}
-                  data-id={item.id}
-                  type="button"
-                  onClick={() => jump(item.id)}
-                  aria-current={active === item.id ? "true" : undefined}
-                  // The ring draws inside the pill so the scroller can't clip it.
-                  className="relative min-h-9 shrink-0 rounded-full px-4 text-[0.875rem] font-medium text-fg-2 transition-colors hover:text-fg focus-visible:outline-offset-[-3px] aria-[current=true]:text-fg"
-                >
-                  {active === item.id && (
-                    <motion.span layoutId="dock-active" className="nav-indicator nav-indicator-active" transition={spring.snappy} />
-                  )}
-                  <span className="relative whitespace-nowrap">{item.label}</span>
-                </button>
-              ))}
-            </div>
-            <motion.span
-              aria-hidden="true"
-              className="absolute inset-x-5 bottom-[3px] h-[2px] origin-left rounded-full"
-              style={{
-                scaleX: progress,
-                background: "linear-gradient(90deg, var(--brand-yellow), var(--brand-red), var(--brand-green), var(--brand-blue))",
-              }}
-            />
-          </div>
+      <div className="glass glass-strong glass-rim relative max-w-full overflow-hidden rounded-full p-1.5">
+        <div ref={listRef} className="no-scrollbar relative flex overflow-x-auto">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              data-id={item.id}
+              type="button"
+              onClick={() => jump(item.id)}
+              aria-current={active === item.id ? "true" : undefined}
+              // The ring draws inside the pill so the scroller can't clip it.
+              className="relative min-h-9 shrink-0 rounded-full px-4 text-[0.875rem] font-medium text-fg-2 transition-colors hover:text-fg focus-visible:outline-offset-[-3px] aria-[current=true]:text-fg"
+            >
+              {active === item.id && (
+                <motion.span layoutId="dock-active" className="nav-indicator nav-indicator-active" transition={spring.snappy} />
+              )}
+              <span className="relative whitespace-nowrap">{item.label}</span>
+            </button>
+          ))}
+        </div>
+        <motion.span
+          aria-hidden="true"
+          className="absolute inset-x-5 bottom-[3px] h-[2px] origin-left rounded-full"
+          style={{
+            scaleX: progress,
+            background: "linear-gradient(90deg, var(--brand-yellow), var(--brand-red), var(--brand-green), var(--brand-blue))",
+          }}
+        />
+      </div>
     </motion.nav>
   );
 }
