@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import manuLogoQr from "@/assets/manu-logo-qr.png?responsive";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor, ButtonLink } from "@/components/Button";
 import { ContactCTA } from "@/components/ContactCTA";
-import { Img } from "@/components/Img";
+import { ManuWordmark, QrCode } from "@/components/ManuWordmark";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
 import { WordsReveal } from "@/components/WordsReveal";
@@ -73,9 +72,13 @@ function QrCard() {
     <motion.div
       {...tilt.handlers}
       style={tilt.style}
-      className="group relative overflow-hidden rounded-[32px] bg-white p-6 shadow-[var(--shadow-card-hover)] md:p-10"
+      className="group relative overflow-hidden rounded-[32px] bg-white p-6 text-[#1d1d1f] shadow-[var(--shadow-card-hover)] md:p-10 dark:bg-surface dark:text-fg dark:shadow-[var(--shadow-card)]"
     >
-      <Img src={manuLogoQr} alt="Manu logo and QR code" sizes="(min-width: 768px) 520px, 90vw" className="h-auto w-full" />
+      {/* Vector logo + QR (same artwork as the PNG) so the card can go dark in dark mode. */}
+      <div role="img" aria-label="Manu logo and QR code" className="flex aspect-[1920/1086] flex-col items-center justify-center gap-[6%]">
+        <ManuWordmark className="h-auto w-[66%]" />
+        <QrCode className="block h-auto w-[26%]" />
+      </div>
       <motion.span className="card-glare" style={{ background: tilt.glare }} aria-hidden="true" />
     </motion.div>
   );

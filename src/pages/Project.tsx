@@ -420,7 +420,7 @@ function LockedDialog({ project, onClose }: { project: SubProject | null; onClos
             exit={{ opacity: 0, scale: 0.96, y: 8, filter: "blur(4px)" }}
             transition={spring.smooth}
           >
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-fg text-bg">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-fg text-bg dark:bg-surface dark:text-fg dark:shadow-[inset_0_0_0_1px_var(--hairline-strong)]">
               <Lock size={20} />
             </span>
             <h2 id="locked-title" className="t-subtitle mt-5">

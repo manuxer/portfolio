@@ -223,7 +223,7 @@ function Insights({ insights }: { insights: string[] }) {
       {insights.map((insight, i) => (
         <StaggerItem key={insight} className="h-full">
           <div className="glass glass-soft glass-rim flex h-full gap-4 rounded-[22px] p-6">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-fg text-[0.85rem] font-semibold tabular-nums text-bg">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-fg text-[0.85rem] font-semibold tabular-nums text-bg dark:bg-surface dark:text-fg dark:shadow-[inset_0_0_0_1px_var(--hairline-strong)]">
               {i + 1}
             </span>
             <p className="pt-1 leading-relaxed text-fg">{insight}</p>
@@ -345,7 +345,7 @@ export function NextProject({ next }: { next: ProjectSummary }) {
                   {next.title}
                 </h2>
               </div>
-              <span className="btn btn-sm shrink-0 self-start bg-white text-[#1d1d1f] sm:self-auto">
+              <span className="btn btn-sm shrink-0 self-start bg-white text-[#1d1d1f] sm:self-auto dark:bg-[var(--btn-bg)] dark:text-[var(--btn-fg)] dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.22)]">
                 View Project <ArrowRight size={16} className="nudge-x" />
               </span>
             </div>
