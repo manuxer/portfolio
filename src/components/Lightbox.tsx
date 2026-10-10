@@ -360,7 +360,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       aria-modal="true"
       aria-label="Image viewer"
       aria-describedby={statusId}
-      className="fixed inset-0 z-[100] select-none"
+      className="fixed inset-0 z-[100] select-none [--focus:#ffffff]"
     >
       <p id={statusId} className="sr-only" aria-live="polite" aria-atomic="true">
         Image {index + 1} of {items.length}: {current.alt}

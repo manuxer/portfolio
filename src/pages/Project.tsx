@@ -97,6 +97,9 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
         </div>
       </section>
 
+      {/* Fixed on screen, but placed here so it is next in the tab order after the intro. */}
+      <SectionDock items={dock} />
+
       <section id="overview" className="section section-alt">
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
@@ -184,7 +187,6 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
 
       <NextProject next={next} />
       <ContactCTA />
-      <SectionDock items={dock} />
     </article>
   );
 }

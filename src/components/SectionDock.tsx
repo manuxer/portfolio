@@ -16,6 +16,9 @@ export interface DockItem {
 export function SectionDock({ items }: { items: DockItem[] }) {
   const [active, setActive] = useState(items[0]?.id);
   const [visible, setVisible] = useState(false);
+  // Keyboard users can always reach the dock: focusing it reveals it.
+  const [focusWithin, setFocusWithin] = useState(false);
+  const shown = visible || focusWithin;
   const listRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll();
@@ -65,7 +68,7 @@ export function SectionDock({ items }: { items: DockItem[] }) {
     const chip = list?.querySelector<HTMLElement>(`[data-id="${active}"]`);
     if (!list || !chip) return;
     list.scrollTo({ left: chip.offsetLeft - list.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
-  }, [active, visible]);
+  }, [active, shown]);
 
   // Scroll to the section and take keyboard/screen-reader focus with it.
   const jump = (id: string) => {
@@ -76,27 +79,23 @@ export function SectionDock({ items }: { items: DockItem[] }) {
     focusTarget(section.querySelector<HTMLElement>("h2") ?? section);
   };
 
-  // If the dock hides while it holds focus, hand focus to the current section.
-  useEffect(() => {
-    if (visible || !navRef.current?.contains(document.activeElement)) return;
-    const section = document.getElementById(active ?? "");
-    focusTarget(section?.querySelector<HTMLElement>("h2") ?? section);
-  }, [visible, active]);
-
   return (
-    // Stays mounted so focus is never destroyed; inert (untabbable) while hidden.
+    // Always mounted and in the tab order; it fades in on scroll or on focus.
     <motion.nav
       ref={navRef}
       aria-label="On this page"
-      inert={!visible}
+      onFocus={() => setFocusWithin(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocusWithin(false);
+      }}
       className="fixed inset-x-0 bottom-[max(16px,env(safe-area-inset-bottom))] z-40 flex justify-center px-3"
       initial={false}
       animate={
-        visible
+        shown
           ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transitionEnd: { filter: "none" } }
           : { opacity: 0, y: 24, scale: 0.95, filter: "blur(6px)" }
       }
-      style={{ pointerEvents: visible ? "auto" : "none" }}
+      style={{ pointerEvents: shown ? "auto" : "none" }}
       transition={spring.smooth}
     >
       <div className="glass glass-strong glass-rim relative max-w-full overflow-hidden rounded-full p-1.5">

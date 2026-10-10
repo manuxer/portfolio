@@ -12,7 +12,7 @@ export function BackPill({ className }: { className?: string }) {
       viewTransition
       onPointerMove={onPointerMove}
       className={cn(
-        "btn btn-sm glass glass-rim specular group text-fg [--glass-bg:var(--glass-bg-strong)]",
+        "btn btn-sm glass glass-rim specular focus-ring-media group text-fg [--glass-bg:var(--glass-bg-strong)]",
         className,
       )}
     >

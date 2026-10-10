@@ -19,7 +19,7 @@
   --hairline: rgb(0 0 0 / 0.08);
   --hairline-strong: rgb(0 0 0 / 0.14);
   --link: #0066cc;
-  --focus: #0071e3;
+  --focus: #0058b9;
 
   --btn-bg: #1d1d1f;
   --btn-fg: #ffffff;
@@ -382,6 +382,24 @@
 
   .glass-strong {
     background: var(--glass-bg-strong);
+  }
+
+  /* Controls floating over photos: a page-coloured halo either side of the
+     ring keeps it 3:1+ whatever the image is (two-colour focus, WCAG C40). */
+  .focus-ring-media:focus-visible {
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 6px var(--bg),
+      var(--glass-shadow),
+      inset 0 0 0 1px var(--glass-stroke),
+      inset 0 1px 0 0 var(--glass-highlight);
+  }
+
+  /* Never leave keyboard focus inside content that hasn't faded in yet. */
+  .reveal:focus-within {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 
   .glass-soft {

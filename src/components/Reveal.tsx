@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { motion, stagger as staggerFrom, type Variants } from "motion/react";
+import { cn } from "@/lib/cn";
 import { ease } from "@/lib/motion";
 
 const viewport = { once: true, margin: "0px 0px -10% 0px" } as const;
@@ -18,7 +19,7 @@ interface RevealProps {
 export function Reveal({ children, className, delay = 0, y = 28, blur = true }: RevealProps) {
   return (
     <motion.div
-      className={className}
+      className={cn("reveal", className)}
       initial={{ opacity: 0, y, ...(blur && { filter: "blur(8px)" }) }}
       // A leftover `filter` would make this wrapper a backdrop root and stop
       // nested glass from seeing what is behind it, so clear it when done.
@@ -82,7 +83,7 @@ export function StaggerItem({
 }) {
   const Comp = motion[as];
   return (
-    <Comp className={className} variants={item}>
+    <Comp className={cn("reveal", className)} variants={item}>
       {children}
     </Comp>
   );
