@@ -8,8 +8,8 @@ import { Img } from "@/components/Img";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 import { WordsReveal } from "@/components/WordsReveal";
 import { useTitle } from "@/hooks/useTitle";
+import PROFILE from "@/assets/manu-portrait.webp?responsive";
 
-const PROFILE = "https://manupeethambar.github.io/manuxer/img/profile1.png";
 const QUOTE =
   "A simple design isn't just an obvious solution - it's one that solves the problem while leaving room for elegance and emotional connection.";
 
@@ -17,11 +17,11 @@ function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // The photo drifts inside its frame — a window, not a sticker.
-  const y = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
 
   return (
-    <div ref={ref} className="media-frame aspect-[4/5] rounded-[36px] shadow-[var(--shadow-card-hover)]">
-      <motion.div className="absolute inset-[-8%]" style={{ y }}>
+    <div ref={ref} className="media-frame aspect-square rounded-[36px] shadow-[var(--shadow-card-hover)]">
+      <motion.div className="absolute inset-[-5%]" style={{ y }}>
         <Img src={PROFILE} alt="Manu, UX Designer" sizes="(min-width: 768px) 520px, 92vw" priority className="h-full w-full object-cover" />
       </motion.div>
     </div>
