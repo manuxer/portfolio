@@ -6,6 +6,8 @@ export interface LightboxItem {
   key: string;
   src: ImageSource;
   alt: string;
+  /** Artwork: never re-toned for dark mode. */
+  trueColor?: boolean;
 }
 
 export interface LightboxContextValue {

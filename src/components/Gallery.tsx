@@ -24,8 +24,8 @@ const GRID_SIZES = "(min-width: 1024px) 360px, (min-width: 640px) 46vw, 92vw";
 export function Gallery({ id, images, layout = "stack", sizes, trueColor = false, className }: GalleryProps) {
   const { open, register, hiddenKey } = useLightbox();
   const items: LightboxItem[] = useMemo(
-    () => images.map((img, i) => ({ key: `${id}-${i}`, src: img.src, alt: img.alt })),
-    [id, images],
+    () => images.map((img, i) => ({ key: `${id}-${i}`, src: img.src, alt: img.alt, trueColor })),
+    [id, images, trueColor],
   );
 
   return (

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { AnimatePresence, motion, stagger } from "motion/react";
 import { Logo } from "@/components/Logo";
-import { MotionToggle } from "@/components/MotionToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/cn";
 import { ease, spring } from "@/lib/motion";
@@ -110,7 +109,6 @@ export function Navbar() {
 
         {/* gap-2 keeps each control's 5px focus ring clear of its neighbour. */}
         <div className="flex items-center gap-2">
-          <MotionToggle />
           <ThemeToggle />
           <a href={MAILTO} className="btn btn-primary btn-sm hidden md:inline-flex">
             Contact

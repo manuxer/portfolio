@@ -21,6 +21,7 @@ import {
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { isPicture, srcOf, srcSetOf } from "@/lib/image";
 import { cn } from "@/lib/cn";
+import { markTone } from "@/lib/lightImage";
 import { LightboxContext, type LightboxItem } from "@/components/lightbox-context";
 import { ease } from "@/lib/motion";
 import { lockScroll } from "@/lib/scrollLock";
@@ -514,16 +515,30 @@ function Slide({
         opacity,
       }}
     >
-      {preview && <img src={preview} alt="" draggable={false} className="absolute inset-0 h-full w-full" />}
+      {preview && (
+        <img
+          src={preview}
+          alt=""
+          draggable={false}
+          ref={markTone}
+          onLoad={(e) => markTone(e.currentTarget)}
+          className={cn("absolute inset-0 h-full w-full", item.trueColor && "true-color")}
+        />
+      )}
       <img
         src={srcOf(item.src)}
         srcSet={srcSet}
         sizes={srcSet ? `${Math.ceil(box.w)}px` : undefined}
         alt={item.alt}
         draggable={false}
-        onLoad={() => setSharp(true)}
+        ref={markTone}
+        onLoad={(e) => {
+          setSharp(true);
+          markTone(e.currentTarget);
+        }}
         className={cn(
           "absolute inset-0 h-full w-full transition-opacity duration-500",
+          item.trueColor && "true-color",
           preview && !sharp ? "opacity-0" : "opacity-100",
         )}
       />

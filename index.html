@@ -38,10 +38,6 @@
             root.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           }
         }
-        // Restore the visitor's "Pause animations" choice before anything moves.
-        try {
-          if (localStorage.getItem("motion") === "paused") root.dataset.motion = "paused";
-        } catch (e) {}
         // Match browser chrome to the chosen theme (CSS sets color-scheme per theme).
         var theme = root.dataset.theme === "dark" ? "dark" : "light";
         var scheme = document.querySelector('meta[name="color-scheme"]');
