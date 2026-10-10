@@ -13,7 +13,7 @@ import {
   animate,
   motion,
   useMotionValue,
-  useReducedMotion,
+  useReducedMotionConfig,
   useTransform,
   type MotionValue,
   type PanInfo,
@@ -162,7 +162,7 @@ interface LightboxProps {
 }
 
 function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: LightboxProps) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
   const vp = useViewport();
   const pageW = vp.w + PAGE_GAP;
 
@@ -198,7 +198,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
     const controls = [
       animate(x, 0, openSpring),
       animate(y, 0, openSpring),
-      animate(scale, 1, openSpring),
+      animate(scale, 1, reduced ? { duration: 0 } : openSpring),
       animate(radius, FRAME_RADIUS, openSpring),
       animate(frameOpacity, 1, { duration: 0.25 }),
       animate(backdrop, 1, { duration: 0.45, ease: ease.out }),
@@ -206,7 +206,17 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
     ];
     closeRef.current?.focus({ preventScroll: true });
     return () => controls.forEach((c) => c.stop());
-  }, [x, y, scale, radius, frameOpacity, backdrop, chrome]);
+  }, [x, y, scale, radius, frameOpacity, backdrop, chrome, reduced]);
+
+  // An arrow that disables while focused (first/last image) drops focus to
+  // <body>; hand it to the other arrow, or to Close.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const el = document.activeElement as HTMLButtonElement | null;
+    if (!dialog || (el && dialog.contains(el) && !el.disabled)) return;
+    const arrow = dialog.querySelector<HTMLButtonElement>("button[data-arrow]:not(:disabled)");
+    (arrow ?? closeRef.current)?.focus({ preventScroll: true });
+  }, [index]);
 
   useEffect(() => lockScroll(), []);
 
@@ -228,9 +238,10 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       indexRef.current = clamped;
       setIndex(clamped);
       onActiveChange(items[clamped].key);
-      animate(trackX, -clamped * pageW, { ...pageSpring, velocity });
+      if (reduced) trackX.set(-clamped * pageW);
+      else animate(trackX, -clamped * pageW, { ...pageSpring, velocity });
     },
-    [items, onActiveChange, pageW, trackX],
+    [items, onActiveChange, pageW, trackX, reduced],
   );
 
   const close = useCallback(async () => {
@@ -244,12 +255,15 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       animate(chrome, 0, { duration: 0.16 }),
     ];
 
-    if (thumb && !reduced) {
-      // Bring the thumbnail on screen so the image has somewhere to land.
+    // Bring the thumbnail on screen: the image lands there and focus returns to it.
+    if (thumb) {
       const rect = thumb.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > window.innerHeight) {
         thumb.scrollIntoView({ block: "center", behavior: "instant" });
       }
+    }
+
+    if (thumb && !reduced) {
       const target = morphFrom(thumb, fit(aspectOf(item, thumb), readViewport()));
       await Promise.all([
         ...fades,
@@ -259,10 +273,11 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
         animate(radius, target.radius, closeTween),
       ]);
     } else {
+      // Reduced motion: a plain fade, no zoom.
       await Promise.all([
         ...fades,
         animate(frameOpacity, 0, { duration: 0.22 }),
-        animate(scale, 0.94, { duration: 0.22 }),
+        ...(reduced ? [] : [animate(scale, 0.94, { duration: 0.22 })]),
       ]);
     }
     onClosed(item.key);
@@ -433,6 +448,8 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
+              aria-hidden={index === 0 || undefined}
+              data-arrow
               className={cn(chromeButton, "absolute bottom-4 left-4 sm:bottom-auto sm:left-5 sm:top-1/2 sm:-translate-y-1/2")}
               aria-label="Previous image"
             >
@@ -442,6 +459,8 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index + 1)}
               disabled={index === items.length - 1}
+              aria-hidden={index === items.length - 1 || undefined}
+              data-arrow
               className={cn(chromeButton, "absolute bottom-4 right-4 sm:bottom-auto sm:right-5 sm:top-1/2 sm:-translate-y-1/2")}
               aria-label="Next image"
             >
@@ -523,7 +542,7 @@ function Dots({ count, index }: { count: number; index: number }) {
         <motion.span
           key={i}
           layout
-          className="block h-1.5 rounded-full bg-white"
+          className="block h-1.5 rounded-full bg-white forced-colors:bg-[CanvasText]"
           animate={{ width: i === index ? 18 : 6, opacity: i === index ? 1 : 0.4 }}
           transition={{ type: "spring", stiffness: 500, damping: 36 }}
         />

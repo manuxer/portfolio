@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { animate, useInView, useReducedMotion } from "motion/react";
+import { animate, useInView, useReducedMotionConfig } from "motion/react";
 import { ease } from "@/lib/motion";
 
 /**
@@ -9,7 +9,7 @@ import { ease } from "@/lib/motion";
 export function CountUp({ value, suffix = "", className }: { value: number; suffix?: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
 
   useEffect(() => {
     const el = ref.current;

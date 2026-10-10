@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring } from "motion/react";
+import { motion, useReducedMotionConfig, useScroll, useSpring } from "motion/react";
 import { focusTarget } from "@/lib/focus";
 import { spring } from "@/lib/motion";
+import { prefersLessMotion } from "@/lib/motionPref";
 
 export interface DockItem {
   id: string;
@@ -21,25 +22,12 @@ export function SectionDock({ items }: { items: DockItem[] }) {
   const shown = visible || focusWithin;
   const listRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const reduced = useReducedMotionConfig();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 });
 
-  // Active section: whichever crosses the middle band of the viewport.
-  useEffect(() => {
-    const sections = items
-      .map((item) => document.getElementById(item.id))
-      .filter((el): el is HTMLElement => el !== null);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, [items]);
-
-  // Show between the first section and the footer.
+  // Show between the first section and the footer, and track the current
+  // section from geometry (so instant jumps, e.g. Back to top, never leave it stale).
   useEffect(() => {
     const first = document.getElementById(items[0]?.id ?? "");
     const footer = document.querySelector("footer");
@@ -50,6 +38,11 @@ export function SectionDock({ items }: { items: DockItem[] }) {
         const startY = first ? first.getBoundingClientRect().top : 0;
         const footerTop = footer ? footer.getBoundingClientRect().top : Infinity;
         setVisible(startY < window.innerHeight * 0.6 && footerTop > window.innerHeight - 40);
+        const mid = window.innerHeight * 0.5;
+        const passed = items
+          .map((item) => document.getElementById(item.id))
+          .filter((s): s is HTMLElement => s !== null && s.getBoundingClientRect().top <= mid);
+        setActive(passed.at(-1)?.id ?? items[0]?.id);
       });
     };
     update();
@@ -62,19 +55,23 @@ export function SectionDock({ items }: { items: DockItem[] }) {
     };
   }, [items]);
 
-  // Keep the active chip centred when the dock scrolls horizontally (mobile).
+  // Keep the active chip centred when the dock scrolls horizontally (mobile),
+  // except while a chip has focus: then the focused chip must stay in view.
   useEffect(() => {
     const list = listRef.current;
     const chip = list?.querySelector<HTMLElement>(`[data-id="${active}"]`);
-    if (!list || !chip) return;
-    list.scrollTo({ left: chip.offsetLeft - list.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
-  }, [active, shown]);
+    if (!list || !chip || list.contains(document.activeElement)) return;
+    list.scrollTo({
+      left: chip.offsetLeft - list.clientWidth / 2 + chip.clientWidth / 2,
+      behavior: reduced ? "auto" : "smooth",
+    });
+  }, [active, shown, reduced]);
 
   // Scroll to the section and take keyboard/screen-reader focus with it.
   const jump = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersLessMotion();
     section.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
     focusTarget(section.querySelector<HTMLElement>("h2") ?? section);
   };
@@ -106,12 +103,14 @@ export function SectionDock({ items }: { items: DockItem[] }) {
               data-id={item.id}
               type="button"
               onClick={() => jump(item.id)}
+              onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}
               aria-current={active === item.id ? "true" : undefined}
               // The ring draws inside the pill so the scroller can't clip it.
               className="relative min-h-9 shrink-0 rounded-full px-4 text-[0.875rem] font-medium text-fg-2 transition-colors hover:text-fg focus-visible:outline-offset-[-3px] aria-[current=true]:text-fg"
             >
               {active === item.id && (
-                <motion.span layoutId="dock-active" className="nav-indicator nav-indicator-active" transition={spring.snappy} />
+                // -z-10 keeps the lens under the chip's inset focus ring (inside the glass pill's stacking context).
+                <motion.span layoutId="dock-active" className="nav-indicator nav-indicator-active -z-10" transition={spring.snappy} />
               )}
               <span className="relative whitespace-nowrap">{item.label}</span>
             </button>
@@ -121,7 +120,7 @@ export function SectionDock({ items }: { items: DockItem[] }) {
           aria-hidden="true"
           className="absolute inset-x-5 bottom-[3px] h-[2px] origin-left rounded-full"
           style={{
-            scaleX: progress,
+            scaleX: reduced ? scrollYProgress : progress,
             background: "linear-gradient(90deg, var(--brand-yellow), var(--brand-red), var(--brand-green), var(--brand-blue))",
           }}
         />

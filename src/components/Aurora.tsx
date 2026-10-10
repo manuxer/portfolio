@@ -1,5 +1,5 @@
 import { useEffect, type CSSProperties } from "react";
-import { motion, useReducedMotion, useSpring } from "motion/react";
+import { motion, useReducedMotionConfig, useSpring } from "motion/react";
 import { cn } from "@/lib/cn";
 
 interface Blob {
@@ -37,7 +37,7 @@ export function Aurora({
   /** Film grain to break up gradient banding — full-bleed heroes only. */
   grain?: boolean;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
   const x = useSpring(0, { stiffness: 40, damping: 20 });
   const y = useSpring(0, { stiffness: 40, damping: 20 });
 

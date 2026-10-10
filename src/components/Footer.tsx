@@ -3,11 +3,12 @@ import { ArrowUp } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { focusTarget } from "@/lib/focus";
 import { MAILTO, navLinks } from "@/lib/site";
+import { prefersLessMotion } from "@/lib/motionPref";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const toTop = () => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersLessMotion();
     window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
     // Keyboard and screen-reader focus travels with the view.
     focusTarget(document.querySelector<HTMLElement>("main h1") ?? document.getElementById("main"));

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotionConfig, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor, ButtonLink } from "@/components/Button";
@@ -16,7 +16,7 @@ import { LINKEDIN, MAILTO } from "@/lib/site";
 
 function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const still = useReducedMotion();
+  const still = useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   // As the page scrolls, the headline recedes: it drifts, shrinks and dims.
   // Scroll-linked values aren't covered by MotionConfig, so honour reduced motion here.
@@ -24,6 +24,8 @@ function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], still ? [1, 1] : [1, 0.9]);
   const opacity = useTransform(scrollYProgress, [0, 0.65], still ? [1, 1] : [1, 0]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  // Once mostly faded, the cue stops catching taps meant for the buttons it drifts over.
+  const cuePointer = useTransform(cueOpacity, (o) => (o < 0.5 ? "none" : "auto"));
 
   const toFeatured = () => {
     const section = document.getElementById("featured");
@@ -66,11 +68,12 @@ function Hero() {
       <motion.button
         type="button"
         onClick={toFeatured}
-        style={{ opacity: cueOpacity }}
+        style={{ opacity: cueOpacity, pointerEvents: cuePointer }}
         initial={{ y: -6 }}
         animate={still ? { y: 0 } : { y: 4 }}
         transition={{ duration: 1.6, repeat: still ? 0 : Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-6 grid h-12 w-12 place-items-center rounded-full text-fg-2 focus-visible:!opacity-100"
+        // Short viewports (landscape phones, 400% zoom) have no room for it below the CTAs.
+        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-6 hidden h-12 w-12 place-items-center rounded-full text-fg-2 focus-visible:!opacity-100 [@media(min-height:680px)]:grid"
         aria-label="Skip to featured projects"
       >
         <ChevronDown size={18} />

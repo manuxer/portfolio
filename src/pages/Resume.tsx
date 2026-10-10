@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from "react";
-import { motion, useInView, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { motion, useInView, useReducedMotionConfig, useScroll, useSpring } from "motion/react";
 import { ArrowUpRight, Download } from "lucide-react";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor } from "@/components/Button";
@@ -76,7 +76,7 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
 
 function TimelineItem({ role }: { role: Role }) {
   const ref = useRef<HTMLLIElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
   const inView = useInView(ref, { once: true, margin: "0px 0px -45% 0px" });
   const reached = reduced || inView;
 
@@ -124,7 +124,7 @@ function TimelineItem({ role }: { role: Role }) {
 /** Experience timeline whose spine fills as you read down it. */
 function Timeline() {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "end 0.55"] });
   const fill = useSpring(scrollYProgress, { stiffness: 140, damping: 30, restDelta: 0.001 });
 

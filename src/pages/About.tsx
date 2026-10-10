@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { motion, useReducedMotionConfig, useScroll, useTransform, type MotionValue } from "motion/react";
 import { ArrowRight, FileText } from "lucide-react";
 import { Ambient } from "@/components/Aurora";
 import { ButtonLink } from "@/components/Button";
@@ -15,7 +15,7 @@ const QUOTE =
 
 function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
-  const still = useReducedMotion();
+  const still = useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // The photo drifts inside its frame — a window, not a sticker.
   const y = useTransform(scrollYProgress, [0, 1], still ? ["0%", "0%"] : ["-6%", "6%"]);
@@ -52,7 +52,7 @@ function Word({
 /** The quote lights up word by word as it is read (scroll-linked). */
 function ScrollQuote() {
   const ref = useRef<HTMLQuoteElement>(null);
-  const still = !!useReducedMotion();
+  const still = !!useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.5"] });
   const words = QUOTE.split(" ");
 
@@ -73,9 +73,9 @@ function ScrollQuote() {
           </span>
         </p>
       </blockquote>
-      <Reveal delay={0.1}>
-        <figcaption className="mt-8 text-lg font-medium text-fg-2">— manuxer</figcaption>
-      </Reveal>
+      <figcaption className="mt-8 text-lg font-medium text-fg-2">
+        <Reveal delay={0.1}>— manuxer</Reveal>
+      </figcaption>
     </figure>
   );
 }

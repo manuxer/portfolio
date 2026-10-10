@@ -9,6 +9,7 @@ import { useSpecular } from "@/hooks/useSpecular";
 
 function CopyEmail() {
   const [copied, setCopied] = useState(false);
+  const [announce, setAnnounce] = useState("");
   const timer = useRef<number | undefined>(undefined);
   const onPointerMove = useSpecular<HTMLButtonElement>();
 
@@ -22,8 +23,14 @@ function CopyEmail() {
       return;
     }
     setCopied(true);
+    // Clear then set, so a second copy is announced again.
+    setAnnounce("");
+    requestAnimationFrame(() => setAnnounce("Email address copied to clipboard"));
     window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setCopied(false), 2200);
+    timer.current = window.setTimeout(() => {
+      setCopied(false);
+      setAnnounce("");
+    }, 2200);
   };
 
   return (
@@ -35,7 +42,8 @@ function CopyEmail() {
         onClick={copy}
         onPointerMove={onPointerMove}
         className="btn btn-lg btn-glass glass glass-soft specular max-w-full overflow-hidden"
-        aria-label={copied ? undefined : `Copy email address ${EMAIL}`}
+        // Mirrors the visible label (no mixed name while the two labels cross-fade).
+        aria-label={copied ? "Copied to clipboard" : `Copy email address ${EMAIL}`}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
@@ -59,9 +67,9 @@ function CopyEmail() {
           </motion.span>
         </AnimatePresence>
       </motion.button>
-      {/* Announced once per copy; the button's own name stays stable. */}
+      {/* The status region announces each copy. */}
       <span role="status" className="sr-only">
-        {copied ? "Email address copied to clipboard" : ""}
+        {announce}
       </span>
     </>
   );

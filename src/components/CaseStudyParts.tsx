@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from "react";
 import { Link } from "react-router";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotionConfig, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { BackPill } from "@/components/BackPill";
 import { CountUp } from "@/components/CountUp";
@@ -39,15 +39,17 @@ export function CaseHero({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   // Scroll-linked values bypass MotionConfig, so reduced motion is handled here.
-  const still = useReducedMotion();
+  const still = useReducedMotionConfig();
   const scale = useTransform(scrollYProgress, [0, 1], still ? [1, 1] : [1, 1.12]);
   const y = useTransform(scrollYProgress, [0, 1], still ? ["0%", "0%"] : ["0%", "10%"]);
 
   return (
     <div className="container-x pt-[92px] md:pt-28">
-      <div ref={ref} className="relative">
+      {/* Media and caption share one grid cell, so a caption that grows (large
+          text, text spacing) grows the hero instead of running under the Back pill. */}
+      <div ref={ref} className="relative grid">
         <div
-          className={cn("card-media h-[52vh] min-h-[320px] md:h-[66vh]", className)}
+          className={cn("card-media col-start-1 row-start-1 min-h-[max(320px,52vh)] md:min-h-[66vh]", className)}
           style={{ viewTransitionName: mediaTransitionName(id) }}
         >
           <motion.div className="absolute inset-0" style={{ scale, y }}>
@@ -55,7 +57,9 @@ export function CaseHero({
           </motion.div>
           {overlay}
         </div>
-        {caption && <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-12">{caption}</div>}
+        {caption && (
+          <div className="relative col-start-1 row-start-1 self-end p-6 pt-[76px] text-white md:p-12 md:pt-24">{caption}</div>
+        )}
         <BackPill className="absolute left-4 top-4 md:left-6 md:top-6" />
       </div>
     </div>
@@ -191,7 +195,8 @@ function Acceptance({ levels }: { levels: AcceptanceLevel[] }) {
         {levels.map((l, i) => (
           <motion.span
             key={l.label}
-            className="h-full origin-left rounded-full"
+            // System colour in forced-colours mode (the inline tone would be forced to Canvas).
+            className="h-full origin-left rounded-full forced-colors:!bg-[CanvasText]"
             style={{ flexBasis: `${l.percentage}%`, background: toneColor[l.tone] }}
             initial={{ scaleX: 0, opacity: 0.4 }}
             whileInView={{ scaleX: 1, opacity: 1 }}
@@ -280,12 +285,13 @@ export function ResearchBlock({ research }: { research: Research }) {
 /* ───────────────────────── outcome ───────────────────────── */
 
 function CheckBadge() {
+  const reduced = useReducedMotionConfig();
   return (
     <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[color-mix(in_srgb,var(--positive)_14%,transparent)] text-[var(--positive)]">
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <motion.path
           d="M5 12.5l4.5 4.5L19 7.5"
-          initial={{ pathLength: 0 }}
+          initial={{ pathLength: reduced ? 1 : 0 }}
           whileInView={{ pathLength: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: ease.out, delay: 0.3 }}

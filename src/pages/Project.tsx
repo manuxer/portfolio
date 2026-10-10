@@ -342,9 +342,10 @@ function LegacyView({ project }: { project: LegacyProject }) {
                   layout={isArt ? "grid" : "stack"}
                   trueColor={isArt}
                   sizes={isArt ? undefined : "(min-width: 1024px) 740px, 94vw"}
-                  images={project.processImages.map((src, i, all) => ({
+                  images={project.processImages.map((src, i) => ({
                     src,
-                    alt: `${galleryLabel} for ${project.title}, image ${i + 1} of ${all.length}.`,
+                    // The gallery already announces "image n of N", so the alt only describes.
+                    alt: project.processAlts?.[i] ?? `${galleryLabel} for ${project.title}.`,
                   }))}
                 />
               </div>
@@ -472,7 +473,8 @@ function LockedDialog({ project, onClose }: { project: SubProject | null; onClos
     <AnimatePresence>
       {project && (
         <motion.div
-          className="fixed inset-0 z-[90] grid place-items-center p-4"
+          // Scrolls when taller than the viewport (400% zoom, landscape phones).
+          className="fixed inset-0 z-[90] grid place-items-center overflow-y-auto overscroll-contain p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="locked-title"
@@ -481,7 +483,7 @@ function LockedDialog({ project, onClose }: { project: SubProject | null; onClos
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
         >
-          <div aria-hidden="true" className="absolute inset-0 bg-black/30 backdrop-blur-[6px] dark:bg-black/60" onClick={onClose} />
+          <div aria-hidden="true" className="fixed inset-0 bg-black/30 backdrop-blur-[6px] dark:bg-black/60" onClick={onClose} />
           <motion.div
             className="glass glass-strong glass-rim relative w-full max-w-md rounded-[32px] p-8"
             initial={{ opacity: 0, scale: 0.92, y: 16, filter: "blur(8px)" }}

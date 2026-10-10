@@ -4,6 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { flushSync } from "react-dom";
 import { cn } from "@/lib/cn";
 import { useSpecular } from "@/hooks/useSpecular";
+import { prefersLessMotion } from "@/lib/motionPref";
 
 type Theme = "light" | "dark";
 
@@ -72,7 +73,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       /* private mode — the choice simply won't persist */
     }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersLessMotion();
     if (!document.startViewTransition || reduced) {
       apply(next);
       return;

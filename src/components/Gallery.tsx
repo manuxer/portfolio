@@ -45,7 +45,9 @@ export function Gallery({ id, images, layout = "stack", sizes, trueColor = false
             }}
             onClick={() => open(items, i)}
             className="gallery-item group media-frame"
-            style={{ visibility: hiddenKey === item.key ? "hidden" : undefined }}
+            // Opacity, not visibility: a visibility change can still be mid-transition
+            // when focus returns here, and focus() on a hidden element is ignored.
+            style={{ opacity: hiddenKey === item.key ? 0 : undefined }}
             aria-haspopup="dialog"
             aria-label={`Enlarge image ${i + 1} of ${items.length}: ${item.alt}`}
           >

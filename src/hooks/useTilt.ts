@@ -1,5 +1,5 @@
 import type { PointerEvent } from "react";
-import { useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { useMotionTemplate, useMotionValue, useReducedMotionConfig, useSpring } from "motion/react";
 
 const tiltSpring = { stiffness: 180, damping: 18, mass: 0.6 };
 
@@ -8,7 +8,7 @@ const tiltSpring = { stiffness: 180, damping: 18, mass: 0.6 };
  * tracks it. Mouse only — touch and reduced-motion users get a flat card.
  */
 export function useTilt(max = 4) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionConfig();
   const rotateX = useSpring(0, tiltSpring);
   const rotateY = useSpring(0, tiltSpring);
   const gx = useMotionValue(50);

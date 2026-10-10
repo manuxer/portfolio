@@ -109,6 +109,8 @@ export interface LegacyProject {
   figmaUrl?: string;
   subProjects?: SubProject[];
   processImages: string[];
+  /** Descriptions for processImages, index for index. */
+  processAlts?: string[];
 }
 
 export type Project = CaseStudy | LegacyProject;
