@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useReducedMotionConfig, useScroll, useTransform, type MotionValue } from "motion/react";
+import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { ArrowRight, FileText } from "lucide-react";
 import { Ambient } from "@/components/Aurora";
 import { ButtonLink } from "@/components/Button";
@@ -15,10 +15,9 @@ const QUOTE =
 
 function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
-  const still = useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // The photo drifts inside its frame — a window, not a sticker.
-  const y = useTransform(scrollYProgress, [0, 1], still ? ["0%", "0%"] : ["-6%", "6%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
 
   return (
     <div ref={ref} className="media-frame aspect-[4/5] rounded-[36px] shadow-[var(--shadow-card-hover)]">
@@ -29,19 +28,8 @@ function Portrait() {
   );
 }
 
-function Word({
-  children,
-  progress,
-  range,
-  still,
-}: {
-  children: string;
-  progress: MotionValue<number>;
-  range: [number, number];
-  still: boolean;
-}) {
-  // Unread words rest at 50%, which still clears 3:1 for this large text.
-  const opacity = useTransform(progress, range, still ? [1, 1] : [0.5, 1]);
+function Word({ children, progress, range }: { children: string; progress: MotionValue<number>; range: [number, number] }) {
+  const opacity = useTransform(progress, range, [0.16, 1]);
   return (
     <>
       <motion.span style={{ opacity }}>{children}</motion.span>{" "}
@@ -52,31 +40,26 @@ function Word({
 /** The quote lights up word by word as it is read (scroll-linked). */
 function ScrollQuote() {
   const ref = useRef<HTMLQuoteElement>(null);
-  const still = !!useReducedMotionConfig();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.5"] });
   const words = QUOTE.split(" ");
 
   return (
-    <figure className="mx-auto max-w-5xl text-center">
-      <blockquote ref={ref}>
-        <p className="t-title !font-semibold">
-          {/* Real text for assistive tech; the word-by-word highlight is visual only. */}
-          <span className="sr-only">{QUOTE}</span>
-          <span aria-hidden="true">
-            <span className="text-fg-2">“</span>
-            {words.map((w, i) => (
-              <Word key={i} still={still} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
-                {w}
-              </Word>
-            ))}
-            <span className="text-fg-2">”</span>
-          </span>
-        </p>
-      </blockquote>
-      <figcaption className="mt-8 text-lg font-medium text-fg-2">
-        <Reveal delay={0.1}>— manuxer</Reveal>
-      </figcaption>
-    </figure>
+    <blockquote ref={ref} className="mx-auto max-w-5xl text-center">
+      <p className="t-title !font-semibold" aria-label={QUOTE}>
+        <span aria-hidden="true">
+          <span className="text-fg-3">“</span>
+          {words.map((w, i) => (
+            <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
+              {w}
+            </Word>
+          ))}
+          <span className="text-fg-3">”</span>
+        </span>
+      </p>
+      <Reveal delay={0.1}>
+        <footer className="mt-8 text-lg font-medium text-fg-2">— manuxer</footer>
+      </Reveal>
+    </blockquote>
   );
 }
 

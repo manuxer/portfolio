@@ -4,7 +4,6 @@ import { Moon, Sun } from "lucide-react";
 import { flushSync } from "react-dom";
 import { cn } from "@/lib/cn";
 import { useSpecular } from "@/hooks/useSpecular";
-import { prefersLessMotion } from "@/lib/motionPref";
 
 type Theme = "light" | "dark";
 
@@ -14,9 +13,7 @@ const media = () => window.matchMedia("(prefers-color-scheme: dark)");
 const read = (): Theme => (document.documentElement.dataset.theme === "dark" ? "dark" : "light");
 
 function apply(theme: Theme) {
-  const root = document.documentElement;
-  root.dataset.theme = theme;
-  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+  document.documentElement.dataset.theme = theme;
   document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
     meta.setAttribute("content", theme === "dark" ? "#000000" : "#fbfbfd");
   });
@@ -73,7 +70,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       /* private mode — the choice simply won't persist */
     }
 
-    const reduced = prefersLessMotion();
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!document.startViewTransition || reduced) {
       apply(next);
       return;

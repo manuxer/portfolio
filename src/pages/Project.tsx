@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { useLoaderData, type LoaderFunctionArgs } from "react-router";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
 import { Ambient } from "@/components/Aurora";
 import {
   CaseHero,
@@ -16,7 +15,6 @@ import {
 import { ContactCTA } from "@/components/ContactCTA";
 import { Gallery } from "@/components/Gallery";
 import { Img } from "@/components/Img";
-import { Logo } from "@/components/Logo";
 import { HERO_SIZES, preloadImage } from "@/lib/image";
 import { Reveal } from "@/components/Reveal";
 import { SectionDock } from "@/components/SectionDock";
@@ -27,7 +25,6 @@ import type { CaseStudy, LegacyProject, SubProject } from "@/data/types";
 import { useTitle } from "@/hooks/useTitle";
 import { cn } from "@/lib/cn";
 import { spring } from "@/lib/motion";
-import { lockScroll } from "@/lib/scrollLock";
 import { MAILTO } from "@/lib/site";
 import NotFound from "@/pages/NotFound";
 
@@ -63,7 +60,7 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
 
   return (
     <article>
-      <CaseHero id={project.id} image={project.hero} />
+      <CaseHero id={project.id} image={project.hero} alt={project.title} />
 
       <section className="relative pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="container-x relative">
@@ -96,9 +93,6 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
           {project.introImages && <Gallery id="intro" images={project.introImages} className="mt-12 md:mt-16" />}
         </div>
       </section>
-
-      {/* Fixed on screen, but placed here so it is next in the tab order after the intro. */}
-      <SectionDock items={dock} />
 
       <section id="overview" className="section section-alt">
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:gap-20">
@@ -177,7 +171,7 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
                   <p className="t-body mt-1">View the complete case study PDF</p>
                 </div>
                 <ButtonAnchor href={project.pdfUrl} newTab>
-                  View PDF<span className="sr-only"> of the full case study</span>
+                  View PDF
                 </ButtonAnchor>
               </div>
             </Reveal>
@@ -187,6 +181,7 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
 
       <NextProject next={next} />
       <ContactCTA />
+      <SectionDock items={dock} />
     </article>
   );
 }
@@ -220,23 +215,18 @@ function LegacyView({ project }: { project: LegacyProject }) {
   const next = nextProjectOf(project.id);
   const isArt = project.category === "Artwork / Paintings";
   const [locked, setLocked] = useState<SubProject | null>(null);
-  const closeLocked = useCallback(() => setLocked(null), []);
-  const galleryLabel = isArt ? "Artwork" : "Design process";
 
   return (
     <article>
       <CaseHero
         id={project.id}
         image={project.hero}
-        overlay={
-          // Dense at the bottom where the white title sits, clear at the top: white text
-          // stays above 6:1 even over a pure-white hero image.
-          <div className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.85)_0%,rgb(0_0_0/0.66)_50%,rgb(0_0_0/0.1)_100%)]" />
-        }
+        alt={project.title}
+        overlay={<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />}
         caption={
           <>
             <Reveal>
-              <p className="text-sm font-medium text-white md:text-base">{project.category}</p>
+              <p className="text-sm font-medium text-white/85 md:text-base">{project.category}</p>
             </Reveal>
             <WordsReveal
               as="h1"
@@ -263,21 +253,12 @@ function LegacyView({ project }: { project: LegacyProject }) {
                 <div className="media-frame aspect-video">
                   <iframe
                     src={project.figmaEmbed}
-                    title={`${project.title} presentation (Figma)`}
+                    title={`${project.title} presentation`}
                     className="absolute inset-0 h-full w-full"
-                    // Matching the embed's own scheme keeps the frame transparent while it loads.
-                    style={{ colorScheme: "normal" }}
                     loading="lazy"
                     allowFullScreen
                   />
                 </div>
-                {project.figmaUrl && (
-                  <a href={project.figmaUrl} target="_blank" rel="noopener noreferrer" className="group link-chevron mt-4">
-                    Open the presentation in Figma
-                    <span className="sr-only"> (opens in a new tab)</span>
-                    <ArrowUpRight size={16} className="nudge-up" />
-                  </a>
-                )}
               </Reveal>
             )}
 
@@ -322,13 +303,11 @@ function LegacyView({ project }: { project: LegacyProject }) {
 
             {project.subProjects && project.subProjects.length > 0 && (
               <TextBlock title="Related projects">
-                <ul className="grid gap-5 sm:grid-cols-2">
+                <div className="grid gap-5 sm:grid-cols-2">
                   {project.subProjects.map((sub) => (
-                    <li key={sub.title}>
-                      <SubProjectCard sub={sub} onLocked={() => setLocked(sub)} />
-                    </li>
+                    <SubProjectCard key={sub.title} sub={sub} onLocked={() => setLocked(sub)} />
                   ))}
-                </ul>
+                </div>
               </TextBlock>
             )}
 
@@ -340,19 +319,17 @@ function LegacyView({ project }: { project: LegacyProject }) {
                 <Gallery
                   id="process"
                   layout={isArt ? "grid" : "stack"}
-                  trueColor={isArt}
                   sizes={isArt ? undefined : "(min-width: 1024px) 740px, 94vw"}
-                  images={project.processImages.map((src, i) => ({
+                  images={project.processImages.map((src) => ({
                     src,
-                    // The gallery already announces "image n of N", so the alt only describes.
-                    alt: project.processAlts?.[i] ?? `${galleryLabel} for ${project.title}.`,
+                    alt: `${isArt ? "Artwork" : "Design process"} for ${project.title}`,
                   }))}
                 />
               </div>
             )}
           </div>
 
-          <div>
+          <aside>
             <Reveal blur={false} className="lg:sticky lg:top-28">
               <MetaCard
                 items={[
@@ -363,127 +340,79 @@ function LegacyView({ project }: { project: LegacyProject }) {
                 ]}
               />
             </Reveal>
-          </div>
+          </aside>
         </div>
       </section>
 
       <NextProject next={next} />
       <ContactCTA />
-      <LockedDialog project={locked} onClose={closeLocked} />
+      <LockedDialog project={locked} onClose={() => setLocked(null)} />
     </article>
   );
 }
 
 function SubProjectCard({ sub, onLocked }: { sub: SubProject; onLocked: () => void }) {
-  const descId = useId();
-  const media = (
-    <div className="relative h-48 overflow-hidden bg-bg-2">
-      {sub.image ? (
-        <Img
-          src={sub.image}
-          alt=""
-          sizes="(min-width: 640px) 360px, 92vw"
-          className="h-full w-full object-cover transition-transform duration-1000 ease-[var(--ease-out)] group-hover:scale-[1.04]"
-        />
-      ) : (
-        // Placeholder mark: the vector logo follows the theme instead of a black PNG.
-        <div className="grid h-full place-items-center">
-          <Logo className="h-20 text-fg transition-transform duration-1000 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
-        </div>
-      )}
-      {sub.isPasswordProtected && (
-        <span
-          aria-hidden="true"
-          className="glass glass-soft absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-fg [--glass-bg:var(--glass-bg-strong)]"
-        >
-          <Lock size={12} strokeWidth={2.4} /> Password Protected
-        </span>
-      )}
-    </div>
+  const body = (
+    <>
+      <div className="relative h-48 overflow-hidden">
+        <Img src={sub.image} alt={sub.title} sizes="(min-width: 640px) 360px, 92vw" className="h-full w-full object-cover transition-transform duration-1000 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+        {sub.isPasswordProtected && (
+          <span className="glass glass-soft absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-fg">
+            <Lock size={12} strokeWidth={2.4} /> Password Protected
+          </span>
+        )}
+      </div>
+      <div className="p-5 text-left">
+        <h4 className="font-semibold tracking-[-0.018em] text-fg">{sub.title}</h4>
+        <p className="mt-1.5 text-[0.95rem] text-fg-2">{sub.description}</p>
+      </div>
+    </>
   );
 
-  if (!sub.isPasswordProtected) {
-    return (
-      <div className="surface-card group overflow-hidden">
-        {media}
-        <div className="p-5 text-left">
-          <h4 className="font-semibold tracking-[-0.018em] text-fg">{sub.title}</h4>
-          <p className="mt-1.5 text-[0.95rem] text-fg-2">{sub.description}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // A real heading with a button inside, stretched over the whole card.
-  return (
-    <div className="surface-card group relative overflow-hidden transition-[box-shadow,transform] duration-500 ease-[var(--ease-spring)] hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-[3px] has-[:focus-visible]:outline-[var(--focus)]">
-      {media}
-      <div className="p-5 text-left">
-        <h4 className="font-semibold tracking-[-0.018em] text-fg">
-          <button
-            type="button"
-            onClick={onLocked}
-            aria-haspopup="dialog"
-            aria-describedby={descId}
-            className="text-left after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
-          >
-            {sub.title}
-            <span className="sr-only"> (password protected)</span>
-          </button>
-        </h4>
-        <p id={descId} className="mt-1.5 text-[0.95rem] text-fg-2">
-          {sub.description}
-        </p>
-      </div>
-    </div>
+  return sub.isPasswordProtected ? (
+    <button
+      type="button"
+      onClick={onLocked}
+      className="surface-card group block overflow-hidden transition-[box-shadow,transform] duration-500 ease-[var(--ease-spring)] hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)] active:scale-[0.98]"
+    >
+      {body}
+    </button>
+  ) : (
+    <div className="surface-card group overflow-hidden">{body}</div>
   );
 }
 
-/**
- * The original gate had no destination to unlock, so this offers an honest path:
- * ask for access. Truly modal: rendered in a portal with the page made inert,
- * focus moved in on open and returned to the card on close.
- */
+/** The original gate had no destination to unlock, so this offers an honest path: ask for access. */
 function LockedDialog({ project, onClose }: { project: SubProject | null; onClose: () => void }) {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!project) return;
-    const opener = document.activeElement as HTMLElement | null;
-    const root = document.getElementById("root");
-    root?.setAttribute("inert", "");
-    const unlock = lockScroll();
     cancelRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
-    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      unlock();
-      root?.removeAttribute("inert");
-      opener?.focus({ preventScroll: true });
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [project, onClose]);
 
-  return createPortal(
+  return (
     <AnimatePresence>
       {project && (
         <motion.div
-          // Scrolls when taller than the viewport (400% zoom, landscape phones).
-          className="fixed inset-0 z-[90] grid place-items-center overflow-y-auto overscroll-contain p-4"
+          className="fixed inset-0 z-[90] grid place-items-center p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="locked-title"
-          aria-describedby="locked-desc"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
         >
-          <div aria-hidden="true" className="fixed inset-0 bg-black/30 backdrop-blur-[6px] dark:bg-black/60" onClick={onClose} />
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Close"
+            className="absolute inset-0 bg-black/25 backdrop-blur-[6px] dark:bg-black/50"
+            onClick={onClose}
+          />
           <motion.div
             className="glass glass-strong glass-rim relative w-full max-w-md rounded-[32px] p-8"
             initial={{ opacity: 0, scale: 0.92, y: 16, filter: "blur(8px)" }}
@@ -491,30 +420,26 @@ function LockedDialog({ project, onClose }: { project: SubProject | null; onClos
             exit={{ opacity: 0, scale: 0.96, y: 8, filter: "blur(4px)" }}
             transition={spring.smooth}
           >
-            <span
-              aria-hidden="true"
-              className="grid h-12 w-12 place-items-center rounded-2xl bg-badge text-on-badge shadow-[inset_0_0_0_1px_var(--hairline-strong)]"
-            >
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-fg text-bg">
               <Lock size={20} />
             </span>
             <h2 id="locked-title" className="t-subtitle mt-5">
               Protected project
             </h2>
-            <p id="locked-desc" className="t-body mt-2">
+            <p className="t-body mt-2">
               {project.title} is password protected. Get in touch and I'll share access.
             </p>
-            <div className="mt-8 flex flex-wrap justify-end gap-2">
+            <div className="mt-8 flex justify-end gap-2">
               <button ref={cancelRef} type="button" onClick={onClose} className="btn btn-sm btn-glass glass glass-soft">
                 Cancel
               </button>
               <a href={`${MAILTO}?subject=${encodeURIComponent(`Access request: ${project.title}`)}`} className="btn btn-sm btn-primary">
-                Request access<span className="sr-only"> by email</span>
+                Request access
               </a>
             </div>
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>,
-    document.body,
+    </AnimatePresence>
   );
 }

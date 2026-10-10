@@ -9,7 +9,6 @@ import { useSpecular } from "@/hooks/useSpecular";
 
 function CopyEmail() {
   const [copied, setCopied] = useState(false);
-  const [announce, setAnnounce] = useState("");
   const timer = useRef<number | undefined>(undefined);
   const onPointerMove = useSpecular<HTMLButtonElement>();
 
@@ -23,55 +22,41 @@ function CopyEmail() {
       return;
     }
     setCopied(true);
-    // Clear then set, so a second copy is announced again.
-    setAnnounce("");
-    requestAnimationFrame(() => setAnnounce("Email address copied to clipboard"));
     window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      setCopied(false);
-      setAnnounce("");
-    }, 2200);
+    timer.current = window.setTimeout(() => setCopied(false), 2200);
   };
 
   return (
-    <>
-      <motion.button
-        layout
-        transition={spring.smooth}
-        type="button"
-        onClick={copy}
-        onPointerMove={onPointerMove}
-        className="btn btn-lg btn-glass glass glass-soft specular max-w-full overflow-hidden"
-        // Mirrors the visible label (no mixed name while the two labels cross-fade).
-        aria-label={copied ? "Copied to clipboard" : `Copy email address ${EMAIL}`}
-      >
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span
-            key={copied ? "copied" : "copy"}
-            initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
-            transition={spring.smooth}
-            // Wraps only when the address can't fit (320px, 400% zoom).
-            className="inline-flex min-w-0 items-center gap-2 whitespace-normal [overflow-wrap:anywhere]"
-          >
-            {copied ? (
-              <>
-                <Check size={18} strokeWidth={2.2} className="shrink-0 text-[var(--positive)]" /> Copied to clipboard
-              </>
-            ) : (
-              <>
-                <Copy size={17} strokeWidth={1.9} className="shrink-0 text-fg-2" /> {EMAIL}
-              </>
-            )}
-          </motion.span>
-        </AnimatePresence>
-      </motion.button>
-      {/* The status region announces each copy. */}
-      <span role="status" className="sr-only">
-        {announce}
-      </span>
-    </>
+    <motion.button
+      layout
+      transition={spring.smooth}
+      type="button"
+      onClick={copy}
+      onPointerMove={onPointerMove}
+      className="btn btn-lg btn-glass glass glass-soft specular overflow-hidden"
+      aria-live="polite"
+    >
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={copied ? "copied" : "copy"}
+          initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+          transition={spring.smooth}
+          className="inline-flex items-center gap-2"
+        >
+          {copied ? (
+            <>
+              <Check size={18} strokeWidth={2.2} className="text-[var(--positive)]" /> Copied to clipboard
+            </>
+          ) : (
+            <>
+              <Copy size={17} strokeWidth={1.9} className="text-fg-2" /> {EMAIL}
+            </>
+          )}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   );
 }
 

@@ -1,7 +1,6 @@
 import {
   useCallback,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -13,7 +12,7 @@ import {
   animate,
   motion,
   useMotionValue,
-  useReducedMotionConfig,
+  useReducedMotion,
   useTransform,
   type MotionValue,
   type PanInfo,
@@ -21,7 +20,6 @@ import {
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { isPicture, srcOf, srcSetOf } from "@/lib/image";
 import { cn } from "@/lib/cn";
-import { markTone } from "@/lib/lightImage";
 import { LightboxContext, type LightboxItem } from "@/components/lightbox-context";
 import { ease } from "@/lib/motion";
 import { lockScroll } from "@/lib/scrollLock";
@@ -163,7 +161,7 @@ interface LightboxProps {
 }
 
 function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: LightboxProps) {
-  const reduced = useReducedMotionConfig();
+  const reduced = useReducedMotion();
   const vp = useViewport();
   const pageW = vp.w + PAGE_GAP;
 
@@ -199,7 +197,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
     const controls = [
       animate(x, 0, openSpring),
       animate(y, 0, openSpring),
-      animate(scale, 1, reduced ? { duration: 0 } : openSpring),
+      animate(scale, 1, openSpring),
       animate(radius, FRAME_RADIUS, openSpring),
       animate(frameOpacity, 1, { duration: 0.25 }),
       animate(backdrop, 1, { duration: 0.45, ease: ease.out }),
@@ -207,26 +205,9 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
     ];
     closeRef.current?.focus({ preventScroll: true });
     return () => controls.forEach((c) => c.stop());
-  }, [x, y, scale, radius, frameOpacity, backdrop, chrome, reduced]);
-
-  // An arrow that disables while focused (first/last image) drops focus to
-  // <body>; hand it to the other arrow, or to Close.
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const el = document.activeElement as HTMLButtonElement | null;
-    if (!dialog || (el && dialog.contains(el) && !el.disabled)) return;
-    const arrow = dialog.querySelector<HTMLButtonElement>("button[data-arrow]:not(:disabled)");
-    (arrow ?? closeRef.current)?.focus({ preventScroll: true });
-  }, [index]);
+  }, [x, y, scale, radius, frameOpacity, backdrop, chrome]);
 
   useEffect(() => lockScroll(), []);
-
-  // Real modality: while open, the page behind can't be reached by Tab or a screen reader.
-  useEffect(() => {
-    const root = document.getElementById("root");
-    root?.setAttribute("inert", "");
-    return () => root?.removeAttribute("inert");
-  }, []);
 
   // Keep the track aligned when the window resizes.
   useEffect(() => {
@@ -239,10 +220,9 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       indexRef.current = clamped;
       setIndex(clamped);
       onActiveChange(items[clamped].key);
-      if (reduced) trackX.set(-clamped * pageW);
-      else animate(trackX, -clamped * pageW, { ...pageSpring, velocity });
+      animate(trackX, -clamped * pageW, { ...pageSpring, velocity });
     },
-    [items, onActiveChange, pageW, trackX, reduced],
+    [items, onActiveChange, pageW, trackX],
   );
 
   const close = useCallback(async () => {
@@ -256,15 +236,12 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       animate(chrome, 0, { duration: 0.16 }),
     ];
 
-    // Bring the thumbnail on screen: the image lands there and focus returns to it.
-    if (thumb) {
+    if (thumb && !reduced) {
+      // Bring the thumbnail on screen so the image has somewhere to land.
       const rect = thumb.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > window.innerHeight) {
         thumb.scrollIntoView({ block: "center", behavior: "instant" });
       }
-    }
-
-    if (thumb && !reduced) {
       const target = morphFrom(thumb, fit(aspectOf(item, thumb), readViewport()));
       await Promise.all([
         ...fades,
@@ -274,11 +251,10 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
         animate(radius, target.radius, closeTween),
       ]);
     } else {
-      // Reduced motion: a plain fade, no zoom.
       await Promise.all([
         ...fades,
         animate(frameOpacity, 0, { duration: 0.22 }),
-        ...(reduced ? [] : [animate(scale, 0.94, { duration: 0.22 })]),
+        animate(scale, 0.94, { duration: 0.22 }),
       ]);
     }
     onClosed(item.key);
@@ -295,10 +271,9 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       } else if (e.key === "ArrowLeft") {
         goTo(indexRef.current - 1);
       } else if (e.key === "Tab" && dialogRef.current) {
-        // Only controls that are actually rendered (prev/next hide at the ends).
         const focusables = Array.from(
           dialogRef.current.querySelectorAll<HTMLElement>("button:not([disabled]), a[href]"),
-        ).filter((el) => el.getClientRects().length > 0);
+        );
         if (focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
@@ -367,7 +342,6 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
   };
 
   const current = items[index];
-  const statusId = useId();
 
   return (
     <div
@@ -375,12 +349,8 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       role="dialog"
       aria-modal="true"
       aria-label="Image viewer"
-      aria-describedby={statusId}
-      className="fixed inset-0 z-[100] select-none [--focus:#ffffff]"
+      className="fixed inset-0 z-[100] select-none"
     >
-      <p id={statusId} className="sr-only" aria-live="polite" aria-atomic="true">
-        Image {index + 1} of {items.length}: {current.alt}
-      </p>
       <motion.div
         className="absolute inset-0 bg-black/75 backdrop-blur-2xl backdrop-saturate-150"
         style={{ opacity: backdropOpacity }}
@@ -407,7 +377,6 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
                 thumb={getThumb(item.key)}
                 box={fit(aspectOf(item, getThumb(item.key)), vp)}
                 offset={i * pageW}
-                active={i === index}
                 radius={i === index ? radius : undefined}
                 // Neighbours stay hidden while the active image morphs, or
                 // they would slide into view as the stage scales down.
@@ -422,8 +391,8 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
       <motion.div className="pointer-events-none absolute inset-0" style={{ opacity: chrome }}>
         <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 sm:p-5">
           <span
-            aria-hidden="true"
             className="glass glass-soft pointer-events-auto rounded-full px-3.5 py-1.5 text-sm font-medium tabular-nums text-white [--glass-bg:rgb(40_40_42/0.5)] [--glass-stroke:rgb(255_255_255/0.14)]"
+            aria-live="polite"
           >
             {index + 1} / {items.length}
           </span>
@@ -449,9 +418,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
-              aria-hidden={index === 0 || undefined}
-              data-arrow
-              className={cn(chromeButton, "absolute bottom-4 left-4 sm:bottom-auto sm:left-5 sm:top-1/2 sm:-translate-y-1/2")}
+              className={cn(chromeButton, "absolute left-5 top-1/2 hidden -translate-y-1/2 sm:grid")}
               aria-label="Previous image"
             >
               <ChevronLeft size={22} />
@@ -460,9 +427,7 @@ function Lightbox({ items, startIndex, getThumb, onActiveChange, onClosed }: Lig
               type="button"
               onClick={() => goTo(index + 1)}
               disabled={index === items.length - 1}
-              aria-hidden={index === items.length - 1 || undefined}
-              data-arrow
-              className={cn(chromeButton, "absolute bottom-4 right-4 sm:bottom-auto sm:right-5 sm:top-1/2 sm:-translate-y-1/2")}
+              className={cn(chromeButton, "absolute right-5 top-1/2 hidden -translate-y-1/2 sm:grid")}
               aria-label="Next image"
             >
               <ChevronRight size={22} />
@@ -483,7 +448,6 @@ function Slide({
   thumb,
   box,
   offset,
-  active,
   radius,
   opacity,
 }: {
@@ -491,8 +455,6 @@ function Slide({
   thumb: HTMLElement | null;
   box: Box;
   offset: number;
-  /** Off-screen neighbours are hidden from assistive tech. */
-  active: boolean;
   radius?: MotionValue<number>;
   opacity?: MotionValue<number>;
 }) {
@@ -504,7 +466,6 @@ function Slide({
   return (
     <motion.div
       data-slide
-      aria-hidden={active ? undefined : true}
       className="absolute overflow-hidden bg-white/5 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]"
       style={{
         left: box.left + offset,
@@ -515,30 +476,16 @@ function Slide({
         opacity,
       }}
     >
-      {preview && (
-        <img
-          src={preview}
-          alt=""
-          draggable={false}
-          ref={markTone}
-          onLoad={(e) => markTone(e.currentTarget)}
-          className={cn("absolute inset-0 h-full w-full", item.trueColor && "true-color")}
-        />
-      )}
+      {preview && <img src={preview} alt="" draggable={false} className="absolute inset-0 h-full w-full" />}
       <img
         src={srcOf(item.src)}
         srcSet={srcSet}
         sizes={srcSet ? `${Math.ceil(box.w)}px` : undefined}
         alt={item.alt}
         draggable={false}
-        ref={markTone}
-        onLoad={(e) => {
-          setSharp(true);
-          markTone(e.currentTarget);
-        }}
+        onLoad={() => setSharp(true)}
         className={cn(
           "absolute inset-0 h-full w-full transition-opacity duration-500",
-          item.trueColor && "true-color",
           preview && !sharp ? "opacity-0" : "opacity-100",
         )}
       />
@@ -557,7 +504,7 @@ function Dots({ count, index }: { count: number; index: number }) {
         <motion.span
           key={i}
           layout
-          className="block h-1.5 rounded-full bg-white forced-colors:bg-[CanvasText]"
+          className="block h-1.5 rounded-full bg-white"
           animate={{ width: i === index ? 18 : 6, opacity: i === index ? 1 : 0.4 }}
           transition={{ type: "spring", stiffness: 500, damping: 36 }}
         />

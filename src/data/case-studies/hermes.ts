@@ -1,6 +1,5 @@
 import type { Picture } from "@/lib/image";
 import asl from "@/assets/hermes/h26.png?responsive";
-import { altFor } from "../alt-text";
 import type { CaseStudy } from "../types";
 
 // h1…h26, in slide order.
@@ -8,7 +7,7 @@ const slides = Object.entries(
   import.meta.glob<Picture>("@/assets/hermes/h*.png", { eager: true, import: "default", query: "?responsive" }),
 )
   .sort(([a], [b]) => slideNumber(a) - slideNumber(b))
-  .map(([path, src]) => ({ src, alt: altFor(path, `Hermes case study slide ${slideNumber(path)} of 26.`) }));
+  .map(([, src]) => ({ src, alt: "project overview" }));
 
 function slideNumber(path: string) {
   return Number(path.match(/h(\d+)\.png/)?.[1] ?? 0);

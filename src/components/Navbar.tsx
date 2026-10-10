@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { AnimatePresence, motion, stagger } from "motion/react";
 import { Logo } from "@/components/Logo";
@@ -19,40 +19,16 @@ export function Navbar() {
   const open = menu.open && menu.path === pathname;
   const setOpen = (value: boolean) => setMenu({ open: value, path: pathname });
 
-  const toggleRef = useRef<HTMLButtonElement>(null);
-
   const active = navLinks.find((l) => pathname.startsWith(l.to))?.to ?? null;
-  // "page" only on the exact page; inside a section (a case study under Projects) it's "true".
-  const currentFor = (to: string) => (pathname === to ? "page" : active === to ? "true" : undefined);
-
-  const closeMenu = (returnFocus: boolean) => {
-    setMenu((m) => ({ ...m, open: false }));
-    if (returnFocus) toggleRef.current?.focus();
-  };
 
   useEffect(() => {
     if (!open) return;
-    // While the menu covers the page, the page behind it can't take focus.
-    const behind = Array.from(document.querySelectorAll<HTMLElement>("#main, footer, a.skip-link"));
-    behind.forEach((el) => (el.inert = true));
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenu((m) => ({ ...m, open: false }));
     const unlock = lockScroll();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      setMenu((m) => ({ ...m, open: false }));
-      toggleRef.current?.focus();
-    };
     window.addEventListener("keydown", onKey);
-    // Rotating to a desktop-width layout hides the menu, so close it rather than leave the page inert.
-    const desktop = window.matchMedia("(min-width: 768px)");
-    const onDesktop = () => {
-      if (desktop.matches) setMenu((m) => ({ ...m, open: false }));
-    };
-    desktop.addEventListener("change", onDesktop);
     return () => {
-      behind.forEach((el) => (el.inert = false));
       unlock();
       window.removeEventListener("keydown", onKey);
-      desktop.removeEventListener("change", onDesktop);
     };
   }, [open]);
 
@@ -74,7 +50,7 @@ export function Navbar() {
                   to={link.to}
                   viewTransition
                   className="nav-link"
-                  aria-current={currentFor(link.to)}
+                  aria-current={isActive ? "page" : undefined}
                   onPointerEnter={() => setHovered(link.to)}
                   onFocus={() => setHovered(link.to)}
                   onBlur={() => setHovered(null)}
@@ -107,29 +83,27 @@ export function Navbar() {
           })}
         </ul>
 
-        {/* gap-2 keeps each control's 5px focus ring clear of its neighbour. */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           <a href={MAILTO} className="btn btn-primary btn-sm hidden md:inline-flex">
             Contact
           </a>
           <button
-            ref={toggleRef}
             type="button"
             className="btn btn-icon md:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label="Menu"
+            aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen(!open)}
           >
             <span className="relative block h-3 w-[18px]" aria-hidden="true">
               <motion.span
-                className="absolute left-0 h-[1.75px] w-full rounded-full bg-fg forced-colors:bg-[CanvasText]"
+                className="absolute left-0 h-[1.75px] w-full rounded-full bg-fg"
                 animate={open ? { top: 5, rotate: 45 } : { top: 1, rotate: 0 }}
                 transition={spring.smooth}
               />
               <motion.span
-                className="absolute left-0 h-[1.75px] w-full rounded-full bg-fg forced-colors:bg-[CanvasText]"
+                className="absolute left-0 h-[1.75px] w-full rounded-full bg-fg"
                 animate={open ? { top: 5, rotate: -45 } : { top: 9, rotate: 0 }}
                 transition={spring.smooth}
               />
@@ -141,19 +115,19 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <>
-            <motion.div
-              aria-hidden="true"
-              className="fixed inset-0 -z-10 bg-black/10 backdrop-blur-[2px] md:hidden dark:bg-black/50"
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              tabIndex={-1}
+              className="fixed inset-0 -z-10 bg-black/10 backdrop-blur-[2px] md:hidden dark:bg-black/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => closeMenu(true)}
+              onClick={() => setOpen(false)}
             />
-            <motion.nav
+            <motion.div
               id="mobile-menu"
-              aria-label="Site menu"
-              // Bounded and scrollable so every item stays reachable at 400% zoom.
-              className="glass glass-strong glass-rim absolute inset-x-3 top-[76px] max-h-[calc(100dvh-88px)] origin-top overflow-y-auto overscroll-contain rounded-[28px] p-3 md:hidden"
+              className="glass glass-strong glass-rim absolute inset-x-3 top-[76px] origin-top rounded-[28px] p-3 md:hidden"
               initial={{ opacity: 0, y: -12, scale: 0.96, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -8, scale: 0.98, filter: "blur(6px)", transition: { duration: 0.2, ease: ease.out } }}
@@ -172,12 +146,12 @@ export function Navbar() {
                     <Link
                       to={link.to}
                       viewTransition
-                      onClick={() => closeMenu(false)}
-                      aria-current={currentFor(link.to)}
-                      className="flex min-h-14 items-center justify-between rounded-2xl px-4 text-[1.6rem] font-semibold tracking-[-0.03em] text-fg-2 transition-colors active:bg-fg/5 aria-[current]:text-fg"
+                      onClick={() => setOpen(false)}
+                      aria-current={active === link.to ? "page" : undefined}
+                      className="flex h-14 items-center justify-between rounded-2xl px-4 text-[1.6rem] font-semibold tracking-[-0.03em] text-fg-2 transition-colors active:bg-fg/5 aria-[current=page]:text-fg"
                     >
                       {link.label}
-                      {active === link.to && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-fg forced-colors:bg-[CanvasText]" />}
+                      {active === link.to && <span className="h-1.5 w-1.5 rounded-full bg-fg" />}
                     </Link>
                   </motion.li>
                 ))}
@@ -190,7 +164,7 @@ export function Navbar() {
                   </a>
                 </motion.li>
               </motion.ul>
-            </motion.nav>
+            </motion.div>
           </>
         )}
       </AnimatePresence>

@@ -1,6 +1,5 @@
 import type { Picture } from "@/lib/image";
 import commsImage from "@/assets/comms-case-status.png?responsive";
-import { altFor } from "../alt-text";
 import type { CaseStudy } from "../types";
 
 // cs1…cs16, in journey order.
@@ -8,7 +7,7 @@ const journey = Object.entries(
   import.meta.glob<Picture>("@/assets/case_status/cs*.png", { eager: true, import: "default", query: "?responsive" }),
 )
   .sort(([a], [b]) => slideNumber(a) - slideNumber(b))
-  .map(([path, src]) => ({ src, alt: altFor(path, `Case status user journey, slide ${slideNumber(path)} of 16.`) }));
+  .map(([, src]) => ({ src, alt: "Employee case status user journey" }));
 
 function slideNumber(path: string) {
   return Number(path.match(/cs(\d+)\.png/)?.[1] ?? 0);

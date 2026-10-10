@@ -1,6 +1,5 @@
 import { useState, type CSSProperties, type Ref } from "react";
 import { cn } from "@/lib/cn";
-import { markTone } from "@/lib/lightImage";
 import { isPicture, srcOf, srcSetOf, type ImageSource } from "@/lib/image";
 
 interface ImgProps {
@@ -20,10 +19,7 @@ export function Img({ src, alt, sizes, className, style, priority = false, ref }
   return (
     <img
       ref={(el) => {
-        if (el?.complete && el.naturalWidth > 0) {
-          setLoaded(true);
-          markTone(el);
-        }
+        if (el?.complete && el.naturalWidth > 0) setLoaded(true);
         if (typeof ref === "function") return ref(el);
         if (ref) ref.current = el;
       }}
@@ -37,10 +33,7 @@ export function Img({ src, alt, sizes, className, style, priority = false, ref }
       fetchPriority={priority ? "high" : "auto"}
       decoding="async"
       draggable={false}
-      onLoad={(e) => {
-        setLoaded(true);
-        markTone(e.currentTarget);
-      }}
+      onLoad={() => setLoaded(true)}
       className={cn(!priority && "img-fade", loaded && "is-loaded", className)}
       style={style}
     />

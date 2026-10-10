@@ -6,7 +6,6 @@ import userflow from "@/assets/ess/userflow.png?responsive";
 import designSystem from "@/assets/ess/ds.png?responsive";
 import wireframes from "@/assets/ess/wireframes.png?responsive";
 import hifi from "@/assets/ess/hifi.png?responsive";
-import { altFor } from "../alt-text";
 import type { CaseStudy } from "../types";
 
 const atoz: CaseStudy = {
@@ -92,8 +91,8 @@ const atoz: CaseStudy = {
       nav: "Research",
       research: true,
       images: [
-        { src: users, alt: altFor("ess/users.png", "End users") },
-        { src: personas, alt: altFor("ess/personas.png", "Employee personas") },
+        { src: users, alt: "End users" },
+        { src: personas, alt: "Employee personas" },
       ],
     },
     {
@@ -101,23 +100,23 @@ const atoz: CaseStudy = {
       title: "Information Architecture",
       nav: "IA",
       images: [
-        { src: ia, alt: altFor("ess/ia.png", "IA structure") },
-        { src: userflow, alt: altFor("ess/userflow.png", "User flows") },
+        { src: ia, alt: "IA structure" },
+        { src: userflow, alt: "User flows" },
       ],
     },
     {
       id: "design-system",
       title: "Design System Integration",
       nav: "Design system",
-      images: [{ src: designSystem, alt: altFor("ess/ds.png", "Design system components") }],
+      images: [{ src: designSystem, alt: "Design system components" }],
     },
     {
       id: "design-prototyping",
       title: "Design & Prototyping",
       nav: "Prototyping",
       images: [
-        { src: wireframes, alt: altFor("ess/wireframes.png", "Wireframes") },
-        { src: hifi, alt: altFor("ess/hifi.png", "High fidelity designs") },
+        { src: wireframes, alt: "Wireframes" },
+        { src: hifi, alt: "High fidelity designs" },
       ],
     },
   ],

@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from "react";
-import { motion, useInView, useReducedMotionConfig, useScroll, useSpring } from "motion/react";
+import { motion, useInView, useScroll, useSpring } from "motion/react";
 import { ArrowUpRight, Download } from "lucide-react";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor } from "@/components/Button";
@@ -76,32 +76,27 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
 
 function TimelineItem({ role }: { role: Role }) {
   const ref = useRef<HTMLLIElement>(null);
-  const reduced = useReducedMotionConfig();
-  const inView = useInView(ref, { once: true, margin: "0px 0px -45% 0px" });
-  const reached = reduced || inView;
+  const reached = useInView(ref, { once: true, margin: "0px 0px -45% 0px" });
 
   return (
     <li ref={ref} className="relative pl-10">
       <motion.span
         aria-hidden="true"
         className="absolute left-0 top-[0.4em] grid h-[13px] w-[13px] place-items-center rounded-full border border-[var(--hairline-strong)] bg-bg"
-        animate={reached && !reduced ? { scale: [1, 1.35, 1] } : undefined}
+        animate={reached ? { scale: [1, 1.35, 1] } : undefined}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.span
           className="h-[7px] w-[7px] rounded-full"
           style={{ background: "linear-gradient(135deg, var(--brand-yellow), var(--brand-red))" }}
-          initial={{ scale: reduced ? 1 : 0 }}
+          initial={{ scale: 0 }}
           animate={{ scale: reached ? 1 : 0 }}
           transition={spring.snappy}
         />
       </motion.span>
       <Reveal>
         <div className="flex flex-col justify-between gap-1 md:flex-row md:items-baseline md:gap-6">
-          <h3 className="text-[1.25rem] font-semibold tracking-[-0.022em]">
-            {role.title}
-            <span className="sr-only">, {role.company}</span>
-          </h3>
+          <h3 className="text-[1.25rem] font-semibold tracking-[-0.022em]">{role.title}</h3>
           <p className="shrink-0 text-[0.95rem] tabular-nums text-fg-3">{role.period}</p>
         </div>
         <p className="mt-1 font-medium text-fg">{role.company}</p>
@@ -110,7 +105,7 @@ function TimelineItem({ role }: { role: Role }) {
           <ul className="mt-4 space-y-2.5">
             {role.highlights.map((h) => (
               <li key={h} className="flex gap-3 text-[0.98rem] leading-relaxed text-fg-2">
-                <span aria-hidden="true" className="mt-[0.62em] h-1 w-1 shrink-0 rounded-full bg-fg-3" />
+                <span className="mt-[0.62em] h-1 w-1 shrink-0 rounded-full bg-fg-3" />
                 {h}
               </li>
             ))}
@@ -123,29 +118,25 @@ function TimelineItem({ role }: { role: Role }) {
 
 /** Experience timeline whose spine fills as you read down it. */
 function Timeline() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotionConfig();
+  const ref = useRef<HTMLOListElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "end 0.55"] });
   const fill = useSpring(scrollYProgress, { stiffness: 140, damping: 30, restDelta: 0.001 });
 
-  // The spine sits beside the list, not inside it, so the <ol> holds only <li>s.
   return (
-    <div ref={ref} className="relative">
+    <ol ref={ref} className="relative space-y-12">
       <span aria-hidden="true" className="absolute bottom-2 left-[6px] top-3 w-px bg-[var(--hairline-strong)]" />
       <motion.span
         aria-hidden="true"
         className="absolute bottom-2 left-[6px] top-3 w-px origin-top"
         style={{
-          scaleY: reduced ? 1 : fill,
+          scaleY: fill,
           background: "linear-gradient(var(--brand-yellow), var(--brand-red), var(--brand-green), var(--brand-blue))",
         }}
       />
-      <ol className="space-y-12">
-        {experience.map((role) => (
-          <TimelineItem key={role.company + role.period} role={role} />
-        ))}
-      </ol>
-    </div>
+      {experience.map((role) => (
+        <TimelineItem key={role.company + role.period} role={role} />
+      ))}
+    </ol>
   );
 }
 
@@ -157,7 +148,7 @@ export function Component() {
       <section className="relative overflow-hidden pb-10 pt-40 text-center md:pt-52">
         <Aurora interactive={false} className="opacity-70" />
         <div className="aurora-fade" aria-hidden="true" />
-        <div className="container-x hero-copy relative">
+        <div className="container-x relative">
           <WordsReveal as="h1" className="t-headline" text="Resume" />
           <Reveal delay={0.2}>
             <p className="t-lead mx-auto mt-6 max-w-2xl">
@@ -167,7 +158,6 @@ export function Component() {
           <Reveal delay={0.32}>
             <ButtonAnchor href={publicUrl("Manu_Resume.pdf")} size="lg" newTab className="group mt-10">
               <Download size={18} className="nudge-down" /> Download
-              <span className="sr-only"> résumé (PDF)</span>
             </ButtonAnchor>
           </Reveal>
         </div>
@@ -191,8 +181,7 @@ export function Component() {
                   rel="noopener noreferrer"
                   className="group link-chevron self-start md:self-end"
                 >
-                  LinkedIn<span className="sr-only"> profile (opens in a new tab)</span>
-                  <ArrowUpRight size={16} className="nudge-up" />
+                  LinkedIn <ArrowUpRight size={16} className="nudge-up" />
                 </a>
               </div>
             </div>

@@ -13,12 +13,7 @@ export default function NotFound() {
       <div className="aurora-fade" aria-hidden="true" />
       <Reveal blur={false} className="relative z-10 w-full max-w-md">
         <div className="glass glass-rim rounded-[36px] px-8 py-14 text-center">
-          <h1 className="t-display">
-            <span aria-hidden="true" className="text-gradient-brand">
-              404
-            </span>
-            <span className="sr-only">Page not found</span>
-          </h1>
+          <h1 className="t-display text-gradient-brand">404</h1>
           <p className="t-lead mt-4">Oops! Page not found</p>
           <ButtonLink to="/" className="group mt-9">
             <ArrowLeft size={17} className="nudge-left" /> Return to Home

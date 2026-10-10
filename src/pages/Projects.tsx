@@ -14,7 +14,7 @@ export function Component() {
       <section className="relative overflow-hidden pb-6 pt-40 md:pt-52">
         <Aurora interactive={false} className="opacity-70" />
         <div className="aurora-fade" aria-hidden="true" />
-        <div className="container-x hero-copy relative text-center">
+        <div className="container-x relative text-center">
           <WordsReveal as="h1" className="t-headline" text="Work" />
           <Reveal delay={0.2}>
             <p className="t-lead mx-auto mt-6 max-w-2xl">
@@ -28,7 +28,7 @@ export function Component() {
         <div className="container-x">
           <div className="project-grid">
             {projects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} headingLevel={2} />
+              <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </div>
         </div>
