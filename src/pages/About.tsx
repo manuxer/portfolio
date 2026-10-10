@@ -8,7 +8,7 @@ import { Img } from "@/components/Img";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 import { WordsReveal } from "@/components/WordsReveal";
 import { useTitle } from "@/hooks/useTitle";
-import PROFILE from "@/assets/manu-portrait.webp?responsive";
+import PROFILE from "@/assets/manu-portrait.png?responsive";
 
 const QUOTE =
   "A simple design isn't just an obvious solution - it's one that solves the problem while leaving room for elegance and emotional connection.";
@@ -20,7 +20,7 @@ function Portrait() {
   const y = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
 
   return (
-    <div ref={ref} className="media-frame aspect-square rounded-[36px] shadow-[var(--shadow-card-hover)]">
+    <div ref={ref} className="media-frame aspect-[2/3] rounded-[36px] shadow-[var(--shadow-card-hover)]">
       <motion.div className="absolute inset-[-5%]" style={{ y }}>
         <Img src={PROFILE} alt="Manu, UX Designer" sizes="(min-width: 768px) 520px, 92vw" priority className="h-full w-full object-cover" />
       </motion.div>
