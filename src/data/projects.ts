@@ -6,8 +6,8 @@ import type { Project, ProjectSummary } from "./types";
 
 const LEGACY = "https://manupeethambar.github.io/manuxer";
 
-/** The Work page, in display order. */
-export const projects: ProjectSummary[] = [
+/** Every project, in display order (kept even when not listed on the site). */
+const allProjects: ProjectSummary[] = [
   {
     id: 9,
     title: "Simplifying disability & leave management using AI",
@@ -76,6 +76,12 @@ export const projects: ProjectSummary[] = [
     image: `${LEGACY}/files/MyPaintings/1.jpg`,
   },
 ];
+
+/** How many projects the site lists; the rest stay in the data, unlisted. */
+const LISTED_COUNT = 4;
+
+/** The Work page, in display order: only the first LISTED_COUNT projects. */
+export const projects: ProjectSummary[] = allProjects.slice(0, LISTED_COUNT);
 
 /** Home page "Featured projects". */
 export const featured: ProjectSummary[] = projects.slice(0, 4).map((p) =>
