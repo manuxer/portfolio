@@ -4,6 +4,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor, ButtonLink } from "@/components/Button";
 import { ContactCTA } from "@/components/ContactCTA";
+import { HeroCharacter } from "@/components/HeroCharacter";
 import { ManuWordmark, QrCode } from "@/components/ManuWordmark";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
@@ -26,28 +27,33 @@ function Hero() {
     <section ref={ref} className="relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-32">
       <Aurora />
       <div className="aurora-fade" aria-hidden="true" />
+      {/* TEMPORARY: character render; remove this line to take it out. */}
+      <HeroCharacter opacity={opacity} />
 
-      <motion.div style={{ y, scale, opacity }} className="container-x relative z-10 text-center">
-        <WordsReveal
-          as="h1"
-          className="t-display"
-          delay={0.15}
-          stagger={0.09}
-          text={[{ text: "Hi, I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
-        />
-        <Reveal delay={0.55}>
-          <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8">Product design leader at Amazon</p>
-        </Reveal>
-        <Reveal delay={0.7}>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12">
-            <ButtonLink to="/projects" size="lg">
-              View work <ArrowRight size={18} className="nudge-x" />
-            </ButtonLink>
-            <ButtonAnchor href={MAILTO} variant="glass" size="lg">
-              Get in touch
-            </ButtonAnchor>
-          </div>
-        </Reveal>
+      {/* Desktop: text on the left, character on the right. */}
+      <motion.div style={{ y, scale, opacity }} className="container-x relative z-10 text-center lg:text-left">
+        <div className="lg:max-w-[52%]">
+          <WordsReveal
+            as="h1"
+            className="t-display"
+            delay={0.15}
+            stagger={0.09}
+            text={[{ text: "Hi, I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
+          />
+          <Reveal delay={0.55}>
+            <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product design leader at Amazon</p>
+          </Reveal>
+          <Reveal delay={0.7}>
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12 lg:justify-start">
+              <ButtonLink to="/projects" size="lg">
+                View work <ArrowRight size={18} className="nudge-x" />
+              </ButtonLink>
+              <ButtonAnchor href={MAILTO} variant="glass" size="lg">
+                Get in touch
+              </ButtonAnchor>
+            </div>
+          </Reveal>
+        </div>
       </motion.div>
 
       <motion.button
@@ -57,7 +63,7 @@ function Hero() {
         initial={{ y: -6 }}
         animate={{ y: 4 }}
         transition={{ duration: 1.6, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-5 grid h-10 w-10 place-items-center rounded-full text-fg-2"
+        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-5 grid h-10 w-10 place-items-center rounded-full text-fg-2 lg:ml-0 lg:left-[max(clamp(20px,5vw,44px),calc((100vw-1200px)/2+clamp(20px,5vw,44px)))]"
         aria-label="Scroll to featured projects"
       >
         <ChevronDown size={18} />
