@@ -35,13 +35,14 @@ function Hero() {
         <div className="lg:max-w-[52%]">
           <WordsReveal
             as="h1"
-            className="t-display"
+            // One line; a touch smaller on desktop so it fits beside the character.
+            className="t-display whitespace-nowrap lg:!text-[clamp(3.4rem,1rem+6.4vw,7.5rem)]"
             delay={0.15}
             stagger={0.09}
-            text={[{ text: "Hi, I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
+            text={[{ text: "I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
           />
           <Reveal delay={0.55}>
-            <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product design leader at Amazon</p>
+            <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product designer</p>
           </Reveal>
           <Reveal delay={0.7}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12 lg:justify-start">
