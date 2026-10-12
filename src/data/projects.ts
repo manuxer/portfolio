@@ -2,12 +2,16 @@ import aliceIntro from "@/assets/alice.png?responsive";
 import asl from "@/assets/hermes/h26.png?responsive";
 import essIntro from "@/assets/ess/ess.png?responsive";
 import commsImage from "@/assets/comms-case-status.png?responsive";
+import uspsCard from "@/assets/legacy/files/USPS/Logo/USPS_logo.png?responsive";
+import mbtaCard from "@/assets/legacy/files/MBTA/img/MBTA-hero.jpeg?responsive";
+import experimentsCard from "@/assets/legacy/files/Experiments/VisualSearch.png?responsive";
+import userworksCard from "@/assets/legacy/img/UW.png?responsive";
+import artworkCard from "@/assets/legacy/files/MyPaintings/1.jpg?responsive";
 import type { Project, ProjectSummary } from "./types";
 
-const LEGACY = "https://manupeethambar.github.io/manuxer";
 
-/** Every project, in display order (kept even when not listed on the site). */
-const allProjects: ProjectSummary[] = [
+/** The Work page, in display order. */
+export const projects: ProjectSummary[] = [
   {
     id: 9,
     title: "Simplifying disability & leave management using AI",
@@ -45,43 +49,37 @@ const allProjects: ProjectSummary[] = [
     title: "Usability evaluation and interaction design",
     category: "UX | Research",
     description: "Usability analysis and redesign of the Postal Service website",
-    image: `${LEGACY}/files/USPS/Logo/USPS_logo.png`,
+    image: uspsCard,
   },
   {
     id: 3,
     title: "Accessibility evaluation and inclusive design",
     category: "Accessibility",
     description: "Accessibility evaluation and remediation of the MBTA intranet website",
-    image: `${LEGACY}/files/MBTA/img/MBTA-hero.jpeg`,
+    image: mbtaCard,
   },
   {
     id: 4,
     title: "My experiments",
     category: "UI/UX",
     description: "A collection of my design experiments",
-    image: `${LEGACY}/files/Experiments/VisualSearch.png`,
+    image: experimentsCard,
   },
   {
     id: 5,
     title: "Usability engineering",
     category: "UX specialist",
     description: "Design - Evaluate - Iterate",
-    image: `${LEGACY}/img/UW.png`,
+    image: userworksCard,
   },
   {
     id: 6,
     title: "My artwork",
     category: "Artwork / Paintings",
     description: "An artist is a simplifier.. Art is the elimination of the unnecessary!",
-    image: `${LEGACY}/files/MyPaintings/1.jpg`,
+    image: artworkCard,
   },
 ];
-
-/** How many projects the site lists; the rest stay in the data, unlisted. */
-const LISTED_COUNT = 4;
-
-/** The Work page, in display order: only the first LISTED_COUNT projects. */
-export const projects: ProjectSummary[] = allProjects.slice(0, LISTED_COUNT);
 
 /** Home page "Featured projects". */
 export const featured: ProjectSummary[] = projects.slice(0, 4).map((p) =>

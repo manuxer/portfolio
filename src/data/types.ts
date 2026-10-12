@@ -105,7 +105,7 @@ export interface LegacyProject {
   tools?: string[];
   figmaEmbed?: string;
   subProjects?: SubProject[];
-  processImages: string[];
+  processImages: ImageSource[];
 }
 
 export type Project = CaseStudy | LegacyProject;

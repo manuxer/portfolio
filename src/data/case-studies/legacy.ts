@@ -2,10 +2,23 @@ import amazonLogo from "@/assets/amazon-phone-logo.png?responsive";
 import { publicUrl } from "@/lib/site";
 import type { LegacyProject } from "../types";
 
-const LEGACY = "https://manupeethambar.github.io/manuxer";
+import type { ImageSource, Picture } from "@/lib/image";
+
+// Images pulled from the manupeethambar/manuxer repo into src/assets/legacy
+// (same paths as on the old site), so they ship with the site.
+const assets = import.meta.glob<Picture>("../../assets/legacy/**/*.{png,jpg,jpeg}", {
+  eager: true,
+  query: "?responsive",
+  import: "default",
+});
+const legacy = (path: string): ImageSource => {
+  const source = assets[`../../assets/legacy${path}`];
+  if (!source) throw new Error(`Missing legacy asset: ${path}`);
+  return source;
+};
 const ndaThumb = publicUrl("lovable-uploads/dc5f6271-b4ae-4ce0-b1fe-3878571be0f1.png");
 
-const range = (count: number, url: (n: number) => string) => Array.from({ length: count }, (_, i) => url(i + 1));
+const range = (count: number, image: (n: number) => ImageSource) => Array.from({ length: count }, (_, i) => image(i + 1));
 
 const list: LegacyProject[] = [
   {
@@ -52,25 +65,25 @@ const list: LegacyProject[] = [
       "Implemented a comprehensive UX strategy including usability testing, heuristic evaluations, and continuous improvement processes. Created Digital Style Guide (DSG) and UX Heuristics to ensure consistent customer experience. Worked with 10 domain-specific teams including Content Strategy, Design, Digital Analytics, and User Experience & UX Design.",
     outcome:
       "Successfully improved USPS.com's digital experience, helping it handle significant traffic increases during COVID-19. Delivered projects including PO Locator redesign and USPS® Online Postal Store improvements.",
-    hero: `${LEGACY}/files/USPS/Logo/USPS_logo.png`,
+    hero: legacy("/files/USPS/Logo/USPS_logo.png"),
     processImages: [
-      `${LEGACY}/files/USPS/usps_ux/usps-hero1.png`,
-      `${LEGACY}/files/USPS/usps_ux/cx-at-usps.png`,
-      `${LEGACY}/files/USPS/usps_ux/ux-steps.png`,
-      `${LEGACY}/files/USPS/usps_ux/usps-heuristic.png`,
-      `${LEGACY}/files/USPS/usps_ux/usability-testing.png`,
+      legacy("/files/USPS/usps_ux/usps-hero1.png"),
+      legacy("/files/USPS/usps_ux/cx-at-usps.png"),
+      legacy("/files/USPS/usps_ux/ux-steps.png"),
+      legacy("/files/USPS/usps_ux/usps-heuristic.png"),
+      legacy("/files/USPS/usps_ux/usability-testing.png"),
     ],
     subProjects: [
       {
         title: "PO Locator - Find USPS® Locations",
         description: "A tool to find USPS Locations on USPS.com (or send directions) and hours of operation.",
-        image: `${LEGACY}/files/USPS/PO_Locator/img/po-banner.png`,
+        image: legacy("/files/USPS/PO_Locator/img/po-banner.png"),
       },
       {
         title: "USPS® Online Postal Store",
         description:
           "Online Postal Store - Order stamps, shipping supplies, and unique items only available from the United States Postal Service.",
-        image: `${LEGACY}/files/USPS/usps_ux/usps-store.png`,
+        image: legacy("/files/USPS/usps_ux/usps-store.png"),
       },
     ],
   },
@@ -92,13 +105,13 @@ const list: LegacyProject[] = [
       "Conducted comprehensive accessibility evaluation using multiple assistive technologies including JAWS screen reader, Dragon Naturally Speaking, keyboard-only navigation, and color contrast tools. Tested across Chrome, Internet Explorer, and Firefox browsers. Provided detailed findings and recommendations for remediation.",
     outcome:
       "Delivered comprehensive accessibility report with severity ratings and actionable recommendations. Identified key issues including missing alt text, keyboard accessibility problems, focus indicators, and WCAG compliance gaps. Provided clear remediation strategies for each finding.",
-    hero: `${LEGACY}/files/MBTA/img/MBTA-hero.jpeg`,
+    hero: legacy("/files/MBTA/img/MBTA-hero.jpeg"),
     processImages: [
-      `${LEGACY}/files/MBTA/img/MBTA-hero2.jpeg`,
-      `${LEGACY}/files/MBTA/img/wcag2-1.png`,
-      `${LEGACY}/files/MBTA/img/tools.png`,
-      `${LEGACY}/files/MBTA/img/MBTA-main.png`,
-      `${LEGACY}/files/MBTA/img/report.png`,
+      legacy("/files/MBTA/img/MBTA-hero2.jpeg"),
+      legacy("/files/MBTA/img/wcag2-1.png"),
+      legacy("/files/MBTA/img/tools.png"),
+      legacy("/files/MBTA/img/MBTA-main.png"),
+      legacy("/files/MBTA/img/report.png"),
     ],
     methodology: [
       "Access the intranet system via web browser using user accounts provided by the MBTA team",
@@ -132,14 +145,14 @@ const list: LegacyProject[] = [
       "Created diverse design concepts including SwiftPay (payment app), Visual Search interface, Furniture app, CinePass (movie booking), Food ordering app, and e-commerce signup flows. Each experiment focuses on solving specific UX challenges with innovative approaches.",
     outcome:
       "Built a comprehensive portfolio of design experiments demonstrating versatility across different domains and design challenges. These experiments inform real-world project decisions and showcase design thinking capabilities.",
-    hero: `${LEGACY}/files/Experiments/VisualSearch.png`,
+    hero: legacy("/files/Experiments/VisualSearch.png"),
     processImages: [
-      `${LEGACY}/files/Experiments/SwiftPay.png`,
-      `${LEGACY}/files/Experiments/VisualSearch.png`,
-      `${LEGACY}/files/Experiments/Furniture%20app.png`,
-      `${LEGACY}/files/Experiments/cinePass.png`,
-      `${LEGACY}/files/Experiments/Food%20ordering%20app.png`,
-      `${LEGACY}/files/Experiments/e-commerce%20signup.png`,
+      legacy("/files/Experiments/SwiftPay.png"),
+      legacy("/files/Experiments/VisualSearch.png"),
+      legacy("/files/Experiments/Furniture app.png"),
+      legacy("/files/Experiments/cinePass.png"),
+      legacy("/files/Experiments/Food ordering app.png"),
+      legacy("/files/Experiments/e-commerce signup.png"),
     ],
   },
   {
@@ -160,8 +173,8 @@ const list: LegacyProject[] = [
       "Applied structured usability engineering methodology covering the complete design lifecycle: user research, persona development, task analysis, prototyping, usability testing, and iterative improvements based on findings.",
     outcome:
       "Developed deep understanding of usability engineering principles and delivered practical design solutions validated through systematic evaluation methods.",
-    hero: `${LEGACY}/img/UW.png`,
-    processImages: range(15, (n) => `${LEGACY}/files/UW/${n}.png`),
+    hero: legacy("/img/UW.png"),
+    processImages: range(15, (n) => legacy(`/files/UW/${n}.png`)),
   },
   {
     kind: "legacy",
@@ -175,8 +188,8 @@ const list: LegacyProject[] = [
     description: "An artist is a simplifier.. Art is the elimination of the unnecessary!",
     overview:
       "A personal collection of artwork and paintings exploring various styles, mediums, and artistic expressions. This collection represents the creative foundation that informs my design work.",
-    hero: `${LEGACY}/files/MyPaintings/1.jpg`,
-    processImages: range(17, (n) => `${LEGACY}/files/MyPaintings/${n}.${n <= 12 ? "jpg" : "png"}`),
+    hero: legacy("/files/MyPaintings/1.jpg"),
+    processImages: range(17, (n) => legacy(`/files/MyPaintings/${n}.${n <= 12 ? "jpg" : "png"}`)),
   },
   {
     kind: "legacy",
