@@ -27,6 +27,18 @@
     <script>
       (function () {
         var root = document.documentElement;
+        // A host page (e.g. a preview wrapper) may inject body{background:#fff;color:#000;…},
+        // which beats the site's layered styles; drop that rule so the site's own theme applies.
+        try {
+          for (var s = 0; s < document.styleSheets.length; s++) {
+            var sheet = document.styleSheets[s];
+            if (!sheet.ownerNode || sheet.ownerNode.tagName !== "STYLE") continue;
+            for (var r = sheet.cssRules.length - 1; r >= 0; r--) {
+              var rule = sheet.cssRules[r];
+              if (rule.selectorText === "body" && /background:\s*(#fff|rgb\(255, 255, 255\))/.test(rule.cssText)) sheet.deleteRule(r);
+            }
+          }
+        } catch (e) {}
         if (root.dataset.theme) return; // a host page already chose
         try {
           var stored = localStorage.getItem("theme");
