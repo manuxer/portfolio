@@ -1,4 +1,4 @@
-import { copyFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
@@ -11,17 +11,31 @@ import { imagetools } from "vite-imagetools";
 const WIDTHS = [640, 1280, 1920, 2560];
 
 // GitHub Pages serves 404.html for unknown paths, which lets deep links like
-// /projects/9 boot the SPA instead of showing GitHub's error page.
+// /projects/9 boot the SPA instead of showing GitHub's error page. That still
+// answers with a 404 status (logged in the console), so every known route also
+// gets its own copy of index.html — as route.html and route/index.html, so it
+// returns 200 whichever of the two Pages resolves.
 const spaFallback = (): Plugin => {
+  let root = ".";
   let outDir = "dist";
   return {
     name: "spa-fallback",
     apply: "build",
     configResolved(config) {
+      root = config.root;
       outDir = path.resolve(config.root, config.build.outDir);
     },
     async closeBundle() {
-      await copyFile(path.join(outDir, "index.html"), path.join(outDir, "404.html"));
+      const index = path.join(outDir, "index.html");
+      const projects = await readFile(path.join(root, "src/data/projects.ts"), "utf8");
+      const ids = [...projects.matchAll(/^\s*id:\s*(\d+),/gm)].map((m) => m[1]);
+      const routes = ["projects", "about", "resume", ...ids.map((id) => `projects/${id}`)];
+      await copyFile(index, path.join(outDir, "404.html"));
+      for (const route of routes) {
+        await mkdir(path.join(outDir, route), { recursive: true });
+        await copyFile(index, path.join(outDir, `${route}.html`));
+        await copyFile(index, path.join(outDir, route, "index.html"));
+      }
     },
   };
 };
