@@ -64,7 +64,7 @@ function Hero() {
         initial={{ y: -6 }}
         animate={{ y: 4 }}
         transition={{ duration: 1.6, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-5 grid h-10 w-10 place-items-center rounded-full text-fg-2 lg:ml-0 lg:left-[max(clamp(20px,5vw,44px),calc((100vw-1200px)/2+clamp(20px,5vw,44px)))]"
+        className="glass glass-soft absolute bottom-8 left-1/2 z-10 -ml-5 grid h-10 w-10 place-items-center rounded-full text-fg-2"
         aria-label="Scroll to featured projects"
       >
         <ChevronDown size={18} />
