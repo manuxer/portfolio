@@ -5,6 +5,7 @@ import { Ambient, Aurora } from "@/components/Aurora";
 import { ButtonAnchor, ButtonLink } from "@/components/Button";
 import { ContactCTA } from "@/components/ContactCTA";
 import { HeroCharacter } from "@/components/HeroCharacter";
+import { LogoCarousel } from "@/components/LogoCarousel";
 import { ManuWordmark, QrCode } from "@/components/ManuWordmark";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
@@ -43,6 +44,9 @@ function Hero() {
           />
           <Reveal delay={0.55}>
             <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product designer</p>
+          </Reveal>
+          <Reveal delay={0.62} blur={false}>
+            <LogoCarousel className="mt-8 md:mt-10" />
           </Reveal>
           <Reveal delay={0.7}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12 lg:justify-start">
