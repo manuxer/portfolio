@@ -2,6 +2,7 @@ import amazon from "@/assets/clients/amazon.svg";
 import usps from "@/assets/clients/usps.svg";
 import standardChartered from "@/assets/clients/standard-chartered.svg";
 import infosys from "@/assets/clients/infosys.svg";
+import fidelity from "@/assets/clients/fidelity.svg";
 
 export interface Client {
   name: string;
@@ -19,4 +20,5 @@ export const clients: Client[] = [
   { name: "USPS.com", logo: usps, ratio: 8.484 },
   { name: "Standard Chartered", logo: standardChartered, ratio: 2.551, scale: 1.18 },
   { name: "Infosys", logo: infosys, ratio: 2.709, scale: 1.08 },
+  { name: "Fidelity Investments", logo: fidelity, ratio: 4.62, scale: 1.12 },
 ];
