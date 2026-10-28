@@ -15,6 +15,7 @@ import {
 import { ContactCTA } from "@/components/ContactCTA";
 import { Gallery } from "@/components/Gallery";
 import { Img } from "@/components/Img";
+import { PrototypeEmbed } from "@/components/PrototypeEmbed";
 import { HERO_SIZES, preloadImage } from "@/lib/image";
 import { Reveal } from "@/components/Reveal";
 import { SectionDock } from "@/components/SectionDock";
@@ -115,6 +116,12 @@ function CaseStudyView({ project }: { project: CaseStudy }) {
             </Reveal>
           </div>
         </div>
+        {project.prototype && (
+          <Reveal className="container-x mt-16 md:mt-24" blur={false}>
+            <h3 className="t-subtitle mb-6">Prototype</h3>
+            <PrototypeEmbed src={project.prototype.src} title={project.prototype.title} />
+          </Reveal>
+        )}
       </section>
 
       {project.sections.map((section, i) => (

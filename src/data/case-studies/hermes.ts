@@ -1,5 +1,6 @@
 import type { Picture } from "@/lib/image";
 import asl from "@/assets/hermes/h26.png?responsive";
+import { publicUrl } from "@/lib/site";
 import type { CaseStudy } from "../types";
 
 // h1…h26, in slide order.
@@ -33,6 +34,7 @@ const hermes: CaseStudy = {
   outcome:
     "Hermes MLP product was launched at sites, directly impacting 3,500+ DHH Amazon employees across site operations spanning SUM, onboarding, training, and daily communication. By integrating AI interpretation with existing workflows, Hermes establishes a scalable accessibility foundation for global operations while closing critical gaps in interpreter reliance and advancing workplace inclusion, belonging, and career progression for DHH associates.",
   hero: asl,
+  prototype: { src: publicUrl("prototypes/hermes-avatar.html"), title: "Hermes prototype: a live AI-interpreted session" },
   impact: "Scaled accessibility support for 3,500+ DHH users, closing critical gaps in sign language interpretation",
   research: {
     methodology:

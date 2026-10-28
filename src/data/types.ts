@@ -71,6 +71,8 @@ export interface CaseStudy {
   hero: ImageSource;
   impact: string;
   introImages?: GalleryImage[];
+  /** Interactive prototype (an HTML page in public/) shown at the end of the Overview. */
+  prototype?: { src: string; title: string };
   research: Research;
   sections: CaseStudySection[];
   keyFeatures: string[];
