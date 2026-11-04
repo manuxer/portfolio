@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tab split the bill prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3A3FD8}a:hover{color:#2B2FB0}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+@keyframes bloom{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.bloom{animation:bloom .5s cubic-bezier(.2,.9,.25,1.2) both}
+.draw{stroke-dasharray:60;animation:draw .55s .25s cubic-bezier(.6,0,.2,1) both}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+.chip{transition:border-color .25s ease,box-shadow .25s ease}
+.amt{transition:color .3s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73">Trattoria Nove · Tonight</div>
+      <h1 style="margin: 4px 0 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Here’s the bill</h1>
+      <div class="rise" style="margin-top: 24px; background: #FFFFFF; border-radius: 22px; padding: 6px 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <sc-for list="{{receipt}}" as="r" hint-placeholder-count="4">
+          <div style="display: flex; justify-content: space-between; align-items: center; height: 50px; border-bottom: 1px solid #EDEDF0; font-size: 16px">
+            <span>{{r.n}}</span><span style="font-variant-numeric: tabular-nums">{{r.price}}</span>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 40px; font-size: 14px; color: #6E6E73"><span>Tax</span><span>$5.85</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 32px; font-size: 14px; color: #6E6E73"><span>Tip · 20%</span><span>$13.00</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 56px; font-size: 18px; font-weight: 700"><span>Total</span><span>$83.85</span></div>
+      </div>
+      <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6E6E73">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+        Scanned from your photo · 4 items found
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Split it</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Who had what?</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">Tap a person, then their items.</p>
+      <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+          <button class="chip" style="height: 56px; box-sizing: border-box; border-radius: 28px; background: #FFFFFF; border: 2px solid {{p.bd}}; box-shadow: {{p.sh}}; display: flex; align-items: center; gap: 8px; padding: 0 10px; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">
+            <span style="width: 32px; height: 32px; border-radius: 16px; background: {{p.c}}; color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{p.i}}</span>{{p.n}}
+          </button>
+        </sc-for>
+      </div>
+      <div style="margin-top: 20px; background: #FFFFFF; border-radius: 22px; padding: 0 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+          <div style="height: 64px; box-sizing: border-box; border-bottom: 1px solid {{r.line}}; display: flex; align-items: center; justify-content: space-between">
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 600">{{r.n}}</span>
+              <span style="font-size: 13px; color: #6E6E73">{{r.price}}</span>
+            </div>
+            <div style="display: flex; align-items: center">
+              <sc-if value="{{r.empty}}" hint-placeholder-val="{{ true }}">
+                <span style="font-size: 13px; color: #6E6E73">Unassigned</span>
+              </sc-if>
+              <sc-for list="{{r.avs}}" as="a" hint-placeholder-count="0">
+                <span class="pop" style="width: 28px; height: 28px; margin-left: -6px; border-radius: 14px; border: 2px solid #FFFFFF; background: {{a.c}}; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{a.i}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 24px; right: 24px; bottom: 104px; height: 84px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; padding: 0 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+            <span style="font-size: 12px; font-weight: 600; color: #6E6E73">{{p.n}}</span>
+            <span class="amt" style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: {{p.amtC}}">{{p.amt}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Review split</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Looks right?</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">Tax and tip split by what each person ordered.</p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{review}}" as="p" hint-placeholder-count="3">
+          <div class="rise" style="animation-delay: {{p.delay}}; background: #FFFFFF; border-radius: 22px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+            <span style="flex: none; width: 44px; height: 44px; border-radius: 22px; background: {{p.c}}; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{p.i}}</span>
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+              <span style="font-size: 17px; font-weight: 600">{{p.n}}</span>
+              <span style="font-size: 13px; color: #6E6E73">{{p.items}}</span>
+            </div>
+            <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{p.amt}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: 16px; display: flex; justify-content: space-between; padding: 0 4px; font-size: 14px; color: #6E6E73"><span>Bill total</span><span>$83.85 · balanced</span></div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #3A3FD8; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Request {{request}} from 2 friends</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 120px 24px 0; display: flex; flex-direction: column; align-items: center">
+      <div class="bloom" style="width: 96px; height: 96px; border-radius: 48px; background: #3A3FD8; display: flex; align-items: center; justify-content: center">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="draw" d="M13 25l7 7 15-16" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <h1 style="margin: 28px 0 0; font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em">Requests sent</h1>
+      <p style="margin: 8px 0 0; font-size: 15px; line-height: 22px; color: #6E6E73; text-align: center">We’ll send a gentle nudge tomorrow<br>if anyone hasn’t paid.</p>
+      <div class="rise" style="animation-delay: .25s; margin-top: 36px; width: 100%; background: #FFFFFF; border-radius: 22px; padding: 0 20px; box-sizing: border-box; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="height: 72px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #EDEDF0">
+          <span style="width: 36px; height: 36px; border-radius: 18px; background: #C2410C; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">M</span>
+          <span style="flex: 1; font-size: 16px; font-weight: 600">Maya</span>
+          <span style="font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums">$38.70</span>
+          <sc-if value="{{paid}}" hint-placeholder-val="{{ false }}">
+            <span class="pop" style="padding: 5px 10px; border-radius: 12px; background: #E3F5EA; color: #0B6B3A; font-size: 13px; font-weight: 600">Paid</span>
+          </sc-if>
+          <sc-if value="{{pending}}" hint-placeholder-val="{{ true }}">
+            <span style="padding: 5px 10px; border-radius: 12px; background: #F2F2F7; color: #6E6E73; font-size: 13px; font-weight: 600">Pending</span>
+          </sc-if>
+        </div>
+        <div style="height: 72px; display: flex; align-items: center; gap: 12px">
+          <span style="width: 36px; height: 36px; border-radius: 18px; background: #0F766E; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">L</span>
+          <span style="flex: 1; font-size: 16px; font-weight: 600">Leo</span>
+          <span style="font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums">$29.67</span>
+          <span style="padding: 5px 10px; border-radius: 12px; background: #F2F2F7; color: #6E6E73; font-size: 13px; font-weight: 600">Pending</span>
+        </div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #E8E8ED; color: #1D1D1F; font: 600 17px Inter, system-ui, sans-serif">Done</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, sel: '', a: { m: [], b: [], s: [], t: [] }, paid: false, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, sel: s.sel, a: { m: s.a.m.slice(), b: s.a.b.slice(), s: s.a.s.slice(), t: s.a.t.slice() }, paid: s.paid, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(650); s.down = true; snap(170); fn(); s.down = false; snap(wait || 520); };
+    snap(1900);
+    tap(195, 788, () => { s.scr = 1; }, 1300);
+    tap(195, 174, () => { s.sel = 'm'; });
+    tap(170, 254, () => { s.a.m.push('m'); });
+    tap(170, 382, () => { s.a.s.push('m'); });
+    tap(312, 174, () => { s.sel = 'l'; });
+    tap(170, 318, () => { s.a.b.push('l'); });
+    tap(170, 446, () => { s.a.t.push('l'); });
+    tap(78, 174, () => { s.sel = 'y'; });
+    tap(170, 382, () => { s.a.s.push('y'); }, 1300);
+    tap(195, 788, () => { s.scr = 2; s.sel = ''; }, 2400);
+    tap(195, 788, () => { s.scr = 3; }, 600);
+    s.cx = 300; s.cy = 920; snap(1200);
+    s.paid = true; snap(2800);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const P = { y: { n: 'You', i: 'Y', c: '#3A3FD8' }, m: { n: 'Maya', i: 'M', c: '#C2410C' }, l: { n: 'Leo', i: 'L', c: '#0F766E' } };
+    const items = [{ k: 'm', n: 'Margherita', p: 18 }, { k: 'b', n: 'Burrata', p: 14 }, { k: 's', n: 'Spritz × 2', p: 24 }, { k: 't', n: 'Tiramisu', p: 9 }];
+    const money = (v) => '$' + v.toFixed(2);
+    const share = { y: 0, m: 0, l: 0 };
+    const owned = { y: [], m: [], l: [] };
+    items.forEach((it) => {
+      const w = f.a[it.k];
+      w.forEach((id) => { share[id] += it.p / w.length; owned[id].push(w.length > 1 ? it.n.replace(' × 2', '') + ' (shared)' : it.n); });
+    });
+    const k = 83.85 / 65;
+    const tot = { y: Math.round(share.y * k * 100) / 100, m: Math.round(share.m * k * 100) / 100, l: Math.round(share.l * k * 100) / 100 };
+    const ids = ['y', 'm', 'l'];
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2, s3: f.scr === 3,
+      receipt: items.map((it) => ({ n: it.n, price: money(it.p) })),
+      people: ids.map((id) => ({
+        n: P[id].n, i: P[id].i, c: P[id].c,
+        bd: f.sel === id ? P[id].c : '#E5E5EA',
+        sh: f.sel === id ? '0 6px 18px rgba(0,0,0,0.10)' : 'none',
+        amt: money(tot[id]),
+        amtC: tot[id] > 0 ? '#1D1D1F' : '#AEAEB2'
+      })),
+      rows: items.map((it, idx) => ({
+        n: it.n, price: money(it.p), line: idx === 3 ? 'transparent' : '#EDEDF0',
+        empty: f.a[it.k].length === 0,
+        avs: f.a[it.k].map((id) => ({ i: P[id].i, c: P[id].c }))
+      })),
+      review: ['m', 'l', 'y'].map((id, idx) => ({ n: P[id].n, i: P[id].i, c: P[id].c, amt: money(tot[id]), items: owned[id].join(' · '), delay: (idx * 0.08) + 's' })),
+      request: money(tot.m + tot.l),
+      paid: f.paid, pending: !f.paid,
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

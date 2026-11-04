@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hearth energy nudge prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#A04B05}a:hover{color:#7E3B04}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes drop{from{opacity:0;transform:translateY(-18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes tick{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(232,137,43,.55)}100%{box-shadow:0 0 0 8px rgba(232,137,43,0)}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.drop{animation:drop .7s .45s cubic-bezier(.2,.9,.25,1.1) both}
+.bar{transform-origin:50% 100%;animation:grow .7s cubic-bezier(.2,.8,.2,1) both}
+.barx{transform-origin:0 50%;animation:growX .8s .3s cubic-bezier(.2,.8,.2,1) both}
+.tick{display:inline-block;animation:tick .4s cubic-bezier(.2,.8,.2,1) both}
+.glow{animation:glow 1.3s ease-out infinite}
+.knob{transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+.track{transition:background .3s ease}
+.btn{transition:background .3s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73; height: 20px">Home · 6:12 PM</div>
+      <h1 style="margin: 4px 0 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Right now</h1>
+      <div class="drop" style="margin-top: 24px; height: 158px; box-sizing: border-box; background: #FFF1E0; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7E3B04" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M13 2L4 14h7l-1 8 9-12h-7z"></path></svg>
+          <div style="display: flex; flex-direction: column; gap: 3px">
+            <span style="font-size: 16px; font-weight: 700; color: #7E3B04">Peak-hour spike</span>
+            <span style="font-size: 14px; line-height: 20px; color: #6B3203">Dryer and AC are running together at peak rates. That’s about $2 more than a usual evening.</span>
+          </div>
+        </div>
+        <button style="height: 44px; border: 0; border-radius: 22px; background: #A04B05; color: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif">See how to save</button>
+      </div>
+      <div class="rise" style="animation-delay: .1s; margin-top: 14px; background: #FFFFFF; border-radius: 22px; padding: 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-size: 30px; font-weight: 700; letter-spacing: -0.03em">4.8</span><span style="font-size: 15px; font-weight: 600; color: #6E6E73">kW now</span></div>
+          <span style="font-size: 13px; color: #6E6E73">Today · $4.90 so far</span>
+        </div>
+        <div role="img" aria-label="Hourly energy use today, spiking at 6 PM during peak hours" style="position: relative; margin-top: 16px; height: 100px">
+          <div style="position: absolute; top: 0; bottom: 0; left: 66.67%; width: 20.83%; background: #FFF4E8; border-radius: 6px"></div>
+          <div style="position: relative; height: 100px; display: flex; align-items: flex-end; gap: 3px; padding: 0 2px">
+            <sc-for list="{{hours}}" as="h" hint-placeholder-count="24">
+              <div class="bar {{h.cls}}" style="flex: 1; height: {{h.h}}px; border-radius: 3px; background: {{h.c}}; animation-delay: {{h.d}}"></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; font-size: 11px; color: #6E6E73"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span style="color: #A04B05; font-weight: 600">Peak 4–9</span><span>12 AM</span></div>
+      </div>
+      <div class="rise" style="animation-delay: .2s; margin-top: 14px; background: #FFFFFF; border-radius: 22px; padding: 4px 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+        <div style="height: 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0; font-size: 15px"><span style="font-weight: 600">Dryer</span><span style="color: #A04B05; font-weight: 600">2.9 kW</span></div>
+        <div style="height: 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0; font-size: 15px"><span style="font-weight: 600">Air conditioning</span><span style="color: #A04B05; font-weight: 600">1.6 kW</span></div>
+        <div style="height: 48px; display: flex; justify-content: space-between; align-items: center; font-size: 15px"><span style="font-weight: 600">Everything else</span><span style="color: #6E6E73">0.3 kW</span></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Run the dryer after 9 PM</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">Same load, off-peak rate.</p>
+      <div class="rise" style="margin-top: 24px; height: 168px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #6E6E73">Now · peak rate</span><span style="font-weight: 700">$1.84</span></div>
+          <div style="height: 14px; border-radius: 7px; background: #F2F2F7"><div class="barx" style="width: 100%; height: 14px; border-radius: 7px; background: #E8892B"></div></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #6E6E73">After 9 PM · off-peak</span><span style="font-weight: 700; color: #0B6B3A">$0.62</span></div>
+          <div style="height: 14px; border-radius: 7px; background: #F2F2F7"><div class="barx" style="width: 34%; height: 14px; border-radius: 7px; background: #2E9E5B; animation-delay: .45s"></div></div>
+        </div>
+      </div>
+      <div class="rise" style="animation-delay: .1s; margin-top: 16px; height: 76px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 0 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 16px; font-weight: 600">Also pre-cool, then eco</span>
+          <span style="font-size: 13px; color: #6E6E73">Holds 74° through peak hours</span>
+        </div>
+        <button class="track" aria-label="Pre-cool then eco mode" style="width: 52px; height: 32px; border: 0; border-radius: 16px; background: {{trk}}; padding: 2px; display: flex; flex: none">
+          <span class="knob" style="width: 28px; height: 28px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transform: translateX({{kx}}px)"></span>
+        </button>
+      </div>
+      <div class="rise" style="animation-delay: .2s; margin-top: 16px; background: #E8F5EE; border-radius: 22px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center">
+        <span style="font-size: 15px; font-weight: 600; color: #0B5A30">You’ll save tonight</span>
+        <sc-if value="{{both}}" hint-placeholder-val="{{ false }}"><span class="tick" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: #0B5A30">$1.97</span></sc-if>
+        <sc-if value="{{one}}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: #0B5A30">$1.22</span></sc-if>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">{{ctaL}}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #0B6B3A; height: 20px">Scheduled · 9:15 PM</div>
+      <h1 style="margin: 4px 0 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">$1.97 saved tonight</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">That’s 3 evenings in a row off peak.</p>
+      <div class="rise" style="margin-top: 24px; background: #FFFFFF; border-radius: 22px; padding: 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <span style="font-size: 16px; font-weight: 700">Evening cost this week</span>
+          <div style="display: flex; gap: 10px; font-size: 12px; color: #6E6E73">
+            <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #2E9E5B"></span>This week</span>
+            <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #D1D1D6"></span>Last week</span>
+          </div>
+        </div>
+        <div role="img" aria-label="Evening energy cost by day, this week lower than last week" style="margin-top: 18px; height: 130px; display: flex; align-items: flex-end; gap: 10px">
+          <sc-for list="{{week}}" as="w" hint-placeholder-count="7">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div style="width: 100%; height: 108px; display: flex; align-items: flex-end; gap: 3px">
+                <div class="bar" style="flex: 1; height: {{w.last}}px; border-radius: 3px; background: #D1D1D6; animation-delay: {{w.d}}"></div>
+                <div class="bar" style="flex: 1; height: {{w.now}}px; border-radius: 3px; background: {{w.c}}; animation-delay: {{w.d2}}"></div>
+              </div>
+              <span style="font-size: 11px; color: {{w.lc}}; font-weight: {{w.fw}}">{{w.l}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div class="rise" style="animation-delay: .25s; background: #FFFFFF; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+          <span style="font-size: 13px; color: #6E6E73">Saved this week</span>
+          <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #0B6B3A">$6.40</span>
+        </div>
+        <div class="rise" style="animation-delay: .32s; background: #FFFFFF; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+          <span style="font-size: 13px; color: #6E6E73">Use shifted off peak</span>
+          <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em">38%</span>
+        </div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #E8E8ED; color: #1D1D1F; font: 600 17px Inter, system-ui, sans-serif">Done</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+    const used = [0.6, 0.5, 0.5, 0.4, 0.4, 0.5, 0.9, 1.4, 1.2, 0.9, 0.8, 0.8, 0.9, 1.0, 1.1, 1.3, 1.6, 2.1, 4.8];
+    const proj = [3.9, 2.8, 1.5, 0.9, 0.7];
+    this.hours = used.concat(proj).map((v, idx) => ({
+      h: Math.max(4, Math.round(v / 5 * 100)),
+      c: idx === 18 ? '#E8892B' : idx > 18 ? '#EDEDF0' : (idx >= 16 ? '#F0B27A' : '#C7C7CC'),
+      cls: idx === 18 ? 'glow' : '',
+      d: (idx * 0.025) + 's'
+    }));
+    const days = ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Today'];
+    const last = [2.9, 3.1, 2.7, 3.3, 3.0, 3.6, 3.4];
+    const now = [3.0, 2.8, 2.9, 1.9, 1.7, 1.6, 1.4];
+    this.week = days.map((l, idx) => ({
+      l, last: Math.round(last[idx] / 3.6 * 104), now: Math.round(now[idx] / 3.6 * 104),
+      c: idx >= 4 ? '#2E9E5B' : '#8FC9A6',
+      d: (idx * 0.06) + 's', d2: (0.15 + idx * 0.06) + 's',
+      lc: idx === 6 ? '#1D1D1F' : '#6E6E73', fw: idx === 6 ? 700 : 500
+    }));
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, both: false, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, both: s.both, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(3000);
+    tap(195, 262, () => { s.scr = 1; }, 1900);
+    tap(322, 408, () => { s.both = true; }, 1400);
+    tap(195, 788, () => { s.scr = 2; }, 400);
+    s.cx = 300; s.cy = 920; snap(3800);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2,
+      hours: this.hours, week: this.week,
+      both: f.both, one: !f.both,
+      trk: f.both ? '#2E9E5B' : '#E5E5EA',
+      kx: f.both ? 20 : 0,
+      ctaL: f.both ? 'Schedule both · save $1.97' : 'Schedule dryer for 9:15 PM',
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ferry onboarding prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2D4FA3}a:hover{color:#223D80}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes logoIn{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes bloom{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+@keyframes travel{0%{offset-distance:0%;opacity:0}12%{opacity:1}88%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.fade{animation:fadeIn .5s ease both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.sheet{animation:sheetUp .7s .35s cubic-bezier(.2,.85,.25,1) both}
+.logo{animation:logoIn .7s cubic-bezier(.2,.8,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.bloom{animation:bloom .5s cubic-bezier(.2,.9,.25,1.2) both}
+.draw{stroke-dasharray:60;animation:draw .55s .25s cubic-bezier(.6,0,.2,1) both}
+.coin{offset-path:path('M76 96 Q150 4 224 96');offset-rotate:0deg;animation:travel 2.2s .3s cubic-bezier(.45,0,.25,1) infinite}
+.float{animation:float 3s ease-in-out infinite}
+.float2{animation:float 3s 1.5s ease-in-out infinite}
+.caret{animation:blink 1s step-end infinite}
+.spin{animation:spin .8s linear infinite}
+.track{transition:transform .55s cubic-bezier(.3,.8,.2,1)}
+.dot{transition:width .3s ease,background .3s ease}
+.key{transition:background .08s ease}
+.btn{transition:background .3s ease,color .3s ease}
+.box{transition:border-color .2s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="fade" style="position: absolute; inset: 0; background: #2D4FA3; overflow: hidden">
+      <div style="position: absolute; width: 420px; height: 420px; border-radius: 210px; background: rgba(255,255,255,0.06); left: -15px; top: -300px"></div>
+      <div style="position: absolute; width: 380px; height: 380px; border-radius: 190px; background: rgba(255,255,255,0.05); right: -210px; top: 250px"></div>
+      <div style="position: absolute; left: 0; right: 0; top: 168px; display: flex; flex-direction: column; align-items: center">
+        <div class="logo" style="width: 72px; height: 72px; border-radius: 22px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px rgba(10,25,70,0.3)">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none" stroke="#2D4FA3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 17c5-5 10-5 15 0s10 5 15 0"></path><path d="M6 27c5-5 10-5 15 0s10 5 15 0" opacity="0.5"></path></svg>
+        </div>
+        <div class="rise" style="animation-delay: .2s; margin-top: 22px; font-size: 40px; font-weight: 700; letter-spacing: -0.03em; color: #FFFFFF">Ferry</div>
+        <div class="rise" style="animation-delay: .3s; margin-top: 8px; font-size: 17px; line-height: 24px; color: rgba(255,255,255,0.88); text-align: center">Send money home,<br>without the guesswork.</div>
+        <div class="rise" style="animation-delay: .45s; margin-top: 26px; padding: 9px 16px; border-radius: 20px; background: rgba(255,255,255,0.14); display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #FFFFFF">
+          <span style="width: 8px; height: 8px; border-radius: 4px; background: #7CE0A3"></span>
+          1 USD = 83.20 INR · live rate
+        </div>
+      </div>
+      <div class="sheet" style="position: absolute; left: 0; right: 0; bottom: 0; height: 330px; background: #FFFFFF; border-radius: 32px 32px 0 0">
+        <div style="position: absolute; left: 32px; right: 32px; top: 36px">
+          <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: #2D4FA3">Welcome</div>
+          <p style="margin: 10px 0 0; font-size: 16px; line-height: 23px; color: #5A5A60">Send to 100+ countries at the real exchange rate, with every fee shown upfront.</p>
+        </div>
+        <button style="position: absolute; left: 24px; right: 24px; bottom: 92px; height: 56px; border: 0; border-radius: 28px; background: #2D4FA3; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif; box-shadow: 0 10px 24px rgba(45,79,163,0.3)">Get started</button>
+        <div style="position: absolute; left: 0; right: 0; bottom: 44px; text-align: center; font-size: 15px; color: #6E6E73">Already have an account? <a href="#" style="font-weight: 600; text-decoration: none">Log in</a></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="overflow: hidden; background: #2D4FA3">
+      <div class="track" style="width: 1170px; height: 844px; display: flex; transform: translateX({{off}}px)">
+
+        <div style="width: 390px; height: 844px; flex: none; display: flex; flex-direction: column">
+          <div style="height: 470px; background: #F4F6FB; display: flex; align-items: center; justify-content: center">
+            <div style="position: relative; width: 300px; height: 230px">
+              <svg width="300" height="230" viewBox="0 0 300 230" fill="none" aria-hidden="true" style="position: absolute; inset: 0">
+                <path d="M76 96 Q150 4 224 96" stroke="#9DB0E0" stroke-width="2.5" stroke-dasharray="6 7" stroke-linecap="round"></path>
+              </svg>
+              <div style="position: absolute; left: 44px; top: 96px; width: 64px; height: 110px; box-sizing: border-box; border-radius: 16px; border: 3px solid #1F2E57; background: #FFFFFF; padding: 14px 8px; display: flex; flex-direction: column; gap: 6px">
+                <div style="height: 6px; border-radius: 3px; background: #2D4FA3"></div>
+                <div style="height: 6px; width: 70%; border-radius: 3px; background: #D5DCEF"></div>
+                <div style="height: 6px; width: 50%; border-radius: 3px; background: #D5DCEF"></div>
+              </div>
+              <div style="position: absolute; right: 44px; top: 96px; width: 64px; height: 110px; box-sizing: border-box; border-radius: 16px; border: 3px solid #1F2E57; background: #FFFFFF; padding: 14px 8px; display: flex; flex-direction: column; gap: 6px">
+                <div style="height: 6px; border-radius: 3px; background: #2E9E5B"></div>
+                <div style="height: 6px; width: 70%; border-radius: 3px; background: #D5DCEF"></div>
+                <div style="height: 6px; width: 50%; border-radius: 3px; background: #D5DCEF"></div>
+              </div>
+              <div class="coin" style="position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 17px; background: #F2B33D; border: 2px solid #D18E14; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #6B4300">$</div>
+              <div style="position: absolute; left: 30px; top: 214px; width: 92px; text-align: center; font-size: 12px; font-weight: 600; color: #4A4A50">You · Boston</div>
+              <div style="position: absolute; right: 30px; top: 214px; width: 92px; text-align: center; font-size: 12px; font-weight: 600; color: #4A4A50">Mom · Pune</div>
+            </div>
+          </div>
+          <div style="padding: 44px 32px 0; text-align: center; color: #FFFFFF">
+            <div style="font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.02em">Money home in minutes</div>
+            <p style="margin: 12px 0 0; font-size: 16px; line-height: 23px; color: rgba(255,255,255,0.88)">Send to 100+ countries, straight to a bank, wallet or cash pickup.</p>
+          </div>
+        </div>
+
+        <div style="width: 390px; height: 844px; flex: none; display: flex; flex-direction: column">
+          <div style="height: 470px; background: #F4F6FB; display: flex; align-items: center; justify-content: center">
+            <div style="position: relative; width: 270px">
+              <div style="background: #FFFFFF; border-radius: 22px; padding: 6px 20px; box-shadow: 0 18px 40px rgba(31,46,87,0.14)">
+                <div style="height: 56px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0"><span style="font-size: 14px; color: #6E6E73">You send</span><span style="font-size: 18px; font-weight: 700">$200.00</span></div>
+                <div style="height: 44px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0"><span style="font-size: 14px; color: #6E6E73">Fee</span><span style="font-size: 15px; font-weight: 600">$1.99</span></div>
+                <div style="height: 44px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0"><span style="font-size: 14px; color: #6E6E73">Rate</span><span style="font-size: 15px; font-weight: 600">83.20</span></div>
+                <div style="height: 56px; display: flex; justify-content: space-between; align-items: center"><span style="font-size: 14px; color: #6E6E73">They get</span><span style="font-size: 18px; font-weight: 700; color: #0B6B3A">₹16,474.43</span></div>
+              </div>
+              <div class="float" style="position: absolute; right: -22px; top: -18px; padding: 7px 12px; border-radius: 14px; background: #E3F5EA; color: #0B5A30; font-size: 13px; font-weight: 700; box-shadow: 0 6px 16px rgba(11,90,48,0.15)">No hidden fees</div>
+            </div>
+          </div>
+          <div style="padding: 44px 32px 0; text-align: center; color: #FFFFFF">
+            <div style="font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.02em">Every fee, upfront</div>
+            <p style="margin: 12px 0 0; font-size: 16px; line-height: 23px; color: rgba(255,255,255,0.88)">See the exact rate and what they receive before you send.</p>
+          </div>
+        </div>
+
+        <div style="width: 390px; height: 844px; flex: none; display: flex; flex-direction: column">
+          <div style="height: 470px; background: #F4F6FB; display: flex; align-items: center; justify-content: center">
+            <div style="position: relative; width: 280px; height: 230px; display: flex; align-items: center; justify-content: center">
+              <svg width="132" height="150" viewBox="0 0 132 150" fill="none" aria-hidden="true">
+                <path d="M66 6l54 20v42c0 36-24 64-54 76C36 132 12 104 12 68V26z" fill="#2D4FA3"></path>
+                <path d="M66 18l42 15v35c0 29-19 52-42 62" fill="#3D61BC"></path>
+                <path d="M44 74l15 15 30-32" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <div class="float" style="position: absolute; left: -6px; top: 34px; padding: 9px 12px; border-radius: 14px; background: #FFFFFF; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 24px rgba(31,46,87,0.14)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D4FA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"></path><path d="M9 10v1M15 10v1M12 10v4h-1M9.5 16.5c1.5 1 3.5 1 5 0"></path></svg>
+                Face ID to send
+              </div>
+              <div class="float2" style="position: absolute; right: -10px; bottom: 30px; padding: 9px 12px; border-radius: 14px; background: #FFFFFF; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 24px rgba(31,46,87,0.14)">
+                <span style="width: 18px; height: 18px; border-radius: 9px; background: #2E9E5B; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+                Delivered · 2:14 PM
+              </div>
+            </div>
+          </div>
+          <div style="padding: 44px 32px 0; text-align: center; color: #FFFFFF">
+            <div style="font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.02em">Safe at every step</div>
+            <p style="margin: 12px 0 0; font-size: 16px; line-height: 23px; color: rgba(255,255,255,0.88)">Face ID on every transfer, with live tracking until it lands.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 48px; display: flex; align-items: center; justify-content: space-between">
+        <button style="height: 48px; min-width: 64px; border: 0; background: transparent; color: rgba(255,255,255,0.88); font: 500 16px Inter, system-ui, sans-serif; text-align: left; padding: 0">Skip</button>
+        <div style="display: flex; gap: 6px; align-items: center">
+          <sc-for list="{{dots}}" as="d" hint-placeholder-count="3">
+            <span class="dot" style="height: 7px; width: {{d.w}}px; border-radius: 4px; background: {{d.c}}"></span>
+          </sc-for>
+        </div>
+        <button style="height: 48px; padding: 0 22px; border: 0; border-radius: 24px; background: #FFFFFF; color: #2D4FA3; font: 600 16px Inter, system-ui, sans-serif">{{nextL}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{entry}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="background: #FFFFFF">
+      <div style="position: absolute; left: 24px; right: 24px; top: 56px">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 44px">
+          <button aria-label="Back" style="width: 44px; height: 44px; margin-left: -10px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+          </button>
+          <span style="font-size: 13px; font-weight: 600; color: #6E6E73">Step {{stepN}} of 2</span>
+        </div>
+        <div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+          <div style="height: 4px; border-radius: 2px; background: #2D4FA3"></div>
+          <div class="btn" style="height: 4px; border-radius: 2px; background: {{seg2}}"></div>
+        </div>
+
+        <sc-if value="{{s2}}" hint-placeholder-val="{{ true }}">
+          <div class="fade">
+            <h1 style="margin: 22px 0 0; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em">What’s your number?</h1>
+            <p style="margin: 6px 0 0; font-size: 15px; line-height: 21px; color: #6E6E73">We’ll text you a code. No passwords to remember.</p>
+            <div style="margin-top: 22px; height: 60px; display: flex; gap: 10px">
+              <div style="width: 84px; box-sizing: border-box; border-radius: 16px; background: #F2F3F7; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 16px; font-weight: 600">US +1
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+              </div>
+              <div class="box" style="flex: 1; box-sizing: border-box; border-radius: 16px; background: #F2F3F7; border: 2px solid {{fieldBd}}; padding: 0 16px; display: flex; align-items: center; font-size: 19px; font-weight: 600; letter-spacing: 0.01em; font-variant-numeric: tabular-nums">
+                <span style="color: {{numC}}">{{num}}</span>
+                <sc-if value="{{focus}}" hint-placeholder-val="{{ false }}"><span class="caret" style="width: 2px; height: 24px; margin-left: 2px; background: #2D4FA3"></span></sc-if>
+              </div>
+            </div>
+            <div style="margin-top: 14px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6E6E73">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              ID check comes later, only when you first send.
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+          <div class="fade">
+            <h1 style="margin: 22px 0 0; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em">Enter the code</h1>
+            <p style="margin: 6px 0 0; font-size: 15px; line-height: 21px; color: #6E6E73">Sent to (202) 555-0147</p>
+            <div style="margin-top: 22px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{boxes}}" as="b" hint-placeholder-count="6">
+                <div class="box" style="height: 60px; box-sizing: border-box; border-radius: 14px; background: #F2F3F7; border: 2px solid {{b.bd}}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700">
+                  <sc-if value="{{b.on}}" hint-placeholder-val="{{ false }}"><span class="pop" style="animation-delay: {{b.d}}">{{b.v}}</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top: 16px; height: 22px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">
+              <sc-if value="{{verifying}}" hint-placeholder-val="{{ false }}">
+                <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#D5DCEF" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" stroke="#2D4FA3" stroke-width="3" stroke-linecap="round"></path></svg>
+                <span style="color: #2D4FA3">Verifying</span>
+              </sc-if>
+              <sc-if value="{{verified}}" hint-placeholder-val="{{ false }}">
+                <span class="pop" style="width: 18px; height: 18px; border-radius: 9px; background: #0B7A3E; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+                <span style="color: #0B6B3A">Verified</span>
+              </sc-if>
+              <sc-if value="{{resend}}" hint-placeholder-val="{{ true }}">
+                <span style="color: #6E6E73; font-weight: 500">Didn’t get it? Resend in 0:28</span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{s2}}" hint-placeholder-val="{{ true }}">
+        <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 264px; height: 56px; border: 0; border-radius: 28px; background: {{contBg}}; color: {{contFg}}; font: 600 17px Inter, system-ui, sans-serif">Continue</button>
+      </sc-if>
+      <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; left: 0; right: 0; bottom: 244px; height: 44px; background: #E4E6EB; border-bottom: 1px solid #D5D8DF; display: flex; align-items: center; justify-content: center">
+          <button class="btn" style="height: 34px; padding: 0 16px; border: 0; border-radius: 10px; background: {{chipBg}}; font: 500 14px Inter, system-ui, sans-serif; color: #1D1D1F; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 15px">
+            <span style="font-size: 11px; color: #6E6E73">From Messages</span>
+            <span style="font-weight: 700; letter-spacing: 0.08em">482 913</span>
+          </button>
+        </div>
+      </sc-if>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 244px; box-sizing: border-box; background: #E4E6EB; padding: 8px 6px 34px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 46px; gap: 6px">
+        <sc-for list="{{keys}}" as="k" hint-placeholder-count="12">
+          <div class="key" style="border-radius: 10px; background: {{k.bg}}; box-shadow: {{k.sh}}; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1">
+            <span style="font-size: 24px; font-weight: 400">{{k.l}}</span>
+            <span style="font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #3A3A3C; margin-top: 2px">{{k.s}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="background: #FFFFFF; padding: 104px 24px 0; display: flex; flex-direction: column; align-items: center">
+      <div class="bloom" style="width: 92px; height: 92px; border-radius: 46px; background: #2D4FA3; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 30px rgba(45,79,163,0.3)">
+        <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="draw" d="M13 25l7 7 15-16" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <h1 style="margin: 26px 0 0; font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em">You’re in</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #6E6E73">Your Ferry account is ready.</p>
+      <div class="rise" style="animation-delay: .25s; margin-top: 32px; width: 100%; box-sizing: border-box; background: #F4F6FB; border-radius: 22px; padding: 20px">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <span style="font-size: 16px; font-weight: 700">Your first transfer is free</span>
+          <span style="padding: 4px 9px; border-radius: 10px; background: #E3F5EA; color: #0B5A30; font-size: 12px; font-weight: 700">$0 fee</span>
+        </div>
+        <div style="margin-top: 16px; display: flex; align-items: center; gap: 12px">
+          <div style="flex: 1; background: #FFFFFF; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 12px; color: #6E6E73">You send</span>
+            <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em">$200.00</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D4FA3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <div style="flex: 1; background: #FFFFFF; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 12px; color: #6E6E73">Mom gets</span>
+            <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: #0B6B3A">₹16,640</span>
+          </div>
+        </div>
+      </div>
+      <div class="rise" style="animation-delay: .4s; margin-top: 14px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6E6E73">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="12" r="2.5"></circle><path d="M14 10h4M14 14h3"></path></svg>
+        Quick ID check when you send · about 2 min
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{sendBg}}; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Send your first transfer</button>
+    </div>
+  </sc-if>
+
+  <div aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box; transition: left {{ctr}}s cubic-bezier(.45,0,.2,1), top {{ctr}}s cubic-bezier(.45,0,.2,1), transform .12s ease, background .12s ease"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, slide: 0, focus: false, digits: '', key: '', otp: false, chip: false, ver: '', send: false, cx: 300, cy: 920, down: false, ctr: 0.6 };
+    const snap = (d) => fr.push(Object.assign({}, s, { dur: d }));
+    const tap = (x, y, fn, wait) => { s.ctr = 0.6; s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    const keyPos = (d) => {
+      let r, c;
+      if (d === '0') { r = 3; c = 1; } else { const n = +d; r = Math.floor((n - 1) / 3); c = (n - 1) % 3; }
+      return { x: 6 + c * 128 + 61, y: 608 + r * 52 + 23 };
+    };
+    const keyTap = (d) => {
+      const p = keyPos(d);
+      s.ctr = 0.16; s.cx = p.x; s.cy = p.y; s.down = false; snap(190);
+      s.down = true; s.key = d; s.digits += d; snap(110);
+      s.down = false; s.key = ''; snap(70);
+    };
+    snap(2800);
+    tap(195, 724, () => { s.scr = 1; s.slide = 0; }, 2300);
+    tap(336, 792, () => { s.slide = 1; }, 2300);
+    tap(336, 792, () => { s.slide = 2; }, 2300);
+    tap(336, 792, () => { s.scr = 2; }, 900);
+    tap(240, 276, () => { s.focus = true; }, 350);
+    '2025550147'.split('').forEach(keyTap);
+    s.ctr = 0.6; snap(500);
+    tap(195, 552, () => { s.scr = 3; s.focus = false; }, 1300);
+    tap(195, 578, () => { s.chip = true; s.otp = true; }, 900);
+    s.chip = false; s.ver = 'ing'; s.cx = 300; s.cy = 920; snap(1100);
+    s.ver = 'ok'; snap(800);
+    s.scr = 4; snap(3000);
+    tap(195, 788, () => { s.send = true; }, 900);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  fmt(d) {
+    if (!d.length) return '(555) 000-0000';
+    let out = '(' + d.slice(0, 3);
+    if (d.length > 3) out += ') ' + d.slice(3, 6);
+    if (d.length > 6) out += '-' + d.slice(6);
+    return out;
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const blue = '#2D4FA3';
+    const labels = [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'], ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['', ''], ['0', ''], ['⌫', '']];
+    const keys = labels.map(([l, sub]) => ({
+      l, s: sub,
+      bg: l === '' ? 'transparent' : (f.key && l === f.key ? '#B9BDC8' : '#FFFFFF'),
+      sh: l === '' ? 'none' : '0 1px 0 rgba(0,0,0,0.25)'
+    }));
+    const code = '482913';
+    const full = f.digits.length === 10;
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2, s3: f.scr === 3, s4: f.scr === 4,
+      entry: f.scr === 2 || f.scr === 3,
+      off: -f.slide * 390,
+      dots: [0, 1, 2].map((k) => ({ w: k === f.slide ? 22 : 7, c: k === f.slide ? '#FFFFFF' : 'rgba(255,255,255,0.45)' })),
+      nextL: f.slide === 2 ? 'Start' : 'Next',
+      stepN: f.scr === 3 ? 2 : 1,
+      seg2: f.scr === 3 ? blue : '#E5E5EA',
+      focus: f.focus,
+      fieldBd: f.focus ? blue : 'transparent',
+      num: this.fmt(f.digits),
+      numC: f.digits.length ? '#1D1D1F' : '#AEAEB2',
+      contBg: full ? blue : '#E8E8ED', contFg: full ? '#FFFFFF' : '#6E6E73',
+      keys,
+      chipBg: f.chip ? '#C9CDD6' : '#FFFFFF',
+      boxes: code.split('').map((v, idx) => ({ v, on: f.otp, d: (idx * 0.06) + 's', bd: f.ver === 'ok' ? '#0B7A3E' : (f.otp ? blue : 'transparent') })),
+      verifying: f.ver === 'ing', verified: f.ver === 'ok', resend: f.ver === '',
+      sendBg: f.send ? '#223D80' : blue,
+      cl: f.cx, ct: f.cy, ctr: f.ctr,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

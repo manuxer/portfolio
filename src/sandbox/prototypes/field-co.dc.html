@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Field and Co checkout prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#A13A0B}a:hover{color:#7F2E09}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes bloom{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes tick{0%{transform:translateY(-8px);opacity:0}100%{transform:none;opacity:1}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.bloom{animation:bloom .5s cubic-bezier(.2,.9,.25,1.2) both}
+.draw{stroke-dasharray:60;animation:draw .55s .25s cubic-bezier(.6,0,.2,1) both}
+.spin{animation:spin .8s linear infinite}
+.tick{display:inline-block;animation:tick .35s cubic-bezier(.2,.8,.2,1) both}
+.tile{transition:border-color .25s ease,background .25s ease,box-shadow .25s ease}
+.btn{transition:background .3s ease,width .3s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Bag</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">2 items · Free returns for 30 days</p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px">
+        <div class="rise" style="background: #FFFFFF; border-radius: 22px; padding: 12px; display: flex; gap: 14px; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+          <div style="width: 88px; height: 88px; border-radius: 16px; background: #EDE4D6; display: flex; align-items: center; justify-content: center; flex: none">
+            <svg width="52" height="52" viewBox="0 0 48 48" fill="none" stroke="#7A5C3A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M18 8c1 3 3 4 6 4s5-1 6-4l9 4 3 10-6 2-1-4v20H13V20l-1 4-6-2 3-10z"></path><path d="M13 38h22"></path></svg>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+            <span style="font-size: 16px; font-weight: 600">Merino Crew Sweater</span>
+            <span style="font-size: 13px; color: #6E6E73">Oat · Size M</span>
+            <span style="font-size: 16px; font-weight: 700; margin-top: 6px">$98.00</span>
+          </div>
+        </div>
+        <div class="rise" style="animation-delay: .08s; background: #FFFFFF; border-radius: 22px; padding: 12px; display: flex; gap: 14px; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+          <div style="width: 88px; height: 88px; border-radius: 16px; background: #E3E6E8; display: flex; align-items: center; justify-content: center; flex: none">
+            <svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="#4A5560" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 30c0-6 1-11 3-13l6 2c2 3 6 5 10 5l8 2c6 1 11 3 11 7v2H5z"></path><path d="M5 34h38"></path><path d="M17 20l2 3M21 21l2 3"></path></svg>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+            <span style="font-size: 16px; font-weight: 600">Everyday Canvas Sneaker</span>
+            <span style="font-size: 13px; color: #6E6E73">Chalk · Size 9</span>
+            <span style="font-size: 16px; font-weight: 700; margin-top: 6px">$85.00</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 20px; padding: 0 4px; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+        <div style="display: flex; justify-content: space-between"><span style="color: #6E6E73">Subtotal</span><span style="font-weight: 600">$183.00</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #6E6E73">Delivery</span><span style="color: #6E6E73">From free · pick a date next</span></div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Checkout · $183.00</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Checkout</h1>
+      <div style="margin-top: 20px; height: 76px; box-sizing: border-box; background: #FFFFFF; border-radius: 20px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 12px; color: #6E6E73">Ship to</span>
+          <span style="font-size: 15px; font-weight: 600">Sam Rivera · 214 Elm St, Apt 3</span>
+        </div>
+        <span style="font-size: 14px; font-weight: 600; color: #A13A0B">Edit</span>
+      </div>
+      <div style="margin-top: 20px; height: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73">When do you want it?</div>
+      <div style="margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{tiles}}" as="t" hint-placeholder-count="3">
+          <button class="tile" style="height: 96px; box-sizing: border-box; border-radius: 18px; background: {{t.bg}}; border: 2px solid {{t.bd}}; box-shadow: {{t.sh}}; padding: 12px 10px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; font-family: Inter, system-ui, sans-serif; color: #1D1D1F; text-align: left">
+            <span style="font-size: 15px; font-weight: 700; line-height: 19px">{{t.d}}</span>
+            <span style="font-size: 12px; color: #6E6E73">{{t.sub}}</span>
+            <span style="font-size: 14px; font-weight: 600; color: {{t.pc}}">{{t.p}}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="margin-top: 20px; height: 64px; box-sizing: border-box; background: #FFFFFF; border-radius: 20px; padding: 0 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+        <span style="width: 40px; height: 28px; border-radius: 6px; background: #1D1D1F; color: #FFFFFF; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">VISA</span>
+        <span style="flex: 1; font-size: 15px; font-weight: 600">Ending 4417</span>
+        <span style="font-size: 14px; font-weight: 600; color: #A13A0B">Change</span>
+      </div>
+      <div style="margin-top: 20px; padding: 0 4px; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+        <div style="display: flex; justify-content: space-between"><span style="color: #6E6E73">Subtotal</span><span>$183.00</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #6E6E73">Delivery</span><sc-if value="{{fast}}" hint-placeholder-val="{{ false }}"><span class="tick">$12.00</span></sc-if><sc-if value="{{slow}}" hint-placeholder-val="{{ true }}"><span>Free</span></sc-if></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #6E6E73">Estimated tax</span><span>$14.64</span></div>
+        <div style="height: 1px; background: #E5E5EA"></div>
+        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700"><span>Total</span><sc-if value="{{fast}}" hint-placeholder-val="{{ false }}"><span class="tick">$209.64</span></sc-if><sc-if value="{{slow}}" hint-placeholder-val="{{ true }}"><span>$197.64</span></sc-if></div>
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{payBg}}; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px">
+        <sc-if value="{{idle}}" hint-placeholder-val="{{ true }}"><span>Pay {{total}}</span></sc-if>
+        <sc-if value="{{paying}}" hint-placeholder-val="{{ false }}">
+          <svg class="spin" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,0.3)" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"></path></svg>
+          <span>Processing</span>
+        </sc-if>
+        <sc-if value="{{paid}}" hint-placeholder-val="{{ false }}">
+          <svg class="pop" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          <span>Paid</span>
+        </sc-if>
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 104px 24px 0; display: flex; flex-direction: column; align-items: center">
+      <div class="bloom" style="width: 88px; height: 88px; border-radius: 44px; background: #0B7A3E; display: flex; align-items: center; justify-content: center">
+        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="draw" d="M13 25l7 7 15-16" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <h1 style="margin: 24px 0 0; font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em">It’s on the way</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #6E6E73">Arriving tomorrow by 8 PM · Order FC-20417</p>
+      <div class="rise" style="animation-delay: .2s; margin-top: 32px; width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 22px 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+            <span style="width: 16px; height: 16px; border-radius: 8px; background: #0B7A3E"></span>
+            <span style="font-size: 12px; font-weight: 600">Ordered</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+            <span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 8px; border: 2px solid #C7C7CC; background: #FFFFFF"></span>
+            <span style="font-size: 12px; color: #6E6E73">Packed</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+            <span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 8px; border: 2px solid #C7C7CC; background: #FFFFFF"></span>
+            <span style="font-size: 12px; color: #6E6E73; text-align: center">Out for delivery</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+            <span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 8px; border: 2px solid #C7C7CC; background: #FFFFFF"></span>
+            <span style="font-size: 12px; color: #6E6E73">Tomorrow</span>
+          </div>
+        </div>
+        <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid #EDEDF0; display: flex; align-items: center; gap: 10px">
+          <div role="img" aria-label="Merino Crew Sweater, Oat" style="width: 48px; height: 48px; border-radius: 12px; background: #EDE4D6; display: flex; align-items: center; justify-content: center; flex: none">
+            <svg width="30" height="30" viewBox="0 0 48 48" fill="none" stroke="#7A5C3A" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M18 8c1 3 3 4 6 4s5-1 6-4l9 4 3 10-6 2-1-4v20H13V20l-1 4-6-2 3-10z"></path><path d="M13 38h22"></path></svg>
+          </div>
+          <div role="img" aria-label="Everyday Canvas Sneaker, Chalk" style="width: 48px; height: 48px; border-radius: 12px; background: #E3E6E8; display: flex; align-items: center; justify-content: center; flex: none">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" stroke="#4A5560" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 30c0-6 1-11 3-13l6 2c2 3 6 5 10 5l8 2c6 1 11 3 11 7v2H5z"></path><path d="M5 34h38"></path><path d="M17 20l2 3M21 21l2 3"></path></svg>
+          </div>
+          <span style="font-size: 13px; color: #6E6E73">2 items</span>
+          <span style="margin-left: auto; font-size: 16px; font-weight: 700">$209.64</span>
+        </div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Track order</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, del: 0, pay: 'idle', cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, del: s.del, pay: s.pay, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(2300);
+    tap(195, 788, () => { s.scr = 1; }, 1600);
+    tap(195, 288, () => { s.del = 1; }, 1500);
+    tap(195, 788, () => { s.pay = 'paying'; }, 1400);
+    s.pay = 'paid'; snap(800);
+    s.scr = 2; s.cx = 300; s.cy = 920; snap(3600);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const rust = '#A13A0B';
+    const raw = [
+      { d: 'Fri, Oct 30', sub: 'Delivery', p: 'Free' },
+      { d: 'Tomorrow', sub: 'By 8 PM', p: '$12.00' },
+      { d: 'Today', sub: 'Pickup · Union St', p: 'Free' }
+    ];
+    const tiles = raw.map((t, idx) => {
+      const on = idx === f.del;
+      return Object.assign({}, t, {
+        bg: on ? '#FFF5EF' : '#FFFFFF',
+        bd: on ? rust : 'transparent',
+        sh: on ? '0 8px 22px rgba(161,58,11,0.16)' : '0 1px 2px rgba(0,0,0,0.04)',
+        pc: on ? rust : '#1D1D1F'
+      });
+    });
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2,
+      tiles,
+      fast: f.del === 1, slow: f.del !== 1,
+      total: f.del === 1 ? '$209.64' : '$197.64',
+      idle: f.pay === 'idle', paying: f.pay === 'paying', paid: f.pay === 'paid',
+      payBg: f.pay === 'paid' ? '#0B7A3E' : '#1D1D1F',
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

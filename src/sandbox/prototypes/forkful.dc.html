@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Forkful wrong order prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B4232F}a:hover{color:#8E1B25}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes open{from{opacity:0;max-height:0}to{opacity:1;max-height:56px}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes bloom{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.open{overflow:hidden;animation:open .4s cubic-bezier(.2,.8,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.bloom{animation:bloom .5s cubic-bezier(.2,.9,.25,1.2) both}
+.draw{stroke-dasharray:60;animation:draw .55s .25s cubic-bezier(.6,0,.2,1) both}
+.card{transition:border-color .25s ease,box-shadow .25s ease}
+.chip{transition:background .25s ease,color .25s ease,border-color .25s ease}
+.btn{transition:background .3s ease,color .3s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Orders</h1>
+      <div class="rise" style="margin-top: 24px; height: 160px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="height: 40px; display: flex; align-items: center; gap: 12px">
+          <span style="width: 40px; height: 40px; border-radius: 12px; background: #FBE7E3; color: #B4232F; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">PS</span>
+          <div style="flex: 1; display: flex; flex-direction: column">
+            <span style="font-size: 16px; font-weight: 700">Pho Saigon</span>
+            <span style="font-size: 13px; color: #0B6B3A; font-weight: 600">Delivered 12 min ago</span>
+          </div>
+          <span style="font-size: 16px; font-weight: 700">$31.40</span>
+        </div>
+        <div style="height: 20px; font-size: 14px; color: #6E6E73; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Beef pho · Spring rolls × 2 · Thai iced tea</div>
+        <button style="height: 44px; border: 0; border-radius: 22px; background: #FBE7E3; color: #9C1E29; font: 600 15px Inter, system-ui, sans-serif">Something wrong with this order?</button>
+      </div>
+      <div style="margin-top: 28px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73">Earlier</div>
+      <div class="rise" style="animation-delay: .08s; margin-top: 10px; background: #FFFFFF; border-radius: 22px; padding: 0 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04)">
+        <div style="height: 72px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #EDEDF0">
+          <span style="width: 40px; height: 40px; border-radius: 12px; background: #EEF1E6; color: #4A5A23; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">GB</span>
+          <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Green Bowl</span><span style="font-size: 13px; color: #6E6E73">Fri · 2 items</span></div>
+          <span style="font-size: 14px; font-weight: 600; color: #B4232F">Reorder</span>
+        </div>
+        <div style="height: 72px; display: flex; align-items: center; gap: 12px">
+          <span style="width: 40px; height: 40px; border-radius: 12px; background: #F3EBDD; color: #6B4E1F; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">TC</span>
+          <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Taqueria Centro</span><span style="font-size: 13px; color: #6E6E73">Tue · 4 items</span></div>
+          <span style="font-size: 14px; font-weight: 600; color: #B4232F">Reorder</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">What went wrong?</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">Tap the item that wasn’t right.</p>
+      <div style="margin-top: 24px; background: #FFFFFF; border-radius: 22px; padding: 0 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <sc-for list="{{items}}" as="it" hint-placeholder-count="4">
+          <div>
+            <div style="height: 64px; box-sizing: border-box; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{it.line}}">
+              <span class="chip" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 12px; border: 2px solid {{it.rb}}; background: {{it.rf}}; display: flex; align-items: center; justify-content: center; flex: none">
+                <sc-if value="{{it.on}}" hint-placeholder-val="{{ false }}">
+                  <svg class="pop" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+                </sc-if>
+              </span>
+              <span style="flex: 1; font-size: 16px; font-weight: 600">{{it.n}}</span>
+              <span style="font-size: 15px; color: #6E6E73">{{it.p}}</span>
+            </div>
+            <sc-if value="{{it.on}}" hint-placeholder-val="{{ false }}">
+              <div class="open" style="height: 56px; box-sizing: border-box; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: center; border-bottom: 1px solid #EDEDF0">
+                <sc-for list="{{reasons}}" as="r" hint-placeholder-count="3">
+                  <button class="chip" style="height: 40px; border-radius: 20px; border: 1.5px solid {{r.bd}}; background: {{r.bg}}; color: {{r.fg}}; font: 600 14px Inter, system-ui, sans-serif">{{r.l}}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{ctaBg}}; color: {{ctaFg}}; font: 600 17px Inter, system-ui, sans-serif">Continue</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Sorry about that</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">Spring rolls × 2 were missing. How should we fix it?</p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
+          <div class="card rise" style="animation-delay: {{o.delay}}; height: 104px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; border: 2px solid {{o.bd}}; box-shadow: {{o.sh}}; padding: 0 18px; display: flex; align-items: center; gap: 14px">
+            <span style="width: 44px; height: 44px; border-radius: 14px; background: {{o.ibg}}; color: {{o.ifg}}; display: flex; align-items: center; justify-content: center; flex: none; font-size: 18px; font-weight: 700">{{o.ic}}</span>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+              <span style="font-size: 17px; font-weight: 700">{{o.t}}</span>
+              <span style="font-size: 14px; color: #6E6E73">{{o.s}}</span>
+            </div>
+            <span style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 11px; border: 2px solid {{o.rb}}; background: {{o.rf}}; display: flex; align-items: center; justify-content: center; flex: none">
+              <sc-if value="{{o.on}}" hint-placeholder-val="{{ false }}"><span class="pop" style="width: 8px; height: 8px; border-radius: 4px; background: #FFFFFF"></span></sc-if>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+      <div class="rise" style="animation-delay: .2s; margin-top: 16px; background: #FFF6E5; border-radius: 16px; padding: 14px 16px; display: flex; gap: 10px; align-items: center; font-size: 14px; line-height: 20px; color: #6B4300">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1c2 0 6 2 6-1s-4-3-6 1"></path></svg>
+        <span>We’re also adding <b>$5 credit</b> to your next order.</span>
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{ctaBg2}}; color: {{ctaFg2}}; font: 600 17px Inter, system-ui, sans-serif">{{ctaL2}}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 112px 24px 0; display: flex; flex-direction: column; align-items: center">
+      <div class="bloom" style="width: 92px; height: 92px; border-radius: 46px; background: #0B7A3E; display: flex; align-items: center; justify-content: center">
+        <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="draw" d="M13 25l7 7 15-16" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <h1 style="margin: 26px 0 0; font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em">$8.00 refunded</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #6E6E73; text-align: center">Back on your Visa ending 4417 instantly.</p>
+      <div class="rise" style="animation-delay: .25s; margin-top: 32px; width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 0 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="height: 56px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0; font-size: 15px"><span style="color: #6E6E73">Refund</span><span style="font-weight: 600">$8.00</span></div>
+        <div style="height: 56px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDEDF0; font-size: 15px"><span style="color: #6E6E73">Credit for next order</span><span style="font-weight: 600; color: #0B6B3A">+$5.00</span></div>
+        <div style="height: 56px; display: flex; justify-content: space-between; align-items: center; font-size: 15px"><span style="color: #6E6E73">Pho Saigon</span><span style="font-weight: 600">Notified</span></div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Done</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, item: false, reason: false, pick: false, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, item: s.item, reason: s.reason, pick: s.pick, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(2200);
+    tap(195, 240, () => { s.scr = 1; }, 1300);
+    tap(195, 242, () => { s.item = true; }, 900);
+    tap(90, 302, () => { s.reason = true; }, 900);
+    tap(195, 788, () => { s.scr = 2; }, 1500);
+    tap(195, 198, () => { s.pick = true; }, 900);
+    tap(195, 788, () => { s.scr = 3; }, 500);
+    s.cx = 300; s.cy = 920; snap(3200);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const red = '#B4232F';
+    const raw = [
+      { n: 'Beef pho', p: '$15.50' },
+      { n: 'Spring rolls × 2', p: '$8.00' },
+      { n: 'Thai iced tea', p: '$5.50' },
+      { n: 'Extra lime', p: 'Free' }
+    ];
+    const items = raw.map((x, idx) => {
+      const on = idx === 1 && f.item;
+      return Object.assign({}, x, { on, rb: on ? red : '#C7C7CC', rf: on ? red : '#FFFFFF', line: idx === 3 || on ? 'transparent' : '#EDEDF0' });
+    });
+    const reasons = ['Missing', 'Wrong item', 'Damaged'].map((l, idx) => {
+      const on = idx === 0 && f.reason;
+      return { l, bd: on ? red : '#E5E5EA', bg: on ? red : '#FFFFFF', fg: on ? '#FFFFFF' : '#1D1D1F' };
+    });
+    const opts = [
+      { ic: '$', t: 'Refund $8.00', s: 'To Visa ending 4417 · instant', ibg: '#E3F5EA', ifg: '#0B6B3A' },
+      { ic: '↻', t: 'Redeliver', s: 'Fresh spring rolls in ~25 min', ibg: '#FBE7E3', ifg: red }
+    ].map((o, idx) => {
+      const on = idx === 0 && f.pick;
+      return Object.assign({}, o, {
+        on, delay: (idx * 0.07) + 's',
+        bd: on ? red : 'transparent',
+        sh: on ? '0 10px 28px rgba(180,35,47,0.16)' : '0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)',
+        rb: on ? red : '#C7C7CC', rf: on ? red : '#FFFFFF'
+      });
+    });
+    const ready = f.item && f.reason;
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2, s3: f.scr === 3,
+      items, reasons, opts,
+      ctaBg: ready ? '#1D1D1F' : '#E8E8ED', ctaFg: ready ? '#FFFFFF' : '#6E6E73',
+      ctaBg2: f.pick ? red : '#E8E8ED', ctaFg2: f.pick ? '#FFFFFF' : '#6E6E73',
+      ctaL2: f.pick ? 'Refund $8.00 now' : 'Choose a fix',
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

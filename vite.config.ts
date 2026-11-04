@@ -29,7 +29,7 @@ const spaFallback = (): Plugin => {
       const index = path.join(outDir, "index.html");
       const projects = await readFile(path.join(root, "src/data/projects.ts"), "utf8");
       const ids = [...projects.matchAll(/^\s*id:\s*(\d+),/gm)].map((m) => m[1]);
-      const routes = ["projects", "about", "resume", ...ids.map((id) => `projects/${id}`)];
+      const routes = ["projects", "sandbox", "about", "resume", ...ids.map((id) => `projects/${id}`)];
       await copyFile(index, path.join(outDir, "404.html"));
       for (const route of routes) {
         await mkdir(path.join(outDir, route), { recursive: true });

@@ -7,6 +7,7 @@ export const publicUrl = (path: string) => `${import.meta.env.BASE_URL}${path.re
 
 export const navLinks = [
   { to: "/projects", label: "Work" },
+  { to: "/sandbox", label: "Sandbox" },
   { to: "/about", label: "About" },
   { to: "/resume", label: "Resume" },
 ] as const;

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Thread fit check prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7A2E5C}a:hover{color:#5E2347}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes qIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes ring{from{stroke-dashoffset:415}to{stroke-dashoffset:50}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes letter{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.q{animation:qIn .5s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.ring{stroke-dasharray:415;animation:ring 1.2s .3s cubic-bezier(.3,0,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.spin{animation:spin .8s linear infinite}
+.letter{animation:letter .6s .5s cubic-bezier(.2,.9,.25,1.2) both}
+.opt{transition:background .2s ease,border-color .2s ease,color .2s ease}
+.seg{transition:background .35s ease}
+.btn{transition:background .3s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr">
+      <div style="height: 380px; background: #E9E4DA; display: flex; align-items: center; justify-content: center">
+        <svg width="230" height="230" viewBox="0 0 120 120" fill="none" stroke="#4F5A3A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" role="img" aria-label="Olive field jacket">
+          <path d="M44 14l-18 8-12 40 10 4 8-24v60h56V42l8 24 10-4-12-40-18-8" fill="#7C8659" fill-opacity="0.35"></path>
+          <path d="M44 14c3 6 9 9 16 9s13-3 16-9"></path>
+          <path d="M60 23v79"></path>
+          <path d="M40 62h12v12H40zM68 62h12v12H68z"></path>
+          <path d="M56 34h0M56 48h0M56 62h0M56 76h0M56 90h0" stroke-width="3.5"></path>
+        </svg>
+      </div>
+      <div style="padding: 20px 24px 0">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 24px; line-height: 30px; font-weight: 700; letter-spacing: -0.02em">Field Jacket</span>
+            <span style="font-size: 14px; color: #6E6E73">Olive · Waxed cotton</span>
+          </div>
+          <span style="font-size: 20px; font-weight: 700">$148</span>
+        </div>
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">Size</span><span style="color: #6E6E73">Runs slim in shoulders</span></div>
+        <div style="margin-top: 8px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+          <button style="height: 48px; border-radius: 14px; border: 1.5px solid #D1D1D6; background: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">XS</button>
+          <button style="height: 48px; border-radius: 14px; border: 1.5px solid #D1D1D6; background: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">S</button>
+          <button style="height: 48px; border-radius: 14px; border: 1.5px solid #D1D1D6; background: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">M</button>
+          <button style="height: 48px; border-radius: 14px; border: 1.5px solid #D1D1D6; background: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">L</button>
+          <button style="height: 48px; border-radius: 14px; border: 1.5px solid #D1D1D6; background: #FFFFFF; font: 600 15px Inter, system-ui, sans-serif; color: #1D1D1F">XL</button>
+        </div>
+        <button style="margin-top: 16px; width: 100%; height: 52px; border-radius: 16px; border: 1.5px solid #7A2E5C; background: #F7EEF3; color: #6A2850; font: 600 15px Inter, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"></path></svg>
+          Not sure? Find your size in 30 sec
+        </button>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #E8E8ED; color: #6E6E73; font: 600 17px Inter, system-ui, sans-serif">Select a size</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+        <sc-for list="{{segs}}" as="g" hint-placeholder-count="3">
+          <div class="seg" style="height: 4px; border-radius: 2px; background: {{g}}"></div>
+        </sc-for>
+      </div>
+      <sc-for list="{{quiz}}" as="q" hint-placeholder-count="0">
+        <sc-if value="{{q.show}}" hint-placeholder-val="{{ false }}">
+          <div class="q">
+            <div style="margin-top: 16px; height: 20px; font-size: 13px; font-weight: 600; color: #7A2E5C">Question {{q.n}} of 3</div>
+            <h2 style="margin: 8px 0 0; height: 68px; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em">{{q.t}}</h2>
+            <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 12px">
+              <sc-for list="{{q.opts}}" as="o" hint-placeholder-count="3">
+                <button class="opt" style="height: 64px; border-radius: 18px; border: 2px solid {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font: 600 16px Inter, system-ui, sans-serif; text-align: left; padding: 0 20px; display: flex; align-items: center; justify-content: space-between">
+                  <span>{{o.l}}</span>
+                  <sc-if value="{{o.on}}" hint-placeholder-val="{{ false }}">
+                    <svg class="pop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-for>
+      <sc-if value="{{thinking}}" hint-placeholder-val="{{ false }}">
+        <div class="q" style="margin-top: 220px; display: flex; flex-direction: column; align-items: center; gap: 16px">
+          <svg class="spin" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#E5D3DE" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" stroke="#7A2E5C" stroke-width="3" stroke-linecap="round"></path></svg>
+          <span style="font-size: 16px; font-weight: 600; color: #6E6E73">Matching you to the right size…</span>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0; display: flex; flex-direction: column; align-items: center">
+      <div style="height: 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73">Your size · Field Jacket</div>
+      <div style="position: relative; margin-top: 16px; width: 150px; height: 150px">
+        <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true" style="transform: rotate(-90deg)">
+          <circle cx="75" cy="75" r="66" fill="none" stroke="#EFE4EA" stroke-width="10"></circle>
+          <circle class="ring" cx="75" cy="75" r="66" fill="none" stroke="#7A2E5C" stroke-width="10" stroke-linecap="round"></circle>
+        </svg>
+        <span class="letter" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; letter-spacing: -0.03em">L</span>
+      </div>
+      <div style="margin-top: 14px; font-size: 20px; font-weight: 700">High confidence</div>
+      <div style="margin-top: 2px; font-size: 14px; color: #6E6E73">Based on your fit, layering and height</div>
+      <div class="rise" style="animation-delay: .5s; margin-top: 20px; width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; padding: 8px 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <sc-for list="{{why}}" as="w" hint-placeholder-count="3">
+          <div style="height: 44px; display: flex; align-items: center; gap: 10px; font-size: 15px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B6B3A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+            <span>{{w}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div class="rise" style="animation-delay: .65s; margin-top: 12px; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <div style="height: 76px; box-sizing: border-box; background: #FFFFFF; border-radius: 18px; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 18px; font-weight: 700; color: #6E6E73">M</span><span style="font-size: 12px; color: #6E6E73">Snug shoulders</span></div>
+        <div style="height: 76px; box-sizing: border-box; background: #F7EEF3; border-radius: 18px; border: 2px solid #7A2E5C; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 18px; font-weight: 700; color: #7A2E5C">L</span><span style="font-size: 12px; font-weight: 600; color: #6A2850">Your fit</span></div>
+        <div style="height: 76px; box-sizing: border-box; background: #FFFFFF; border-radius: 18px; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 18px; font-weight: 700; color: #6E6E73">XL</span><span style="font-size: 12px; color: #6E6E73">Sleeves run long</span></div>
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{ctaBg}}; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">{{ctaL}}</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, q: 1, a: [-1, -1, -1], thinking: false, added: false, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, q: s.q, a: s.a.slice(), thinking: s.thinking, added: s.added, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(2400);
+    tap(195, 588, () => { s.scr = 1; s.q = 1; }, 1000);
+    tap(195, 232, () => { s.a[0] = 0; }, 650);
+    s.q = 2; snap(1000);
+    tap(195, 308, () => { s.a[1] = 1; }, 650);
+    s.q = 3; snap(1000);
+    tap(195, 308, () => { s.a[2] = 1; }, 650);
+    s.q = 0; s.thinking = true; s.cx = 300; s.cy = 920; snap(1300);
+    s.thinking = false; s.scr = 2; snap(2600);
+    tap(195, 788, () => { s.added = true; }, 600);
+    s.cx = 300; s.cy = 920; snap(2400);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const plum = '#7A2E5C';
+    const Q = [
+      { t: 'How do size M jackets usually fit you?', opts: ['Tight in the shoulders', 'Just right', 'A bit loose'] },
+      { t: 'How do you like to wear a jacket?', opts: ['Over a T-shirt', 'Over a sweater', 'Either way'] },
+      { t: 'How tall are you?', opts: ['Under 5′7″', '5′7″ to 6′0″', 'Over 6′0″'] }
+    ];
+    const quiz = Q.map((q, qi) => ({
+      n: qi + 1, t: q.t, show: f.q === qi + 1,
+      opts: q.opts.map((l, oi) => {
+        const on = f.a[qi] === oi;
+        return { l, on, bd: on ? plum : '#E5E5EA', bg: on ? plum : '#FFFFFF', fg: on ? '#FFFFFF' : '#1D1D1F' };
+      })
+    }));
+    const done = f.a.filter((x) => x >= 0).length;
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2,
+      segs: [0, 1, 2].map((k) => (k < done ? plum : (k === done && !f.thinking ? '#D9BFCD' : '#E5E5EA'))),
+      quiz, thinking: f.thinking,
+      why: ['Room in the shoulders', 'Fits over a sweater', 'Sleeves end at the wrist'],
+      ctaBg: f.added ? '#0B7A3E' : '#1D1D1F',
+      ctaL: f.added ? 'Added to bag ✓' : 'Add size L · $148',
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>
