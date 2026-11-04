@@ -17,6 +17,7 @@ const routes: RouteObject[] = [
       { index: true, Component: Home },
       { path: "projects", lazy: () => import("@/pages/Projects") },
       { path: "projects/:id", lazy: () => import("@/pages/Project") },
+      { path: "sandbox", lazy: () => import("@/pages/Sandbox") },
       { path: "about", lazy: () => import("@/pages/About") },
       { path: "resume", lazy: () => import("@/pages/Resume") },
       { path: "*", Component: NotFound },

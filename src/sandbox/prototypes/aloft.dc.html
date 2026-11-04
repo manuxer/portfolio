@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aloft rebooking prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0A5BC4}a:hover{color:#08479A}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes drop{from{opacity:0;transform:translateY(-18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes passIn{from{opacity:0;transform:translateY(40px) rotateX(18deg)}to{opacity:1;transform:none}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.drop{animation:drop .7s .35s cubic-bezier(.2,.9,.25,1.1) both}
+.dim{animation:fade .35s ease both}
+.sheet{animation:sheet .55s cubic-bezier(.2,.85,.25,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.pass{animation:passIn .8s .15s cubic-bezier(.2,.85,.25,1) both;transform-origin:50% 0}
+.card{transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+.btn{transition:background .3s ease,color .3s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F5F7; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6E6E73">Today · Oct 26</div>
+      <h1 style="margin: 4px 0 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Your trip</h1>
+      <div class="drop" style="margin-top: 22px; background: #FFF1E0; border-radius: 20px; padding: 16px 18px; display: flex; gap: 12px; align-items: flex-start">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A3B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 16px; font-weight: 700; color: #8A3B00">You’ll miss your connection in Denver</span>
+          <span style="font-size: 14px; line-height: 20px; color: #6B2E00">NW 214 is delayed 3h 40m. We’re holding seats on faster options until 9:30 AM.</span>
+        </div>
+      </div>
+      <div class="rise" style="animation-delay: .1s; margin-top: 14px; background: #FFFFFF; border-radius: 22px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div style="display: flex; flex-direction: column">
+            <span style="font-size: 34px; font-weight: 700; letter-spacing: -0.03em">BOS</span>
+            <span style="font-size: 13px; color: #6E6E73">Boston</span>
+          </div>
+          <div style="flex: 1; margin: 0 14px; display: flex; align-items: center; gap: 6px; color: #AEAEB2">
+            <div style="flex: 1; height: 0; border-top: 2px dashed #D1D1D6"></div>
+            <span style="font-size: 12px; font-weight: 600; color: #6E6E73">DEN</span>
+            <div style="flex: 1; height: 0; border-top: 2px dashed #D1D1D6"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end">
+            <span style="font-size: 34px; font-weight: 700; letter-spacing: -0.03em">SFO</span>
+            <span style="font-size: 13px; color: #6E6E73">San Francisco</span>
+          </div>
+        </div>
+        <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid #EDEDF0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 12px; color: #6E6E73">Departs</span>
+            <span style="font-size: 15px; color: #8E8E93; text-decoration: line-through">7:10 AM</span>
+            <span style="font-size: 17px; font-weight: 700; color: #B54700">10:50 AM</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 12px; color: #6E6E73">Connection</span>
+            <span style="font-size: 15px; color: #8E8E93; text-decoration: line-through">DEN 11:05 AM</span>
+            <span style="font-size: 17px; font-weight: 700; color: #B54700">Missed</span>
+          </div>
+        </div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #0A5BC4; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">See your options</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">Your options</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; line-height: 20px; color: #6E6E73">You were arriving at 1:35 PM. No change fees.</p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+          <div class="card rise" style="animation-delay: {{o.delay}}; height: 108px; box-sizing: border-box; background: #FFFFFF; border-radius: 22px; border: 2px solid {{o.bd}}; box-shadow: {{o.sh}}; padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="display: flex; align-items: baseline; gap: 8px">
+              <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">{{o.arr}}</span>
+              <span style="font-size: 14px; font-weight: 600; color: #6E6E73">{{o.delta}}</span>
+              <span style="margin-left: auto; width: 22px; height: 22px; box-sizing: border-box; border-radius: 11px; border: 2px solid {{o.rb}}; background: {{o.rf}}; display: flex; align-items: center; justify-content: center">
+                <sc-if value="{{o.on}}" hint-placeholder-val="{{ false }}"><span class="pop" style="width: 8px; height: 8px; border-radius: 4px; background: #FFFFFF"></span></sc-if>
+              </span>
+            </div>
+            <span style="font-size: 14px; color: #3A3A3C">{{o.route}}</span>
+            <div style="display: flex; gap: 6px">
+              <sc-for list="{{o.tags}}" as="t" hint-placeholder-count="1">
+                <span style="padding: 3px 8px; border-radius: 8px; background: {{t.bg}}; color: {{t.fg}}; font-size: 12px; font-weight: 600">{{t.l}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <button class="btn" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: {{ctaBg}}; color: {{ctaFg}}; font: 600 17px Inter, system-ui, sans-serif">{{ctaL}}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="dim" style="position: absolute; inset: 0; background: rgba(0,0,0,0.32)"></div>
+    <div class="sheet" style="position: absolute; left: 0; right: 0; bottom: 0; height: 500px; box-sizing: border-box; background: #FFFFFF; border-radius: 30px 30px 0 0; padding: 12px 24px 0">
+      <div style="width: 40px; height: 5px; border-radius: 3px; background: #D1D1D6; margin: 0 auto"></div>
+      <h2 style="margin: 20px 0 4px; font-size: 24px; line-height: 30px; font-weight: 700; letter-spacing: -0.02em">Confirm new flight</h2>
+      <p style="margin: 0 0 10px; font-size: 14px; color: #6E6E73">NW 1180 · Nonstop · Boston to San Francisco</p>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+        <div style="height: 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EDEDF0; font-size: 15px">
+          <span style="color: #6E6E73">{{r.k}}</span><span style="font-weight: 600">{{r.v}}</span>
+        </div>
+      </sc-for>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #0A5BC4; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Confirm rebooking</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="padding: 56px 24px 0">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span class="pop" style="width: 28px; height: 28px; border-radius: 14px; background: #0B7A3E; display: flex; align-items: center; justify-content: center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </span>
+        <span style="font-size: 15px; font-weight: 600; color: #0B6B3A">Rebooked · arrives 1h 05m later</span>
+      </div>
+      <h1 style="margin: 10px 0 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.025em">You’re all set</h1>
+      <div class="pass" style="margin-top: 22px; background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 18px 40px rgba(10,91,196,0.14)">
+        <div style="background: #0A5BC4; color: #FFFFFF; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center">
+          <span style="font-size: 15px; font-weight: 700; letter-spacing: 0.02em">Aloft</span>
+          <span style="font-size: 13px; font-weight: 600; opacity: 0.9">Boarding pass · NW 1180</span>
+        </div>
+        <div style="padding: 18px 20px 0; display: flex; justify-content: space-between; align-items: flex-end">
+          <div style="display: flex; flex-direction: column"><span style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em">BOS</span><span style="font-size: 13px; color: #6E6E73">11:15 AM</span></div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0A5BC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-bottom: 10px"><path d="M2 16l20-6-20-6 4 6-4 6z"></path></svg>
+          <div style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em">SFO</span><span style="font-size: 13px; color: #6E6E73">2:40 PM</span></div>
+        </div>
+        <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #6E6E73">Gate</span><span style="font-size: 17px; font-weight: 700">B12</span></div>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #6E6E73">Seat</span><span style="font-size: 17px; font-weight: 700">14C</span></div>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #6E6E73">Group</span><span style="font-size: 17px; font-weight: 700">3</span></div>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #6E6E73">Boards</span><span style="font-size: 17px; font-weight: 700">10:35</span></div>
+        </div>
+        <div style="margin: 0 20px; border-top: 2px dashed #E5E5EA"></div>
+        <div style="padding: 18px 0 20px; display: flex; justify-content: center">
+          <div role="img" aria-label="Boarding pass code" style="display: grid; grid-template-columns: repeat(17, minmax(0, 1fr)); width: 119px; height: 119px">
+            <sc-for list="{{qr}}" as="q" hint-placeholder-count="0">
+              <span style="background: {{q}}"></span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <button style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #1D1D1F; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Save boarding pass</button>
+    </div>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+    this.qr = this.makeQr();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, sel: false, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push({ scr: s.scr, sel: s.sel, cx: s.cx, cy: s.cy, down: s.down, dur: d });
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(2600);
+    tap(195, 788, () => { s.scr = 1; }, 1500);
+    tap(195, 200, () => { s.sel = true; }, 1000);
+    tap(195, 788, () => { s.scr = 2; }, 2200);
+    tap(195, 788, () => { s.scr = 3; }, 500);
+    s.cx = 300; s.cy = 920; snap(3400);
+    return fr;
+  }
+  makeQr() {
+    const n = 17, out = [];
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const finder = (r, c) => {
+      const inBox = (r0, c0) => r >= r0 && r < r0 + 5 && c >= c0 && c < c0 + 5;
+      const boxes = [[0, 0], [0, n - 5], [n - 5, 0]];
+      for (const [r0, c0] of boxes) {
+        if (inBox(r0, c0)) {
+          const rr = r - r0, cc = c - c0;
+          const edge = rr === 0 || rr === 4 || cc === 0 || cc === 4;
+          const core = rr === 2 && cc === 2;
+          return edge || core ? 1 : 0;
+        }
+      }
+      return -1;
+    };
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+      const f = finder(r, c);
+      const on = f === -1 ? rnd() > 0.52 : f === 1;
+      out.push(on ? '#1D1D1F' : 'transparent');
+    }
+    return out;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const blue = '#0A5BC4';
+    const tag = (l, kind) => kind === 'rec' ? { l, bg: '#E6F0FC', fg: '#08479A' } : { l, bg: '#F2F2F7', fg: '#3A3A3C' };
+    const raw = [
+      { arr: '2:40 PM', delta: '+1h 05m', route: 'Nonstop · NW 1180 · departs 11:15 AM', tags: [tag('Recommended', 'rec'), tag('Aisle 14C held')] },
+      { arr: '4:55 PM', delta: '+3h 20m', route: '1 stop ORD · departs 12:05 PM', tags: [tag('Window 22A held')] },
+      { arr: '10:20 AM', delta: 'tomorrow', route: 'Nonstop · departs 7:00 AM', tags: [tag('Hotel and meals covered')] }
+    ];
+    const opts = raw.map((o, idx) => {
+      const on = idx === 0 && f.sel;
+      return Object.assign({}, o, {
+        on, delay: (idx * 0.07) + 's',
+        bd: on ? blue : 'transparent',
+        sh: on ? '0 10px 28px rgba(10,91,196,0.18)' : '0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.05)',
+        rb: on ? blue : '#C7C7CC', rf: on ? blue : '#FFFFFF'
+      });
+    });
+    return {
+      s0: f.scr === 0, s1: f.scr === 1 || f.scr === 2, s2: f.scr === 2, s3: f.scr === 3,
+      opts,
+      ctaBg: f.sel ? blue : '#E8E8ED', ctaFg: f.sel ? '#FFFFFF' : '#6E6E73',
+      ctaL: f.sel ? 'Rebook to NW 1180' : 'Choose a flight',
+      rows: [
+        { k: 'Departs', v: '11:15 AM · Gate B12' },
+        { k: 'Arrives', v: '2:40 PM' },
+        { k: 'Seat', v: '14C · Aisle' },
+        { k: 'Checked bag', v: 'Moves with you' },
+        { k: 'Change fee', v: '$0' }
+      ],
+      qr: this.qr,
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>

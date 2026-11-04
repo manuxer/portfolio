@@ -14,6 +14,7 @@ Same information architecture as the original site:
 | `/` | Hero, featured projects, about preview, contact |
 | `/projects` | Work grid |
 | `/projects/:id` | Case studies 8, 9, 10, 11; legacy projects 1–7 |
+| `/sandbox` | Short design experiments: a brief beside a prototype that plays the flow |
 | `/about` | Story, portrait, quote |
 | `/resume` | Experience, education, skills, PDF download |
 

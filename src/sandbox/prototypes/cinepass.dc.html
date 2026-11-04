@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>cinePass booking prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4338CA}a:hover{color:#3730A3}
+@keyframes scrIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes cardDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.2);opacity:0}65%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes ping{0%{transform:scale(.6);opacity:.6}100%{transform:scale(2.6);opacity:0}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes passIn{from{opacity:0;transform:translateY(60px) rotate(-4deg)}to{opacity:1;transform:none}}
+@keyframes twinkle{0%,100%{opacity:.3}50%{opacity:1}}
+.scr{position:absolute;inset:0;box-sizing:border-box;animation:scrIn .6s cubic-bezier(.2,.8,.2,1) both}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.cardDown{animation:cardDown .6s .1s cubic-bezier(.2,.8,.2,1) both}
+.pop{animation:pop .4s cubic-bezier(.2,.8,.2,1) both}
+.ping{animation:ping 1.8s ease-out infinite}
+.drift{animation:drift 4s ease-in-out infinite}
+.pass{animation:passIn .8s .35s cubic-bezier(.2,.85,.25,1) both}
+.tw{animation:twinkle 2.4s ease-in-out infinite}
+.pin{transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.row{transition:border-color .25s ease,background .25s ease}
+.chip{transition:background .25s ease,border-color .25s ease,color .25s ease}
+.seat{transition:background .2s ease,transform .2s ease}
+.fab{transition:background .3s ease,transform .2s ease}
+.cursor{transition:left .6s cubic-bezier(.45,0,.2,1),top .6s cubic-bezier(.45,0,.2,1),transform .14s ease,background .14s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F6F6FB; font-family: Inter, -apple-system, system-ui, sans-serif; color: #1D1D1F">
+
+  <sc-if value="{{poster}}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; left: 0; right: 0; top: 0; height: 240px; background: #16143D; overflow: hidden">
+      <svg width="390" height="240" viewBox="0 0 390 240" fill="none" aria-hidden="true" style="position: absolute; inset: 0">
+        <circle cx="300" cy="96" r="84" fill="#2A2672"></circle>
+        <path d="M232 70c30 10 80 14 136 6" stroke="#3B36A0" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M228 120c40 12 100 10 144-4" stroke="#3B36A0" stroke-width="8" stroke-linecap="round"></path>
+        <ellipse cx="300" cy="100" rx="140" ry="26" stroke="#7C72FF" stroke-width="3" transform="rotate(-12 300 100)"></ellipse>
+        <circle cx="96" cy="150" r="18" fill="#4B45B8"></circle>
+        <circle cx="90" cy="145" r="5" fill="#5C56CC"></circle>
+        <path d="M0 210 L150 120" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="1.5"></path>
+      </svg>
+      <span class="tw" style="position: absolute; left: 40px; top: 60px; width: 3px; height: 3px; border-radius: 2px; background: #FFFFFF"></span>
+      <span class="tw" style="position: absolute; left: 150px; top: 40px; width: 2px; height: 2px; border-radius: 1px; background: #FFFFFF; animation-delay: .6s"></span>
+      <span class="tw" style="position: absolute; left: 190px; top: 90px; width: 3px; height: 3px; border-radius: 2px; background: #FFFFFF; animation-delay: 1.2s"></span>
+      <span class="tw" style="position: absolute; left: 60px; top: 100px; width: 2px; height: 2px; border-radius: 1px; background: #FFFFFF; animation-delay: 1.8s"></span>
+      <span class="tw" style="position: absolute; left: 220px; top: 28px; width: 2px; height: 2px; border-radius: 1px; background: #FFFFFF; animation-delay: .3s"></span>
+      <button aria-label="Back" style="position: absolute; left: 10px; top: 52px; width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="scr" style="pointer-events: none">
+      <div style="position: absolute; left: 0; right: 0; top: 240px; bottom: 0; background: #E9EDF2; overflow: hidden">
+        <svg width="390" height="544" viewBox="0 0 390 544" fill="none" aria-hidden="true" style="position: absolute; inset: 0">
+          <path d="M290 0 C270 120 330 200 300 300 C280 380 320 460 300 544" stroke="#B9D3EE" stroke-width="34"></path>
+          <rect x="30" y="300" width="110" height="90" rx="14" fill="#D6E8CF"></rect>
+          <rect x="200" y="430" width="70" height="60" rx="12" fill="#D6E8CF"></rect>
+          <path d="M0 180h390M0 300h260M0 440h390M120 0v544M210 0v544" stroke="#FFFFFF" stroke-width="12"></path>
+          <path d="M0 250 C120 230 200 330 390 290" stroke="#F7D488" stroke-width="10"></path>
+          <path d="M60 0v544M0 360h390M250 120h140" stroke="#FFFFFF" stroke-width="5"></path>
+        </svg>
+      </div>
+      <div style="position: absolute; left: 170px; top: 610px; width: 18px; height: 18px; margin: -9px 0 0 -9px">
+        <span class="ping" style="position: absolute; inset: 0; border-radius: 9px; background: #4338CA"></span>
+        <span style="position: absolute; inset: 0; border-radius: 9px; background: #4338CA; border: 3px solid #FFFFFF; box-sizing: border-box; box-shadow: 0 2px 6px rgba(0,0,0,0.25)"></span>
+      </div>
+      <sc-for list="{{pins}}" as="p" hint-placeholder-count="3">
+        <div class="pin" style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 36px; height: 46px; margin: -46px 0 0 -18px; transform-origin: 50% 100%; transform: scale({{p.sc}})">
+          <svg width="36" height="46" viewBox="0 0 36 46" aria-hidden="true"><path d="M18 45C18 45 3 28 3 17a15 15 0 0 1 30 0c0 11-15 28-15 28z" fill="{{p.c}}" stroke="#FFFFFF" stroke-width="2.5"></path><circle cx="18" cy="17" r="5.5" fill="#FFFFFF"></circle></svg>
+        </div>
+      </sc-for>
+      <sc-if value="{{callout}}" hint-placeholder-val="{{ false }}">
+        <div class="pop" style="position: absolute; left: 226px; top: 570px; padding: 8px 12px; border-radius: 12px; background: #1E1C3A; color: #FFFFFF; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 8px 20px rgba(0,0,0,0.2)">Starlight IMAX · 1.2 mi</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+    <div class="cardDown" style="position: absolute; left: 16px; right: 16px; top: 108px; background: #FFFFFF; border-radius: 22px; padding: 20px 16px 16px; box-shadow: 0 16px 40px rgba(22,20,61,0.18)">
+      <div style="text-align: center; font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.02em">The Long Orbit</div>
+      <div style="margin-top: 6px; display: flex; justify-content: center; gap: 14px; font-size: 13px; color: #6E6E73">
+        <span>★ 4.8</span><span>2h 28m</span><span>IMAX · PG-13</span>
+      </div>
+      <div style="margin: 14px 0 10px; height: 1px; background: #EDEDF4"></div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{cinemas}}" as="c" hint-placeholder-count="3">
+          <div class="row" style="height: 46px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{c.bd}}; background: {{c.bg}}; padding: 0 14px; display: flex; align-items: center; gap: 10px">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: {{c.dot}}; flex: none"></span>
+            <span style="flex: 1; font-size: 15px; font-weight: 600; color: {{c.fg}}">{{c.n}}</span>
+            <span style="font-size: 13px; color: #6E6E73">{{c.d}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="pointer-events: none">
+      <div class="rise" style="position: absolute; left: 16px; right: 16px; top: 108px; background: #FFFFFF; border-radius: 22px; padding: 20px 18px 18px; box-shadow: 0 16px 40px rgba(22,20,61,0.18)">
+        <div style="text-align: center; font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.02em">The Long Orbit</div>
+        <div style="margin-top: 6px; display: flex; justify-content: center; gap: 14px; font-size: 13px; color: #6E6E73"><span>★ 4.8</span><span>2h 28m</span><span>IMAX · PG-13</span></div>
+        <div style="margin: 14px 0 12px; height: 1px; background: #EDEDF4"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 15px; font-weight: 700">Synopsis</span>
+          <div style="display: flex; gap: 6px"><span style="padding: 4px 9px; border-radius: 8px; background: #F1F0FF; color: #4338CA; font-size: 12px; font-weight: 600">Sci-fi</span><span style="padding: 4px 9px; border-radius: 8px; background: #F1F0FF; color: #4338CA; font-size: 12px; font-weight: 600">Drama</span></div>
+        </div>
+        <p style="margin: 8px 0 0; font-size: 13px; line-height: 19px; color: #5A5A60">A lone engineer on a decaying space station has 40 days to bring her crew home before its orbit gives out.</p>
+      </div>
+      <div style="position: absolute; left: 16px; right: 0; top: 352px; display: flex; gap: 10px">
+        <sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
+          <div class="chip" style="width: 60px; height: 64px; box-sizing: border-box; border-radius: 16px; border: 1.5px solid {{d.bd}}; background: {{d.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex: none">
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: {{d.sub}}">{{d.w}}</span>
+            <span style="font-size: 20px; font-weight: 700; color: {{d.fg}}">{{d.n}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 16px; right: 0; top: 436px; display: flex; flex-direction: column; gap: 18px">
+        <sc-for list="{{shows}}" as="s" hint-placeholder-count="3">
+          <div>
+            <div style="height: 18px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700">{{s.n}}<span style="font-size: 12px; font-weight: 500; color: #6E6E73">{{s.d}}</span></div>
+            <div style="margin-top: 8px; display: flex; gap: 8px">
+              <sc-for list="{{s.times}}" as="t" hint-placeholder-count="4">
+                <div class="chip" style="width: 76px; height: 36px; box-sizing: border-box; border-radius: 18px; border: 1.5px solid {{t.bd}}; background: {{t.bg}}; color: {{t.fg}}; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: {{t.td}}; flex: none">{{t.l}}</div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="background: #FFFFFF">
+      <div style="position: absolute; left: 0; right: 0; top: 0; height: 180px; background: #16143D"></div>
+      <button aria-label="Back" style="position: absolute; left: 10px; top: 46px; width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+      </button>
+      <div class="rise" style="position: absolute; left: 16px; right: 16px; top: 96px; background: #FFFFFF; border-radius: 22px; padding: 18px 16px 16px; box-shadow: 0 16px 40px rgba(22,20,61,0.16)">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em">The Long Orbit
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+        </div>
+        <div style="margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+          <div style="height: 32px; border-radius: 16px; border: 1.5px solid #E2E2EC; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">Sat, Nov 7</div>
+          <div style="height: 32px; border-radius: 16px; border: 1.5px solid #E2E2EC; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">7:15 PM</div>
+          <div style="height: 32px; border-radius: 16px; border: 1.5px solid #E2E2EC; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">Starlight IMAX</div>
+        </div>
+      </div>
+      <div style="position: absolute; left: 0; right: 0; top: 238px; display: flex; justify-content: center; gap: 16px; font-size: 12px; color: #6E6E73">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #E4E4EE"></span>Available</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1E1C3A"></span>Taken</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #4338CA"></span>Yours</span>
+      </div>
+      <svg width="320" height="24" viewBox="0 0 320 24" fill="none" aria-hidden="true" style="position: absolute; left: 35px; top: 268px">
+        <path d="M4 20 Q160 -4 316 20" stroke="#C9C6F5" stroke-width="5" stroke-linecap="round"></path>
+      </svg>
+      <div style="position: absolute; left: 0; right: 0; top: 292px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #8E8E93">SCREEN</div>
+      <div role="img" aria-label="Seat map, rows A to H" style="position: absolute; left: 12px; top: 312px; display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+          <div style="height: 24px; display: flex; align-items: center; gap: 6px">
+            <span style="width: 16px; font-size: 11px; font-weight: 600; color: #8E8E93; text-align: center">{{r.l}}</span>
+            <sc-for list="{{r.seats}}" as="s" hint-placeholder-count="10">
+              <span class="seat" style="width: 25px; height: 24px; margin-left: {{s.ml}}px; border-radius: 8px 8px 4px 4px; background: {{s.c}}; transform: scale({{s.sc}}); flex: none"></span>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{picked}}" hint-placeholder-val="{{ false }}">
+        <div class="pop" style="position: absolute; left: 0; right: 0; top: 586px; display: flex; justify-content: center">
+          <span style="padding: 7px 12px; border-radius: 12px; background: #F1F0FF; color: #3730A3; font-size: 13px; font-weight: 600">E5 · E6 · Center view</span>
+        </div>
+      </sc-if>
+      <div style="position: absolute; left: 16px; right: 16px; bottom: 24px; height: 72px; box-sizing: border-box; border-radius: 22px; background: #FFFFFF; box-shadow: 0 8px 28px rgba(22,20,61,0.12); padding: 0 8px 0 20px; display: flex; align-items: center; gap: 10px">
+        <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><path d="M2 2h24v5a3 3 0 0 0 0 6v5H2v-5a3 3 0 0 0 0-6z" fill="#4338CA"></path><path d="M18 3v14" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="2 2"></path></svg>
+        <span style="font-size: 20px; font-weight: 500; color: #3A3A3C">× {{count}}</span>
+        <span style="flex: 1; text-align: right; font-size: 18px; font-weight: 700; padding-right: 12px">{{price}}</span>
+        <button class="fab" aria-label="Continue" style="width: 56px; height: 56px; border: 0; border-radius: 28px; background: {{fab2}}; display: flex; align-items: center; justify-content: center; padding: 0; flex: none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+    <div class="scr" style="background: #FFFFFF">
+      <div style="position: absolute; left: 0; right: 0; top: 0; height: 172px; background: #16143D; border-radius: 0 0 24px 24px"></div>
+      <button aria-label="Back" style="position: absolute; left: 10px; top: 46px; width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+      </button>
+      <div style="position: absolute; left: 0; right: 0; top: 104px; text-align: center; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: #FFFFFF">Confirmation</div>
+      <div class="rise" style="position: absolute; left: 0; right: 0; top: 200px; text-align: center; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #4338CA">Tickets booked!</div>
+      <div class="drift" style="position: absolute; left: 115px; top: 246px; width: 160px; height: 130px">
+        <svg width="160" height="130" viewBox="0 0 160 130" fill="none" aria-hidden="true">
+          <circle cx="86" cy="58" r="40" fill="#E4E2FF"></circle>
+          <circle cx="86" cy="58" r="40" stroke="#4338CA" stroke-width="4"></circle>
+          <circle cx="86" cy="36" r="9" fill="#4338CA"></circle><circle cx="86" cy="80" r="9" fill="#4338CA"></circle>
+          <circle cx="64" cy="58" r="9" fill="#4338CA"></circle><circle cx="108" cy="58" r="9" fill="#4338CA"></circle>
+          <circle cx="86" cy="58" r="4" fill="#4338CA"></circle>
+          <path d="M18 64h40l-6 60H24z" fill="#FFFFFF" stroke="#4338CA" stroke-width="3" stroke-linejoin="round"></path>
+          <path d="M30 64l2 60M42 64v60M52 64l-2 60" stroke="#4338CA" stroke-width="5"></path>
+          <circle cx="24" cy="58" r="8" fill="#FFD66B"></circle><circle cx="36" cy="52" r="9" fill="#FFE39A"></circle><circle cx="50" cy="56" r="8" fill="#FFD66B"></circle><circle cx="30" cy="46" r="6" fill="#FFE39A"></circle><circle cx="44" cy="44" r="6" fill="#FFD66B"></circle>
+          <path d="M118 80h30l-4 46h-22z" fill="#4338CA"></path>
+          <path d="M136 80l6-22" stroke="#4338CA" stroke-width="3" stroke-linecap="round"></path>
+          <rect x="116" y="76" width="34" height="7" rx="3" fill="#2E28A0"></rect>
+          <circle cx="133" cy="102" r="6" fill="#FFFFFF"></circle>
+        </svg>
+        <span class="pop" style="position: absolute; right: -4px; top: -6px; width: 30px; height: 30px; border-radius: 15px; background: #22C08A; display: flex; align-items: center; justify-content: center; animation-delay: .5s">
+          <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="#FFFFFF"></path></svg>
+        </span>
+      </div>
+      <div class="rise" style="animation-delay: .15s; position: absolute; left: 0; right: 0; top: 394px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+        <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em">The Long Orbit</span>
+        <span style="font-size: 13px; font-weight: 600; color: #3A3A3C">SAT, NOV 7 · 7:15 PM</span>
+        <span style="font-size: 13px; color: #6E6E73">Starlight IMAX · Auditorium 4 · Seats E5, E6</span>
+        <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px; color: #4338CA; font-size: 20px; font-weight: 500">
+          <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><path d="M2 2h24v5a3 3 0 0 0 0 6v5H2v-5a3 3 0 0 0 0-6z" fill="#4338CA"></path><path d="M18 3v14" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="2 2"></path></svg>× 2
+        </div>
+      </div>
+      <div class="pass" style="position: absolute; left: 20px; right: 20px; top: 532px; height: 190px; box-sizing: border-box; border-radius: 20px; background: #4338CA; color: #FFFFFF; padding: 20px 22px; overflow: hidden; box-shadow: 0 20px 40px rgba(67,56,202,0.35)">
+        <div style="position: absolute; width: 240px; height: 240px; border-radius: 120px; background: rgba(255,255,255,0.07); right: -80px; top: -120px"></div>
+        <div style="position: absolute; width: 160px; height: 160px; border-radius: 80px; background: rgba(255,255,255,0.05); left: -50px; bottom: -90px"></div>
+        <div style="position: relative; display: flex; justify-content: space-between; align-items: center">
+          <div style="width: 40px; height: 30px; border-radius: 6px; background: #D9D6E8"></div>
+          <div style="font-size: 26px; letter-spacing: -0.01em"><span style="font-weight: 300">cine</span><span style="font-weight: 700">Pass</span></div>
+        </div>
+        <div style="position: relative; margin-top: 26px; font-size: 21px; font-weight: 600; letter-spacing: 0.12em; font-variant-numeric: tabular-nums">5555 0000 1111 4444</div>
+        <div style="position: relative; margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end">
+          <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 11px; color: rgba(255,255,255,0.8)">Member</span><span style="font-size: 14px; font-weight: 600">Sam Rivera</span></div>
+          <span class="pop" style="animation-delay: 1.1s; padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,0.18); font-size: 13px; font-weight: 700">+240 points</span>
+        </div>
+      </div>
+      <button style="position: absolute; left: 20px; right: 20px; bottom: 28px; height: 56px; border: 0; border-radius: 28px; background: #16143D; color: #FFFFFF; font: 600 17px Inter, system-ui, sans-serif">Add tickets to Wallet</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{fabShow}}" hint-placeholder-val="{{ true }}">
+    <button class="fab" aria-label="Continue" style="position: absolute; right: 24px; bottom: 32px; width: 60px; height: 60px; border: 0; border-radius: 30px; background: {{fabBg}}; box-shadow: 0 12px 26px rgba(67,56,202,0.4); display: flex; align-items: center; justify-content: center; padding: 0">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+    </button>
+  </sc-if>
+
+  <div class="cursor" aria-hidden="true" style="position: absolute; left: {{cl}}px; top: {{ct}}px; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 22px; background: {{cbg}}; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.18); transform: scale({{cs}}); pointer-events: none; box-sizing: border-box"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.frames = this.build();
+  }
+  build() {
+    const fr = [];
+    const s = { scr: 0, cin: 0, date: 0, time: -1, seats: 0, cx: 300, cy: 920, down: false };
+    const snap = (d) => fr.push(Object.assign({}, s, { dur: d }));
+    const tap = (x, y, fn, wait) => { s.cx = x; s.cy = y; s.down = false; snap(700); s.down = true; snap(170); fn(); s.down = false; snap(wait || 600); };
+    snap(2600);
+    tap(300, 662, () => { s.cin = 2; }, 1500);
+    tap(336, 782, () => { s.scr = 1; }, 1600);
+    tap(116, 384, () => { s.date = 1; }, 800);
+    tap(222, 480, () => { s.time = 2; }, 1000);
+    tap(336, 782, () => { s.scr = 2; }, 1500);
+    tap(185, 452, () => { s.seats = 1; }, 500);
+    tap(216, 452, () => { s.seats = 2; }, 1300);
+    tap(338, 784, () => { s.scr = 3; }, 500);
+    s.cx = 300; s.cy = 920; snap(4600);
+    return fr;
+  }
+  componentDidMount() { this.alive = true; this.run(); }
+  componentWillUnmount() { this.alive = false; clearTimeout(this.t); }
+  run() {
+    const f = this.frames[this.state.i];
+    this.t = setTimeout(() => {
+      if (!this.alive) return;
+      this.setState({ i: (this.state.i + 1) % this.frames.length }, () => this.run());
+    }, f.dur);
+  }
+  renderVals() {
+    const f = this.frames[this.state.i] || this.frames[0];
+    const ind = '#4338CA';
+    const cinData = [
+      { n: 'Riverside 12', d: '0.8 mi', x: 82, y: 470 },
+      { n: 'Lumière Downtown', d: '1.0 mi', x: 252, y: 520 },
+      { n: 'Starlight IMAX', d: '1.2 mi', x: 300, y: 676 }
+    ];
+    const cinemas = cinData.map((c, idx) => {
+      const on = idx === f.cin;
+      return { n: c.n, d: c.d, bd: on ? ind : '#E8E8F0', bg: on ? '#F5F4FF' : '#FFFFFF', fg: on ? '#3730A3' : '#1D1D1F', dot: on ? ind : '#E5484D' };
+    });
+    const pins = cinData.map((c, idx) => ({ x: c.x, y: c.y, c: idx === f.cin ? ind : '#E5484D', sc: idx === f.cin ? 1.25 : 1 }));
+    const dates = [['FRI', 6], ['SAT', 7], ['SUN', 8], ['MON', 9], ['TUE', 10]].map(([w, n], idx) => {
+      const on = idx === f.date;
+      return { w, n, bd: on ? ind : '#E2E2EC', bg: on ? '#F5F4FF' : '#FFFFFF', fg: on ? ind : '#8E8E93', sub: on ? ind : '#8E8E93' };
+    });
+    const mk = (list, sel, sold) => list.map((l, idx) => {
+      const on = idx === sel, off = sold.indexOf(idx) >= 0;
+      return { l, bd: on ? ind : '#E2E2EC', bg: on ? ind : (off ? '#F2F2F5' : '#FFFFFF'), fg: on ? '#FFFFFF' : (off ? '#8E8E93' : '#1D1D1F'), td: off ? 'line-through' : 'none' };
+    });
+    const shows = [
+      { n: 'Starlight IMAX', d: '1.2 mi', times: mk(['1:30 PM', '4:20 PM', '7:15 PM', '10:05 PM'], f.time, []) },
+      { n: 'Riverside 12', d: '0.8 mi', times: mk(['12:45 PM', '3:50 PM', '6:40 PM', '9:30 PM'], -1, [2]) },
+      { n: 'Lumière Downtown', d: '1.0 mi', times: mk(['2:10 PM', '5:00 PM', '8:15 PM', '11:00 PM'], -1, []) }
+    ];
+    const taken = ['A3', 'A4', 'B4', 'B5', 'B6', 'C1', 'C2', 'C7', 'C8', 'D5', 'D6', 'D9', 'E2', 'E7', 'E8', 'F4', 'F5', 'F6', 'F7', 'G0', 'G1', 'G8', 'G9', 'H3', 'H4', 'H5', 'H6'];
+    const rows = 'ABCDEFGH'.split('').map((l, r) => ({
+      l,
+      seats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((c) => {
+        const mine = r === 4 && ((c === 4 && f.seats >= 1) || (c === 5 && f.seats >= 2));
+        const t = taken.indexOf(l + c) >= 0;
+        return { ml: (c === 2 || c === 8) ? 14 : 0, c: mine ? ind : (t ? '#1E1C3A' : '#E4E4EE'), sc: mine ? 1.08 : 1 };
+      })
+    }));
+    const fabOn = f.scr === 0 || (f.scr === 1 && f.time >= 0);
+    return {
+      s0: f.scr === 0, s1: f.scr === 1, s2: f.scr === 2, s3: f.scr === 3,
+      poster: f.scr <= 1,
+      cinemas, pins, callout: f.scr === 0 && f.cin === 2,
+      dates, shows, rows,
+      picked: f.seats === 2,
+      count: f.seats, price: '$' + (f.seats * 15.5).toFixed(2),
+      fab2: f.seats ? ind : '#C7C7D6',
+      fabShow: f.scr <= 1,
+      fabBg: fabOn ? ind : '#C7C7D6',
+      cl: f.cx, ct: f.cy,
+      cs: f.down ? 0.78 : 1,
+      cbg: f.down ? 'rgba(29,29,31,0.34)' : 'rgba(29,29,31,0.16)'
+    };
+  }
+}
+</script>
+</body>
+</html>
