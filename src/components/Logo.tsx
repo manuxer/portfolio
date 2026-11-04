@@ -1,12 +1,6 @@
 import { useId, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
-
-const stripes = [
-  { y: 0, h: 67.5, fill: "#F2BC41" },
-  { y: 67.5, h: 65, fill: "#DB5240" },
-  { y: 132.5, h: 69, fill: "#56A65D" },
-  { y: 201.5, h: 120, fill: "#5B81C1" },
-];
+import { LOGO_BODY, LOGO_STRIPES, LOGO_TRIANGLE, LOGO_VIEWBOX } from "@/lib/logo";
 
 /**
  * The manuxer mark, traced from assets/manuxer-logo.png into vectors so the
@@ -14,24 +8,30 @@ const stripes = [
  */
 export function Logo({ className }: { className?: string }) {
   const clipId = `logo-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const [[x0, y0], [x1], [ax, ay]] = LOGO_TRIANGLE;
 
   return (
-    <svg viewBox="0 0 464 417" className={cn("w-auto", className)} aria-hidden="true" focusable="false">
+    <svg
+      viewBox={`0 0 ${LOGO_VIEWBOX.w} ${LOGO_VIEWBOX.h}`}
+      className={cn("w-auto", className)}
+      aria-hidden="true"
+      focusable="false"
+    >
       <defs>
         <clipPath id={clipId}>
-          <path d="M54 2H409.5L231.75 316Z" />
+          <path d={`M${x0} ${y0}H${x1}L${ax} ${ay}Z`} />
         </clipPath>
       </defs>
-      <path d="M1 4 231.5 410 463 4V417H1Z" fill="currentColor" />
+      <path d={LOGO_BODY} fill="currentColor" />
       <g clipPath={`url(#${clipId})`}>
-        {stripes.map((s, i) => (
+        {LOGO_STRIPES.map((s, i) => (
           <rect
             key={s.fill}
             className="logo-stripe"
             style={{ "--i": i } as CSSProperties}
             x="0"
             y={s.y}
-            width="464"
+            width={LOGO_VIEWBOX.w}
             height={s.h}
             fill={s.fill}
           />

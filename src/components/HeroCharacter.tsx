@@ -1,4 +1,4 @@
-import type { PointerEvent } from "react";
+import { useRef, type PointerEvent } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -8,6 +8,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import character from "@/assets/hero-character.webp?w=1100&format=webp&quality=86&imagetools";
+import { enterOpacity, INTRO_PAGE, takeIntroCadence, useIntroHold } from "@/lib/intro";
 
 const tiltSpring = { stiffness: 150, damping: 20, mass: 0.7 };
 
@@ -20,6 +21,8 @@ const tiltSpring = { stiffness: 150, damping: 20, mass: 0.7 };
  */
 export function HeroCharacter({ opacity }: { opacity: MotionValue<number> }) {
   const reduced = useReducedMotion();
+  const held = useIntroHold();
+  const afterIntro = useRef(takeIntroCadence()).current;
   const rotateX = useSpring(0, tiltSpring);
   const rotateY = useSpring(0, tiltSpring);
   const gx = useMotionValue(28);
@@ -68,8 +71,8 @@ export function HeroCharacter({ opacity }: { opacity: MotionValue<number> }) {
           <motion.div
             className="relative h-full w-full [transform-style:preserve-3d]"
             style={{ rotateX, rotateY }}
-            initial={{ opacity: 0, y: 48 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: enterOpacity, y: afterIntro ? INTRO_PAGE.rise : 48 }}
+            animate={held ? undefined : { opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 90, damping: 20, delay: 0.35 }}
           >
             {/* Frosted-glass slab behind the character; its base runs past the fold. */}

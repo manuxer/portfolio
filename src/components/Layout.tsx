@@ -1,9 +1,19 @@
+import { lazy, Suspense } from "react";
 import { Outlet, ScrollRestoration } from "react-router";
 import { MotionConfig } from "motion/react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NavProgress } from "@/components/NavProgress";
 import { LightboxProvider } from "@/components/Lightbox";
+import { endIntro, introWillPlay } from "@/lib/intro";
+
+// The first-load logo intro (GSAP) is its own chunk, fetched only when it will play.
+const Intro = lazy(() =>
+  import("@/intro/Intro").catch(() => {
+    endIntro();
+    return { default: () => null };
+  }),
+);
 
 export function Layout() {
   return (
@@ -19,6 +29,11 @@ export function Layout() {
         </main>
         <Footer />
         <ScrollRestoration />
+        {introWillPlay && (
+          <Suspense fallback={null}>
+            <Intro />
+          </Suspense>
+        )}
       </LightboxProvider>
     </MotionConfig>
   );

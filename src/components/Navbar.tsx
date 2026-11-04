@@ -36,7 +36,7 @@ export function Navbar() {
     <header className="site-nav fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 md:pt-4">
       <nav aria-label="Primary" className={cn("nav-pill glass glass-rim", (compact || open) && "is-compact")}>
         <Link to="/" viewTransition className="logo-link flex h-10 items-center gap-2.5 rounded-full px-2 text-fg">
-          <Logo className="h-7" />
+          <Logo className="site-logo h-7" />
           <span className="text-[0.95rem] font-semibold tracking-[-0.02em]">manuxer</span>
           <span className="sr-only">— home</span>
         </Link>

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Ambient, Aurora } from "@/components/Aurora";
@@ -13,6 +13,7 @@ import { WordsReveal } from "@/components/WordsReveal";
 import { featured } from "@/data/projects";
 import { useTilt } from "@/hooks/useTilt";
 import { useTitle } from "@/hooks/useTitle";
+import { INTRO_PAGE, markIntroCadenceUsed, takeIntroCadence } from "@/lib/intro";
 import { MAILTO } from "@/lib/site";
 
 function Hero() {
@@ -23,6 +24,11 @@ function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
   const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  // After the first-load intro the hero rises in on the intro's quicker cadence (known before
+  // mount, so start positions use it too): headline → subtext → CTA → rest. Only the first time.
+  const afterIntro = useRef(takeIntroCadence()).current;
+  useEffect(markIntroCadenceUsed, []);
+  const { rise, stagger } = INTRO_PAGE;
 
   return (
     <section ref={ref} className="relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-32">
@@ -38,14 +44,15 @@ function Hero() {
             as="h1"
             // One line; a touch smaller on desktop so it fits beside the character.
             className="t-display whitespace-nowrap lg:!text-[clamp(3.4rem,1rem+6.4vw,7.5rem)]"
-            delay={0.15}
-            stagger={0.09}
+            delay={afterIntro ? 0 : 0.15}
+            stagger={afterIntro ? stagger : 0.09}
+            rise={afterIntro ? rise : undefined}
             text={[{ text: "I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
           />
-          <Reveal delay={0.55}>
+          <Reveal delay={afterIntro ? stagger * 2 : 0.55} y={afterIntro ? rise : undefined}>
             <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product designer</p>
           </Reveal>
-          <Reveal delay={0.7}>
+          <Reveal delay={afterIntro ? stagger * 3 : 0.7} y={afterIntro ? rise : undefined}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12 lg:justify-start">
               <ButtonLink to="/projects" size="lg">
                 View work <ArrowRight size={18} className="nudge-x" />
@@ -55,7 +62,7 @@ function Hero() {
               </ButtonAnchor>
             </div>
           </Reveal>
-          <Reveal delay={0.82} blur={false}>
+          <Reveal delay={afterIntro ? stagger * 4 : 0.82} y={afterIntro ? rise : undefined} blur={false}>
             <LogoCarousel className="mt-12 md:mt-14" />
           </Reveal>
         </div>

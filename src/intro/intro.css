@@ -1,0 +1,69 @@
+/* First-load logo intro (Intro.tsx). Page-level states (scroll lock, hidden header
+   logo, pre-paint cover) live inline in index.html so they apply before any script. */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100; /* above the header (z-50) */
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.intro-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--intro-bg, #000);
+}
+
+/* Soft brand-coloured light that breathes in behind the logo (painted by backdrop.ts). */
+.intro-ambient {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+/* The 3D stage fills the overlay; its canvas draws the same backdrop, so only the logo shows. */
+.intro-3d {
+  position: absolute;
+  inset: 0;
+}
+
+/* Untransformed box the stage is measured against; the stage inside it moves. */
+.intro-frame {
+  position: relative;
+}
+
+.intro-stage {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+/* Every layer shares the stage box and viewBox, so all parts share one coordinate system. */
+.intro-layer,
+.intro-stage svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.intro-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  /* Invisible through the warm-up but not 0, so the page already composites it (a first
+     composite can stall); Act 1 fades it in. */
+  opacity: 0.001;
+}
+
+.intro-flat {
+  opacity: 0;
+}

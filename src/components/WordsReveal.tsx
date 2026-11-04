@@ -1,5 +1,6 @@
 import { motion, stagger as staggerFrom, type Variants } from "motion/react";
 import { ease } from "@/lib/motion";
+import { enterOpacity, useIntroHold } from "@/lib/intro";
 
 interface Part {
   text: string;
@@ -13,10 +14,12 @@ interface WordsRevealProps {
   className?: string;
   delay?: number;
   stagger?: number;
+  /** How far each word rises (default 0.35em). */
+  rise?: number | string;
 }
 
 const word: Variants = {
-  hidden: { opacity: 0, y: "0.35em", filter: "blur(12px)" },
+  hidden: (rise: number | string = "0.35em") => ({ opacity: enterOpacity, y: rise, filter: "blur(12px)" }),
   show: {
     opacity: 1,
     y: 0,
@@ -30,7 +33,8 @@ const word: Variants = {
  * Headline that resolves word by word out of a soft blur — the same
  * cadence Apple uses on its keynote title cards.
  */
-export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0.075 }: WordsRevealProps) {
+export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0.075, rise }: WordsRevealProps) {
+  const held = useIntroHold();
   const parts: Part[] = typeof text === "string" ? [{ text }] : text;
   const label = parts.map((p) => p.text).join(" ");
   const Comp = motion[as];
@@ -46,7 +50,7 @@ export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0
         show: { transition: { delayChildren: staggerFrom(stagger, { startDelay: delay }) } },
       }}
       initial="hidden"
-      whileInView="show"
+      whileInView={held ? undefined : "show"}
       viewport={{ once: true }}
     >
       {parts.map((part, p) =>
@@ -54,7 +58,7 @@ export function WordsReveal({ text, as = "h1", className, delay = 0, stagger = 0
           index += 1;
           return (
             <span key={`${p}-${i}`} aria-hidden="true">
-              <motion.span variants={word} className={`inline-block ${part.className ?? ""}`}>
+              <motion.span variants={word} custom={rise} className={`inline-block ${part.className ?? ""}`}>
                 {w}
               </motion.span>
               {index < total ? " " : null}
