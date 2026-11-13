@@ -50,7 +50,10 @@ function Hero() {
             text={[{ text: "I am" }, { text: "Manu", className: "text-gradient-brand pr-[0.05em]" }]}
           />
           <Reveal delay={afterIntro ? stagger * 2 : 0.55} y={afterIntro ? rise : undefined}>
-            <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0">Product designer</p>
+            <p className="t-lead mx-auto mt-6 max-w-[30ch] md:mt-8 lg:mx-0 lg:max-w-none">
+              <span className="block text-fg">Product designer</span>
+              <span className="mt-1 block">Designing systems that simplify human complexity</span>
+            </p>
           </Reveal>
           <Reveal delay={afterIntro ? stagger * 3 : 0.7} y={afterIntro ? rise : undefined}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-12 lg:justify-start">
