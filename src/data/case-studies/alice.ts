@@ -99,7 +99,7 @@ const alice: StoryCaseStudy = {
         text: "People are often stressed or in pain when they ask for help, and they wanted patient, supportive guidance.",
       },
     ],
-    note: "After the first round of interviews, we moved to concept tests, prototype usability tests and co-design workshops with DLS associates. I wrote sample conversations for each persona, and worked with applied science on the tone rules, the card templates and a guide for scoring the AI’s answers.",
+    note: "After the first round of interviews, I moved to concept tests, prototype usability tests and co-design workshops with DLS associates. I wrote sample conversations for each persona, and worked with applied science on the tone rules, the card templates and a guide for scoring the AI’s answers.",
   },
   mainIdea: {
     title: "Turning a personal story into a complete request",
@@ -117,7 +117,7 @@ const alice: StoryCaseStudy = {
     caption: "ALICE does the conversion, then shows the employee what it understood so they can confirm it.",
   },
   personas: {
-    title: "Who we designed for",
+    title: "Who I designed for",
     items: [
       {
         name: "John",
@@ -276,7 +276,7 @@ const alice: StoryCaseStudy = {
   behavior: {
     title: "Designing how the AI behaves",
     intro:
-      "The AI won’t say exactly the same thing every time, so we designed the building blocks, the tone and the safety rules it has to follow.",
+      "The AI won’t say exactly the same thing every time, so I designed the building blocks, the tone and the safety rules it has to follow.",
     patterns: [
       "Open question",
       "Short recap",
@@ -309,7 +309,7 @@ const alice: StoryCaseStudy = {
     ],
   },
   outcome: {
-    title: "What we learned from testing, and how we measure success",
+    title: "What I learned from testing, and how I measure success",
     text: "Research and usability testing confirmed a strong need for an AI-assisted intake. Acceptance varied, but most participants saw value in getting help with a complex process, as long as they could check the AI’s work and reach a person.",
     goal: "Requests filed correctly the first time",
     measures: [
@@ -362,7 +362,7 @@ const alice: StoryCaseStudy = {
     },
     {
       title: "Tone needs testing too",
-      text: "We wrote tone rules like requirements and tested them the same way we tested features.",
+      text: "I wrote tone rules like requirements and tested them the same way I tested features.",
     },
     {
       title: "Designers should help define quality",

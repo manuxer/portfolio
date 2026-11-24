@@ -113,7 +113,7 @@ export function CaseStoryView({ project }: { project: StoryCaseStudy }) {
           </Stagger>
 
           <Reveal className="mt-20 md:mt-28">
-            <h3 className="t-subtitle">What we learned</h3>
+            <h3 className="t-subtitle">What I learned</h3>
           </Reveal>
           <Stagger as="ol" className="mt-6 grid gap-x-12 md:mt-8 md:grid-cols-2" stagger={0.06}>
             {research.findings.map((f) => (
