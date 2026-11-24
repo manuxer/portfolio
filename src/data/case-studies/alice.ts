@@ -1,166 +1,373 @@
 import aliceIntro from "@/assets/alice.png?responsive";
-import aliceResponsive from "@/assets/alice-responsive.png?responsive";
-import alice1 from "@/assets/alice/alice1.png?responsive";
-import alice2 from "@/assets/alice/alice2.png?responsive";
-import alice3 from "@/assets/alice/alice3.png?responsive";
-import alice4 from "@/assets/alice/alice4.png?responsive";
-import alice5 from "@/assets/alice/alice5.png?responsive";
-import alice6 from "@/assets/alice/alice6.png?responsive";
-import type { CaseStudy } from "../types";
+import john02 from "@/assets/alice/story/john_02.webp?responsive";
+import john04 from "@/assets/alice/story/john_04.webp?responsive";
+import john07 from "@/assets/alice/story/john_07.webp?responsive";
+import sam02 from "@/assets/alice/story/sam_02.webp?responsive";
+import sam07 from "@/assets/alice/story/sam_07.webp?responsive";
+import sam11 from "@/assets/alice/story/sam_11.webp?responsive";
+import jane04 from "@/assets/alice/story/jane_04.webp?responsive";
+import jane05 from "@/assets/alice/story/jane_05.webp?responsive";
+import jane09 from "@/assets/alice/story/jane_09.webp?responsive";
+import portraitJohn from "@/assets/alice/story/portrait_john.webp?responsive";
+import portraitSam from "@/assets/alice/story/portrait_sam.webp?responsive";
+import portraitJane from "@/assets/alice/story/portrait_jane.webp?responsive";
+import type { StoryCaseStudy } from "../types";
 
-const alice: CaseStudy = {
-  kind: "case-study",
+const alice: StoryCaseStudy = {
+  kind: "story",
   id: 9,
-  title: "Simplifying disability and leave management using AI",
-  category: "UX | Product Design | Research | Gen AI",
-  client: "Amazon - Disability Leave Services (DLS)",
-  duration: "6 months",
-  year: "2024-2025",
-  role: "Lead Product Designer, UX Researcher",
-  description: "A conversational Gen AI system for streamlining disability and leave services intake at Amazon",
-  overview:
-    "This product is a conversational Gen AI solution designed to transform the accommodation and leave request intake process at Amazon. Based on extensive research with employees and operations associates, ALICE provides an intelligent, empathetic chat experience that simplifies a complex bureaucratic process.",
-  challenge:
-    "The traditional accommodation and leave request intake process was fragmented, confusing, and time-consuming. Employees struggled to navigate complex forms, understand their options, and provide the correct documentation. Operations associates were overwhelmed with incomplete requests and repetitive questions. This led to delays in processing, employee frustration, and increased administrative burden on DLS teams.",
-  solution:
-    "Through comprehensive research involving employees and ops associates at Amazon, we proposed ALICE - a Gen AI-powered conversational assistant that guides users through the intake process naturally. ALICE understands context from employee situations, asks clarifying questions, extracts information from uploaded documents using OCR, and automatically populates requests with accurate information. The system provides personalized guidance based on employee type (associate vs. corporate), condition type, and individual circumstances.",
-  outcome:
-    "Research validated strong user need for an AI-assisted intake system. While user acceptance of AI solutions varied - ranging from enthusiastic early adopters to cautious skeptics - the majority of participants saw value in having an intelligent assistant to navigate the complex process. Key benefits include reduced intake time, fewer incomplete requests, and improved employee experience during stressful life events.",
+  title: "Simplifying disability and leave requests with AI",
+  product: "ALICE",
+  category: "UX | Product design | Research | Gen AI",
+  description:
+    "ALICE is an AI assistant in Amazon’s A to Z app. Employees describe their situation in their own words, and ALICE turns it into the right request, then lets them check everything before it’s sent.",
   hero: aliceIntro,
-  impact:
-    "Streamlined accommodation intake process by improved employee experience during stressful life events, scaled adoption of AI",
-  introImages: [{ src: aliceResponsive, alt: "ALICE on both mobile and desktop" }],
+  meta: [
+    ["Company", "Amazon, Disability and Leave Services (DLS)"],
+    ["Timeline", "6 months"],
+    ["Year", "2024–2025"],
+    ["My role", "Lead Product Designer, UX Researcher"],
+    ["Platform", "A to Z mobile app, US"],
+  ],
+  summary: [
+    { label: "The problem", text: "To ask for help, employees first had to understand HR policy." },
+    {
+      label: "What I did",
+      text: "Led research with employees and DLS associates, designed the conversation and how the AI behaves, and designed three end-to-end flows.",
+    },
+    {
+      label: "The result",
+      text: "Testing confirmed strong demand for AI help, as long as people could see what the AI understood and reach a person when they needed one.",
+    },
+  ],
+  problem: {
+    title: "The problem",
+    paragraphs: [
+      "When people get hurt, get sick, care for a family member or deal with a disaster, they may need an accommodation or time off. The old intake asked them to choose an HR category first: accommodation, leave of absence, policy exception, FMLA or personal leave.",
+      "Most people didn’t know which one fit. A wrong choice meant the case had to be moved and reworked, and missing documents left cases on hold.",
+    ],
+    stats: [
+      { value: 73, suffix: "%", label: "of employees found the process confusing" },
+      { value: 65, suffix: "%", label: "of first requests were missing the right documents" },
+      { value: 60, suffix: "%", label: "of DLS associates’ time went to fixing intake issues" },
+    ],
+  },
   research: {
-    methodology:
-      "Mixed-methods research combining interviews, usability testing, and surveys with employees and operations associates",
-    participants: [
+    title: "Talking to both sides of every request",
+    intro:
+      "I ran mixed-methods research with two groups: employees, including warehouse associates and corporate staff, and the DLS operations associates who process requests.",
+    groups: [
       {
         title: "Employees",
-        count: 52,
-        demographics:
-          "Both warehouse associates and corporate employees across multiple Amazon locations in the US, representing diverse accommodation and leave scenarios",
         methods: [
-          "Contextual interviews (n=18)",
-          "Concept testing sessions (n=15)",
-          "Prototype usability testing (n=19)",
-          "Survey responses (n=52)",
+          ["Contextual interviews", 18],
+          ["Concept tests", 15],
+          ["Prototype usability tests", 19],
+          ["Survey responses", 52],
         ],
       },
       {
-        title: "Operations Associates",
-        count: 14,
-        demographics:
-          "DLS operations associates responsible for processing accommodation and leave requests, with 1-10 years of experience",
+        title: "DLS operations associates",
         methods: [
-          "Workflow analysis sessions (n=8)",
-          "Pain point interviews (n=10)",
-          "Solution co-design workshops (n=6)",
-          "Survey responses (n=14)",
+          ["Workflow sessions", 8],
+          ["Interviews", 10],
+          ["Co-design workshops", 6],
+          ["Survey responses", 14],
         ],
       },
     ],
-    keyFindings: [
+    findings: [
       {
-        finding: "Complex Process Confusion",
-        details:
-          "73% of employees found the existing intake process confusing and overwhelming. Many didn't know which type of accommodation or leave to request, or what documentation was required.",
-        impact: "High rates of incomplete or incorrect requests, requiring multiple rounds of back-and-forth communication",
+        title: "People don’t know the categories",
+        text: "Many couldn’t tell which request type or which documents they needed.",
       },
       {
-        finding: "Documentation Challenges",
-        details:
-          "Employees struggled with understanding what medical documentation was needed. 65% of initial requests lacked proper supporting documentation.",
-        impact: "Significant delays in case processing and frustrated employees waiting for decisions",
+        title: "Trust in AI varies",
+        text: "Most wanted to see what the AI understood and to have an easy way to reach a person.",
+        acceptance: [
+          { label: "enthusiastic", percentage: 35, tone: "positive" },
+          { label: "cautiously optimistic", percentage: 45, tone: "neutral" },
+          { label: "skeptical", percentage: 20, tone: "negative" },
+        ],
       },
       {
-        finding: "Varied AI Acceptance Levels",
-        details:
-          "User acceptance of AI solutions ranged significantly: 35% were enthusiastic early adopters, 45% were cautiously optimistic with specific concerns, and 20% were skeptical. Trust, privacy, and accuracy were key concerns.",
-        impact:
-          "Need for transparent AI communication, human oversight options, and clear privacy protections in the solution design",
+        title: "Associates and corporate staff work differently",
+        text: "Associates preferred short, mobile-first interactions, and some wanted voice input.",
       },
       {
-        finding: "Associate vs. Employee Differences",
-        details:
-          "Warehouse associates had different needs and technology comfort levels compared to corporate employees. Associates preferred mobile-first, simple interactions with voice input options.",
-        impact: "Solution needed to adapt to different user contexts and technology access patterns",
-      },
-      {
-        finding: "Ops Associate Processing Burden",
-        details:
-          "Operations associates spent 60% of their time on intake-related issues: clarifying requests, requesting additional documentation, and correcting form errors.",
-        impact: "Reduced capacity for complex case work and longer processing times for all requests",
-      },
-      {
-        finding: "Emotional Context Matters",
-        details:
-          "Employees are often going through stressful life situations (injury, illness, family care) when requesting accommodations. They valued empathetic, patient guidance.",
-        impact: "AI tone and interaction design needed to be supportive and understanding, not robotic or transactional",
+        title: "Tone matters",
+        text: "People are often stressed or in pain when they ask for help, and they wanted patient, supportive guidance.",
       },
     ],
-    insights: [
-      "Users want AI assistance but with clear human escalation paths for complex situations",
-      "Conversational guidance reduces cognitive load during an already stressful time",
-      "Document intelligence (OCR + understanding) can eliminate manual form filling",
-      "Trust in AI grows when users see accurate, helpful responses in their specific situation",
-      "AI acceptance increases when users understand what the AI can/cannot do",
-      "Personalization based on employee type and situation improves relevance and adoption",
+    note: "After the first round of interviews, I moved to concept tests, prototype usability tests and co-design workshops with DLS associates. I wrote sample conversations for each persona, and worked with applied science on the tone rules, the card templates and a guide for scoring the AI’s answers.",
+  },
+  mainIdea: {
+    title: "Turning a personal story into a complete request",
+    quoteLabel: "What John wrote",
+    quote:
+      "“I have an injury in my left elbow, which makes it difficult for me to lift or hold heavy objects. My doctor has given me restrictions… I work in three areas: diver, full scan and small sort… Recently, my manager got upset…”",
+    fieldsLabel: "What the case manager needs",
+    fields: [
+      ["Request type", "Accommodation, role change"],
+      ["Limitation", "Motor (movement)"],
+      ["Restrictions", "No lifting over 20 lbs, no bending or twisting"],
+      ["Duration", "Indefinite"],
+      ["Documents", "Doctor’s note, checked by John"],
     ],
-    aiAcceptance: [
+    caption: "ALICE does the conversion, then shows the employee what it understood so they can confirm it.",
+  },
+  personas: {
+    title: "Who I designed for",
+    items: [
       {
-        label: "Enthusiastic Adopters",
-        percentage: 35,
-        tone: "positive",
-        characteristics: "Early adopters who valued efficiency and were comfortable with AI technology",
-        feedback: "Loved the idea of not filling out forms manually, appreciated intelligent suggestions",
+        name: "John",
+        tag: "Accommodation",
+        text: "Operations associate with an elbow injury who wants to change his duties and keep working.",
+        tests: "reading a doctor’s note",
+        portrait: portraitJohn,
+        alt: "Line illustration of John",
       },
       {
-        label: "Cautiously Optimistic",
-        percentage: 45,
-        tone: "neutral",
-        characteristics:
-          "Open to AI assistance but had specific concerns about accuracy, privacy, and whether the AI truly understood their situation",
-        feedback:
-          "Wanted to see AI responses before submission, valued transparency about AI limitations, needed reassurance about data privacy",
+        name: "Sam",
+        tag: "Disability & leave",
+        text: "Employee with ADHD and anxiety who is also the only caregiver for his mother during chemo. Wants to work from home.",
+        tests: "two needs in one message",
+        portrait: portraitSam,
+        alt: "Line illustration of Sam",
       },
       {
-        label: "Skeptical",
-        percentage: 20,
-        tone: "negative",
-        characteristics: "Preferred human interaction, concerned about AI making mistakes in sensitive situations",
-        feedback:
-          "Wanted option to bypass AI entirely, needed strong human oversight, valued clear escalation to human case managers",
+        name: "Jane",
+        tag: "Personal leave",
+        text: "Operations associate whose home was damaged by a hurricane. Wants to know what leave she can take.",
+        tests: "picking the right leave",
+        portrait: portraitJane,
+        alt: "Line illustration of Jane",
       },
     ],
   },
-  sections: [
-    { id: "research", title: "Research & Discovery", nav: "Research", research: true, images: [] },
-    {
-      id: "journey",
-      title: "User Journey Walkthrough",
-      nav: "Walkthrough",
-      images: [alice1, alice2, alice3, alice4, alice5, alice6].map((src) => ({
-        src,
-        alt: "ALICE journey walkthrough",
-      })),
-    },
-  ],
+  principles: {
+    title: "Five principles for every conversation",
+    items: [
+      {
+        title: "Start by listening",
+        text: "Begin with an open question. People explain their situation in their own words, and ALICE picks out the details.",
+      },
+      {
+        title: "Show what it understood",
+        text: "Anything the AI works out is shown back as a short summary the employee can confirm or correct.",
+      },
+      {
+        title: "Ask before submitting",
+        text: "The AI never submits a request on its own. The employee always presses the button.",
+      },
+      {
+        title: "Keep it calm and simple",
+        text: "Acknowledge the situation once, then help. Plain words, one question at a time, no medical labels.",
+      },
+      {
+        title: "Always show what’s next",
+        text: "Every conversation ends with a status, something the person can do and a way to reach a human.",
+      },
+    ],
+  },
+  howItWorks: {
+    title: "How ALICE builds a request",
+    layers: [
+      {
+        label: "Experience",
+        text: "The chat in A to Z, with summary cards, tap-to-answer buttons, document upload and a feedback button on every answer.",
+      },
+      {
+        label: "AI",
+        text: "Reads the employee’s message, spots each separate need, asks for anything missing and drafts the request.",
+      },
+      {
+        label: "Data",
+        text: "HR policies, the employee’s profile and time-off balances, document reading, and the case system (MyHR).",
+      },
+      {
+        label: "Safeguards",
+        text: "Answers based on policy, no medical or legal advice, only the data the case needs, asks when unsure, hands off to a person.",
+      },
+    ],
+    steps: ["Open", "Reflect", "Clarify", "Confirm", "Submit", "Guide"],
+    caption: "The AI writes the words. The design decides when to show a card, when to show buttons and when to ask for approval.",
+  },
+  walkthrough: {
+    title: "Three people, three flows",
+    stories: [
+      {
+        label: "Story 1 · John · Accommodation",
+        title: "An injury, a doctor’s note and a role change",
+        portrait: portraitJohn,
+        screens: [
+          { src: john02, alt: "John describes his elbow injury, restrictions and work areas in one message" },
+          { src: john04, alt: "ALICE summarizes John’s doctor’s note and asks if it is accurate" },
+          { src: john07, alt: "The full accommodation request with a Submit request button" },
+        ],
+        decisions: [
+          {
+            title: "Start with an open question",
+            text: "“What can I help with?” lets John explain everything. He never has to pick a category.",
+          },
+          {
+            title: "Check what the AI read",
+            text: "ALICE summarizes his doctor’s note and asks if it’s accurate before using it.",
+          },
+          {
+            title: "Submit when ready",
+            text: "Only the Submit button creates the case. The AI can’t submit anything by itself.",
+          },
+        ],
+      },
+      {
+        label: "Story 2 · Sam · Work from home",
+        title: "Two needs in one message",
+        portrait: portraitSam,
+        screens: [
+          {
+            src: sam02,
+            alt: "Sam explains his ADHD, anxiety and caregiving, and ALICE asks how long he needs to work from home",
+          },
+          { src: sam07, alt: "ALICE explains Sam needs two requests and shows the family care request" },
+          { src: sam11, alt: "Confirmation cards, with the accommodation on hold pending documentation" },
+        ],
+        decisions: [
+          {
+            title: "Keep track of both needs",
+            text: "Sam mentions his ADHD and anxiety, and caring for his mother. ALICE keeps both.",
+          },
+          {
+            title: "Two requests from one conversation",
+            text: "Family care and a disability accommodation follow different policies, so ALICE prepares two requests that Sam submits with one button.",
+          },
+          {
+            title: "Documents can come later",
+            text: "Sam doesn’t have his doctor’s note with him, so the request is filed as “On hold, pending documentation,” with clear next steps.",
+          },
+        ],
+      },
+      {
+        label: "Story 3 · Jane · Personal leave",
+        title: "Finding the right leave after a hurricane",
+        portrait: portraitJane,
+        screens: [
+          { src: jane04, alt: "ALICE suggests Personal Leave and lists Jane’s PTO balances with options as buttons" },
+          { src: jane05, alt: "Jane asks about FMLA and ALICE explains why it does not apply" },
+          { src: jane09, alt: "Four numbered points about approvals, job protection, status and extensions" },
+        ],
+        decisions: [
+          {
+            title: "Suggest the right leave",
+            text: "ALICE recommends Personal Leave, which covers natural disasters, and shows her real PTO balances.",
+          },
+          {
+            title: "Answer side questions",
+            text: "When Jane asks about FMLA, ALICE explains why it doesn’t apply and lists what does.",
+          },
+          {
+            title: "Be clear about what happens next",
+            text: "Approvals, job protection and how to extend her leave, in four short points.",
+          },
+        ],
+      },
+    ],
+  },
+  behavior: {
+    title: "Designing how the AI behaves",
+    intro:
+      "The AI won’t say exactly the same thing every time, so I designed the building blocks, the tone and the safety rules it has to follow.",
+    patterns: [
+      "Open question",
+      "Short recap",
+      "One question at a time",
+      "Quick answers",
+      "Summary card",
+      "Approval step",
+      "Confirmation card",
+      "Feedback on every answer",
+    ],
+    tone: ["Acknowledge once", "One question at a time", "Use their words", "Don’t diagnose", "Don’t promise outcomes"],
+    toneExamples: [
+      ["“Please specify the requested accommodation duration.”", "“For how long would you like to work from home?”"],
+      ["“You qualify for FMLA.”", "“You may be eligible for FMLA, but it doesn’t cover natural disasters.”"],
+    ],
+    mistakes: [
+      ["It misreads a document", "Shows a summary with a clear “No” button, so the employee can correct it."],
+      ["It isn’t sure what someone needs", "Asks one follow-up question instead of guessing."],
+      ["The case is complex", "Hands it to a DLS case manager, along with the conversation."],
+      ["Someone mentions self-harm or danger", "Stops the request and shows support resources right away."],
+      ["Someone asks if they’re eligible", "Answers only from policy and says “you may be eligible.”"],
+    ],
+    safeguards: [
+      { label: "Trust", text: "Clearly labeled as AI. Shows what it understood and asks before submitting." },
+      { label: "Privacy", text: "Collects only what the case needs. Medical documents are used only for that case." },
+      {
+        label: "Accessibility",
+        text: "Screen-reader labels on every card, plain language, and tap or type for every choice.",
+      },
+    ],
+  },
+  outcome: {
+    title: "What I learned from testing, and how I measure success",
+    text: "Research and usability testing confirmed a strong need for an AI-assisted intake. Acceptance varied, but most participants saw value in getting help with a complex process, as long as they could check the AI’s work and reach a person.",
+    goal: "Requests filed correctly the first time",
+    measures: [
+      {
+        title: "Employee experience",
+        items: ["Time to submit a request", "How many people finish", "“Was this helpful?” ratings"],
+      },
+      {
+        title: "Case quality",
+        items: ["Right request type on the first try", "Cases with complete documents", "Fewer cases moved or followed up"],
+      },
+      {
+        title: "AI quality",
+        items: ["Details checked by case managers", "Answers that match policy", "Safety cases handled correctly"],
+      },
+    ],
+  },
   keyFeatures: [
-    "Conversational Gen AI-powered intake system",
-    "Document intelligence with OCR capabilities",
-    "Smart recommendations based on employee situation",
-    "Personalized guidance for different user types",
-    "Multi-request handling recognition",
-    "Human escalation pathways",
-    "Mobile-optimized interface",
+    "Conversational intake",
+    "Document reading",
+    "Suggestions based on the employee’s situation",
+    "More than one request per conversation",
+    "Hand-off to a person",
+    "Mobile-first design",
   ],
-  technologies: [
-    "Gen AI/LLM",
-    "Document extraction",
-    "Predictive UX",
-    "Intelligent Assistive Interfaces",
-    "Conversation design",
-    "Figma",
+  roadmap: {
+    title: "Where ALICE could go next",
+    items: [
+      {
+        label: "Now",
+        title: "US requests",
+        text: "Accommodations, disability and leave, and personal leave, with document reading and case status in MyHR.",
+      },
+      {
+        label: "Next",
+        title: "Reaching out first",
+        text: "Reminders for missing documents, status updates, return-to-work check-ins and Spanish support.",
+      },
+      {
+        label: "Later",
+        title: "More countries and users",
+        text: "New countries and leave types, a version for managers, and voice input for associates on the floor.",
+      },
+    ],
+  },
+  learned: [
+    {
+      title: "Showing its work builds trust",
+      text: "People trusted ALICE most when it showed what it understood and asked them to check.",
+    },
+    {
+      title: "Tone needs testing too",
+      text: "I wrote tone rules like requirements and tested them the same way I tested features.",
+    },
+    {
+      title: "Designers should help define quality",
+      text: "With AI, deciding what a good answer looks like is part of the design work.",
+    },
   ],
 };
 

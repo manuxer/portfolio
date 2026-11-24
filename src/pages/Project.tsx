@@ -12,6 +12,7 @@ import {
   ResearchBlock,
   TechChips,
 } from "@/components/CaseStudyParts";
+import { CaseStoryView } from "@/components/CaseStory";
 import { ContactCTA } from "@/components/ContactCTA";
 import { Gallery } from "@/components/Gallery";
 import { Img } from "@/components/Img";
@@ -41,6 +42,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export function Component() {
   const project = useLoaderData<typeof loader>();
   if (!project) return <NotFound />;
+  if (project.kind === "story") return <CaseStoryView key={project.id} project={project} />;
   return project.kind === "case-study" ? (
     <CaseStudyView key={project.id} project={project} />
   ) : (

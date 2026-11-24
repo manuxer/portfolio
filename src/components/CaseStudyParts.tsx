@@ -179,23 +179,51 @@ const toneColor: Record<AcceptanceLevel["tone"], string> = {
   negative: "var(--negative)",
 };
 
+/** One bar, its segments growing in turn: the whole split at a glance. */
+export function AcceptanceBar({
+  levels,
+  className,
+}: {
+  levels: Array<Pick<AcceptanceLevel, "label" | "percentage" | "tone">>;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex h-3.5 w-full gap-1.5", className)} role="img" aria-label={levels.map((l) => `${l.label} ${l.percentage}%`).join(", ")}>
+      {levels.map((l, i) => (
+        <motion.span
+          key={l.label}
+          className="h-full origin-left rounded-full"
+          style={{ flexBasis: `${l.percentage}%`, background: toneColor[l.tone] }}
+          initial={{ scaleX: 0, opacity: 0.4 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+          transition={{ duration: 1.1, ease: ease.out, delay: 0.15 + i * 0.18 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** The split in words, a coloured dot for each segment of the bar. */
+export function AcceptanceLegend({ levels }: { levels: Array<Pick<AcceptanceLevel, "label" | "percentage" | "tone">> }) {
+  return (
+    <ul className="flex flex-wrap gap-x-5 gap-y-1.5 text-[0.92rem] text-fg-2">
+      {levels.map((l) => (
+        <li key={l.label} className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full" style={{ background: toneColor[l.tone] }} />
+          <span>
+            <span className="font-semibold tabular-nums text-fg">{l.percentage}%</span> {l.label}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Acceptance({ levels }: { levels: AcceptanceLevel[] }) {
   return (
     <div>
-      {/* One bar, three segments growing in turn: the whole split at a glance. */}
-      <div className="flex h-3.5 w-full gap-1.5" role="img" aria-label={levels.map((l) => `${l.label} ${l.percentage}%`).join(", ")}>
-        {levels.map((l, i) => (
-          <motion.span
-            key={l.label}
-            className="h-full origin-left rounded-full"
-            style={{ flexBasis: `${l.percentage}%`, background: toneColor[l.tone] }}
-            initial={{ scaleX: 0, opacity: 0.4 }}
-            whileInView={{ scaleX: 1, opacity: 1 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 1.1, ease: ease.out, delay: 0.15 + i * 0.18 }}
-          />
-        ))}
-      </div>
+      <AcceptanceBar levels={levels} />
       <Stagger className="mt-8 grid gap-5 md:grid-cols-3">
         {levels.map((l) => (
           <StaggerItem key={l.label} className="h-full">

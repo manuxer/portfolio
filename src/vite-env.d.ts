@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   /** "memory" for embedded builds that must not touch the URL. */
   readonly VITE_ROUTER?: string;
+  readonly VITE_START_PATH?: string;
 }
 
 declare module "*?responsive" {
