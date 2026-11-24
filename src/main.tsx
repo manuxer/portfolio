@@ -27,9 +27,10 @@ const routes: RouteObject[] = [
 
 // `npm run build:embed` keeps routing in memory so the site works inside a
 // host that owns the URL (e.g. a preview frame); the real site uses the URL.
+// VITE_START_PATH opens such a preview on a given page (default: the home page).
 const router =
   import.meta.env.VITE_ROUTER === "memory"
-    ? createMemoryRouter(routes)
+    ? createMemoryRouter(routes, { initialEntries: [import.meta.env.VITE_START_PATH || "/"] })
     : createBrowserRouter(routes, { basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" });
 
 createRoot(document.getElementById("root")!).render(

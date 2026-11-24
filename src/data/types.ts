@@ -80,6 +80,99 @@ export interface CaseStudy {
   pdfUrl?: string;
 }
 
+/* ───── story case study: a longer write-up told in sections (ALICE) ───── */
+
+/** A label with a sentence or two: summary cards, system layers, trust notes. */
+export interface Labelled {
+  label: string;
+  text: string;
+}
+
+/** A short title with a sentence or two: findings, principles, decisions, lessons. */
+export interface Point {
+  title: string;
+  text: string;
+}
+
+export interface Persona {
+  name: string;
+  /** Request type, shown as a tag. */
+  tag: string;
+  text: string;
+  /** What this persona's flow puts to the test. */
+  tests: string;
+  portrait: ImageSource;
+  alt: string;
+}
+
+export interface Story {
+  /** e.g. "Story 1 · John · Accommodation". */
+  label: string;
+  title: string;
+  portrait: ImageSource;
+  /** Three screens, each paired with the decision below it. */
+  screens: GalleryImage[];
+  decisions: Point[];
+}
+
+export interface StoryCaseStudy {
+  kind: "story";
+  id: number;
+  title: string;
+  /** Product name, shown above the title. */
+  product: string;
+  category: string;
+  description: string;
+  hero: ImageSource;
+  meta: Array<[label: string, value: string]>;
+  summary: Labelled[];
+  problem: {
+    title: string;
+    paragraphs: string[];
+    stats: Array<{ value: number; suffix: string; label: string }>;
+  };
+  research: {
+    title: string;
+    intro: string;
+    groups: Array<{ title: string; methods: Array<[method: string, count: number]> }>;
+    /** What we learned; a finding may carry the AI-acceptance split as a bar. */
+    findings: Array<Point & { acceptance?: Array<Pick<AcceptanceLevel, "label" | "percentage" | "tone">> }>;
+    note: string;
+  };
+  mainIdea: {
+    title: string;
+    quoteLabel: string;
+    quote: string;
+    fieldsLabel: string;
+    fields: Array<[label: string, value: string]>;
+    caption: string;
+  };
+  personas: { title: string; items: Persona[] };
+  principles: { title: string; items: Point[] };
+  howItWorks: { title: string; layers: Labelled[]; steps: string[]; caption: string };
+  walkthrough: { title: string; stories: Story[] };
+  behavior: {
+    title: string;
+    intro: string;
+    patterns: string[];
+    tone: string[];
+    /** Typical wording → what the assistant says. */
+    toneExamples: Array<[typical: string, ours: string]>;
+    /** If… → the assistant… */
+    mistakes: Array<[when: string, then: string]>;
+    safeguards: Labelled[];
+  };
+  outcome: {
+    title: string;
+    text: string;
+    goal: string;
+    measures: Array<{ title: string; items: string[] }>;
+  };
+  keyFeatures: string[];
+  roadmap: { title: string; items: Array<Labelled & { title: string }> };
+  learned: Point[];
+}
+
 export interface SubProject {
   title: string;
   description: string;
@@ -110,4 +203,4 @@ export interface LegacyProject {
   processImages: ImageSource[];
 }
 
-export type Project = CaseStudy | LegacyProject;
+export type Project = CaseStudy | StoryCaseStudy | LegacyProject;
