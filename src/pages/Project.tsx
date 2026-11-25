@@ -43,6 +43,7 @@ export function Component() {
   const project = useLoaderData<typeof loader>();
   if (!project) return <NotFound />;
   if (project.kind === "story") return <CaseStoryView key={project.id} project={project} />;
+  if (project.kind === "page") return <project.Page key={project.id} project={project} />;
   return project.kind === "case-study" ? (
     <CaseStudyView key={project.id} project={project} />
   ) : (

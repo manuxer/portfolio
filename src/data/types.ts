@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import type { ImageSource } from "@/lib/image";
 
 export interface ProjectSummary {
@@ -173,6 +174,16 @@ export interface StoryCaseStudy {
   learned: Point[];
 }
 
+/** A case study with its own page component: its copy and layout live in that component. */
+export interface PageCaseStudy {
+  kind: "page";
+  id: number;
+  title: string;
+  /** Preloaded before navigation; the project card's image morphs into it. */
+  hero: ImageSource;
+  Page: ComponentType<{ project: PageCaseStudy }>;
+}
+
 export interface SubProject {
   title: string;
   description: string;
@@ -203,4 +214,4 @@ export interface LegacyProject {
   processImages: ImageSource[];
 }
 
-export type Project = CaseStudy | StoryCaseStudy | LegacyProject;
+export type Project = CaseStudy | StoryCaseStudy | PageCaseStudy | LegacyProject;

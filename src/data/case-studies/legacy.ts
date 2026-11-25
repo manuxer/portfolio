@@ -32,11 +32,11 @@ const list: LegacyProject[] = [
     role: "Product, User experience, Interaction designer",
     description: "User experience design and product strategy of enterprise products impacting over 1.5M users at Amazon.",
     challenge:
-      "Designing enterprise products for a massive scale while maintaining usability and meeting the diverse needs of over 1.6 million users across various roles and workflows.",
+      "Designing enterprise products for a massive scale while maintaining usability and meeting the diverse needs of over 1.5 million users across various roles and workflows.",
     solution:
       "Applied user-centered design principles, conducted extensive research, and created scalable design systems that work across multiple product lines. Collaborated with cross-functional teams to ensure design solutions align with business goals and user needs.",
     outcome:
-      "Successfully delivered user experience design for enterprise products serving 1.6M+ users, improving productivity and user satisfaction across Amazon's internal tools.",
+      "Successfully delivered user experience design for enterprise products serving 1.5M+ users, improving productivity and user satisfaction across Amazon's internal tools.",
     hero: amazonLogo,
     isNDA: true,
     processImages: [],
