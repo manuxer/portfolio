@@ -240,7 +240,7 @@ export default function AtozCaseStudy({ project }: { project: PageCaseStudy }) {
               },
               {
                 label: "Result",
-                text: "More than 100,000 changes made by employees themselves, and 10,000 new self-identification submissions worldwide.",
+                text: "More than 500,000 changes made by employees themselves, and 100,000 new self-identification submissions worldwide.",
               },
             ].map((item) => (
               <StaggerItem key={item.label} className="h-full">
@@ -814,9 +814,9 @@ export default function AtozCaseStudy({ project }: { project: PageCaseStudy }) {
             <Heading eyebrow="Impact" title="What changed after launch." />
             <Stagger className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3">
               {[
-                { value: 100, suffix: "K+", text: "personal information changes submitted by employees since launch" },
+                { value: 500, suffix: "K+", text: "personal information changes submitted by employees since launch" },
                 { value: 26, suffix: "%", text: "of ESS page views are for self-identification" },
-                { value: 10, suffix: "K", text: "new self-identification submissions worldwide" },
+                { value: 100, suffix: "K", text: "new self-identification submissions worldwide" },
               ].map((s) => (
                 <StaggerItem key={s.text} className="h-full">
                   <div className="glass glass-rim h-full rounded-[28px] p-7 md:p-8">
