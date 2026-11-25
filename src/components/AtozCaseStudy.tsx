@@ -208,7 +208,7 @@ export default function AtozCaseStudy({ project }: { project: PageCaseStudy }) {
               <WordsReveal as="h1" text={project.title} className="t-headline mt-4" delay={0.05} stagger={0.05} />
               <Reveal delay={0.25}>
                 <p className="t-lead mt-6 max-w-2xl">
-                  How 1.6 million Amazon employees view and update their own personal information.
+                  How 1.5 million Amazon employees view and update their own personal information.
                 </p>
               </Reveal>
             </div>
@@ -219,7 +219,7 @@ export default function AtozCaseStudy({ project }: { project: PageCaseStudy }) {
                   ["My role", "Product Designer, UX Researcher", "Research through launch"],
                   ["Timeline", "2022–2023", "5 releases in 12 months"],
                   ["Platforms", "Mobile and web", "Designed in Figma with Stencil"],
-                  ["Audience", "1.6M+ employees", "Hourly, corporate and field"],
+                  ["Audience", "1.5M+ employees", "Hourly, corporate and field"],
                 ]}
               />
             </Reveal>
@@ -385,9 +385,12 @@ export default function AtozCaseStudy({ project }: { project: PageCaseStudy }) {
             </div>
           </Reveal>
 
-          <Reveal className="mt-10 flex flex-wrap items-baseline gap-x-5 gap-y-2 md:mt-14">
-            <p className={cn(display, "text-[clamp(3.4rem,2rem+5vw,5.5rem)] leading-none text-[var(--brand-blue)]")}>1.6M+</p>
-            <p className="t-body-lg max-w-xl">employees, from fulfillment centers and delivery stations to corporate offices.</p>
+          {/* One line on wide screens; narrower ones put the sentence under the number. */}
+          <Reveal className="mt-10 md:mt-14 xl:flex xl:items-baseline xl:gap-5">
+            <p className={cn(display, "text-[clamp(3.4rem,2rem+5vw,5.5rem)] leading-none text-[var(--brand-blue)]")}>1.5M+</p>
+            <p className="t-body-lg mt-3 xl:mt-0 xl:whitespace-nowrap">
+              employees, from fulfillment centers and delivery stations to corporate offices.
+            </p>
           </Reveal>
 
           <div className="mt-20 md:mt-28">

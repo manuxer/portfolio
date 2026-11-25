@@ -32,7 +32,7 @@ export const projects: ProjectSummary[] = [
     id: 10,
     title: "Personal information management in AtoZ",
     category: "UX | Product design | Research",
-    description: "How 1.6 million Amazon employees view and update their own personal information.",
+    description: "How 1.5 million Amazon employees view and update their own personal information.",
     image: atozCard,
   },
   {

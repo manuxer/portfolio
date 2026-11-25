@@ -140,7 +140,7 @@ export default function Home() {
             <Reveal delay={0.08}>
               <p className="t-body-lg mt-6">
                 Product, User experience, and Interaction designer currently working at Amazon, specializing in
-                enterprise products that impact over 1.6M users.
+                enterprise products that impact over 1.5M users.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
