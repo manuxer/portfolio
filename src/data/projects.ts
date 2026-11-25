@@ -1,6 +1,6 @@
 import aliceIntro from "@/assets/alice.png?responsive";
 import asl from "@/assets/hermes/h26.png?responsive";
-import essIntro from "@/assets/ess/ess.png?responsive";
+import atozCard from "@/assets/atoz/hero.webp?responsive";
 import commsImage from "@/assets/comms-case-status.png?responsive";
 import uspsCard from "@/assets/legacy/files/USPS/Logo/USPS_logo.png?responsive";
 import mbtaCard from "@/assets/legacy/files/MBTA/img/MBTA-hero.jpeg?responsive";
@@ -32,9 +32,8 @@ export const projects: ProjectSummary[] = [
     id: 10,
     title: "Personal information management in AtoZ",
     category: "UX | Product design | Research",
-    description:
-      "Self-service personal information management system for Amazon's global workforce, improving discoverability and employee autonomy",
-    image: essIntro,
+    description: "How 1.6 million Amazon employees view and update their own personal information.",
+    image: atozCard,
   },
   {
     id: 8,
@@ -82,11 +81,7 @@ export const projects: ProjectSummary[] = [
 ];
 
 /** Home page "Featured projects". */
-export const featured: ProjectSummary[] = projects.slice(0, 4).map((p) =>
-  p.id === 10
-    ? { ...p, description: "Self-service personal information management system for Amazon's global workforce" }
-    : p,
-);
+export const featured: ProjectSummary[] = projects.slice(0, 4);
 
 /** Next project in Work order; unlisted projects lead back to the first. */
 export function nextProjectOf(id: number): ProjectSummary {

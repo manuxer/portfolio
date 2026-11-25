@@ -61,14 +61,18 @@ export function CaseHero({
 
 /* ───────────────────────── header ───────────────────────── */
 
-export function MetaCard({ items }: { items: Array<[string, string]> }) {
+/** Label, value and an optional detail line under the value. */
+export function MetaCard({ items }: { items: Array<[label: string, value: string, detail?: string]> }) {
   const onPointerMove = useSpecular<HTMLDListElement>();
   return (
     <dl onPointerMove={onPointerMove} className="glass glass-rim specular rounded-[28px] px-7 py-3">
-      {items.map(([label, value], i) => (
+      {items.map(([label, value, detail], i) => (
         <div key={label} className={cn("py-4", i > 0 && "hairline-t")}>
           <dt className="t-label">{label}</dt>
-          <dd className="mt-1.5 text-[1.06rem] font-semibold leading-snug tracking-[-0.018em] text-fg">{value}</dd>
+          <dd className="mt-1.5 text-[1.06rem] font-semibold leading-snug tracking-[-0.018em] text-fg">
+            {value}
+            {detail && <span className="mt-0.5 block text-[0.92rem] font-normal tracking-normal text-fg-2">{detail}</span>}
+          </dd>
         </div>
       ))}
     </dl>
@@ -299,7 +303,7 @@ export function ResearchBlock({ research }: { research: Research }) {
 
 /* ───────────────────────── outcome ───────────────────────── */
 
-function CheckBadge() {
+export function CheckBadge() {
   return (
     <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[color-mix(in_srgb,var(--positive)_14%,transparent)] text-[var(--positive)]">
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

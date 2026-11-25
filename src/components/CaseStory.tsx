@@ -4,19 +4,20 @@
  * outcome, what's next and what I learned. It shares the hero, meta card, key features,
  * next-project card and section dock with the other case studies.
  */
-import { useMemo, type ReactNode } from "react";
-import { ArrowDown, ArrowRight, Maximize2 } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import { Ambient } from "@/components/Aurora";
 import { AcceptanceBar, AcceptanceLegend, CaseHero, KeyFeatures, MetaCard, NextProject, TechChips } from "@/components/CaseStudyParts";
 import { ContactCTA } from "@/components/ContactCTA";
 import { CountUp } from "@/components/CountUp";
 import { Img } from "@/components/Img";
-import { useLightbox, type LightboxItem } from "@/components/lightbox-context";
+import type { LightboxItem } from "@/components/lightbox-context";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 import { SectionDock } from "@/components/SectionDock";
+import { Heading, SubBlock, SummaryCard, ZoomImage } from "@/components/StoryParts";
 import { WordsReveal } from "@/components/WordsReveal";
 import { nextProjectOf } from "@/data/projects";
-import type { Labelled, Point, Story, StoryCaseStudy } from "@/data/types";
+import type { Point, Story, StoryCaseStudy } from "@/data/types";
 import { useSpecular } from "@/hooks/useSpecular";
 import { useTitle } from "@/hooks/useTitle";
 import { cn } from "@/lib/cn";
@@ -378,50 +379,6 @@ export function CaseStoryView({ project }: { project: StoryCaseStudy }) {
 
 /* ───────────────────────── parts ───────────────────────── */
 
-function Heading({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {
-  return (
-    <div className="max-w-3xl">
-      {eyebrow && (
-        <Reveal>
-          <p className="t-label">{eyebrow}</p>
-        </Reveal>
-      )}
-      <Reveal delay={0.05}>
-        <h2 className={cn("t-title", eyebrow && "mt-3")}>{title}</h2>
-      </Reveal>
-      {children && (
-        <Reveal delay={0.1}>
-          <p className="t-lead mt-5">{children}</p>
-        </Reveal>
-      )}
-    </div>
-  );
-}
-
-function SubBlock({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="mt-16 md:mt-20">
-      <Reveal>
-        <h3 className="t-subtitle">{title}</h3>
-      </Reveal>
-      <div className="mt-6">{children}</div>
-    </div>
-  );
-}
-
-function SummaryCard({ item, soft = false }: { item: Labelled; soft?: boolean }) {
-  const onPointerMove = useSpecular<HTMLDivElement>();
-  return (
-    <div
-      onPointerMove={onPointerMove}
-      className={cn("glass glass-rim specular h-full rounded-[28px] p-7", soft && "glass-soft rounded-[26px]")}
-    >
-      <p className="t-label">{item.label}</p>
-      <p className="mt-3 text-[1.06rem] font-medium leading-snug tracking-[-0.016em] text-fg">{item.text}</p>
-    </div>
-  );
-}
-
 function MethodsCard({ title, methods }: { title: string; methods: Array<[string, number]> }) {
   const onPointerMove = useSpecular<HTMLDivElement>();
   return (
@@ -511,7 +468,6 @@ const SCREEN_SIZES = "(min-width: 1024px) 300px, (min-width: 768px) 28vw, 72vw";
  * three sideways; wider screens show them side by side. Screens open in the lightbox.
  */
 function StoryFlow({ story, index }: { story: Story; index: number }) {
-  const { open, register, hiddenKey } = useLightbox();
   const items: LightboxItem[] = useMemo(
     () => story.screens.map((s, i) => ({ key: `story-${index}-${i}`, src: s.src, alt: s.alt })),
     [story.screens, index],
@@ -534,22 +490,7 @@ function StoryFlow({ story, index }: { story: Story; index: number }) {
           <Reveal key={item.key} blur={false} delay={i * 0.08} className="w-[76%] shrink-0 snap-center md:w-auto">
             <figure>
               <div className="rounded-[28px] bg-[var(--bg-2)] p-4 md:p-6">
-                <button
-                  type="button"
-                  ref={(el) => {
-                    register(item.key, el);
-                    return () => register(item.key, null);
-                  }}
-                  onClick={() => open(items, i)}
-                  className="gallery-item group media-frame mx-auto block w-full max-w-[300px]"
-                  style={{ visibility: hiddenKey === item.key ? "hidden" : undefined }}
-                  aria-label={`Expand screen ${i + 1} of ${items.length}: ${item.alt}`}
-                >
-                  <Img src={item.src} alt={item.alt} sizes={SCREEN_SIZES} className="block h-auto w-full" />
-                  <span className="hover-chip glass glass-soft absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full text-fg">
-                    <Maximize2 size={15} strokeWidth={2} />
-                  </span>
-                </button>
+                <ZoomImage group={items} index={i} sizes={SCREEN_SIZES} label="screen" className="mx-auto w-full max-w-[300px]" />
               </div>
               <figcaption className="mt-5 px-1">
                 <h4 className="text-[1.1rem] font-semibold tracking-[-0.02em] text-fg">{story.decisions[i].title}</h4>
